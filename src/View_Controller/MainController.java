@@ -20,7 +20,14 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Objects;
+import java.util.Properties;
 import java.util.ResourceBundle;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.ResultSet;
+import java.sql.Statement;
 
 /*
  * Javadoc location: /out/javadoc/index.html
@@ -36,13 +43,51 @@ import java.util.ResourceBundle;
 public class MainController extends Application implements Initializable {
 
     /**
-     * Starts application and loads up main screen (mainform.fxml)
+     * Starts application and loads up main screen (MainForm.fxml)
      * @param primaryStage main stage to be set after starting
      * @throws Exception if it fails to start properly
      */
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("../View_Controller/mainform.fxml")));
+        Connection conn = null;
+        String username = "U08U87";
+        String password = "53689393671";
+        Properties connectionProps = new Properties();
+        connectionProps.put("user", username);
+        connectionProps.put("password", password);
+        try {
+            String databaseURL = "jdbc:mysql://wgudb.ucertify.com:3306/WJ08U87?verifyServerCertificate=false&useSSL=true";
+            conn = DriverManager.getConnection(databaseURL, connectionProps);
+            System.out.println("CONNECTED!");
+            Statement stmt = null;
+            String query = "select * from customers";
+            try {
+                stmt = conn.createStatement();
+                ResultSet rs = stmt.executeQuery(query);
+                while(rs.next()) {
+                    String name = rs.getString("Customer_Name");
+                    String postal = rs.getString("Postal_Code");
+                    System.out.println(name);
+                    System.out.println(postal);
+                }
+            }catch(SQLException e) {
+                throw new Error("Problem", e);
+            } finally {
+                if(stmt != null) {stmt.close();}
+            }
+        } catch (SQLException e) {
+            System.err.println("Connection not established.");
+        }
+//        finally {
+//            try {
+//                if(conn != null) {
+//                    conn.close();
+//                }
+//            } catch (SQLException e) {
+//                System.err.println(e.getMessage());
+//            }
+//        }
+        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("../View_Controller/MainForm.fxml")));
         primaryStage.setTitle("Main Page");
         primaryStage.setScene(new Scene(root, 1100, 500));
         primaryStage.setResizable(false);

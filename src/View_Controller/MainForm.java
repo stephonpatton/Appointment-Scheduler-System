@@ -1,4 +1,4 @@
 package View_Controller;
 
-public class Mainform {
+public class MainForm {
 }
