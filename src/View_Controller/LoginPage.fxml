@@ -1,14 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="View_Controller.LoginPage"
-            prefHeight="400.0" prefWidth="600.0">
-
+<AnchorPane prefHeight="300.0" prefWidth="600.0" style="-fx-background-color: #66D4F2;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View_Controller.LoginPage">
+   <children>
+      <TextField fx:id="usernameTF" layoutX="270.0" layoutY="93.0" promptText="Username" />
+      <TextField fx:id="passwordTF" layoutX="270.0" layoutY="143.0" promptText="Password" />
+      <Label layoutX="147.0" layoutY="93.0" text="Username">
+         <font>
+            <Font name="Roboto Light" size="18.0" />
+         </font>
+      </Label>
+      <Label layoutX="149.0" layoutY="143.0" text="Password">
+         <font>
+            <Font name="Roboto Light" size="18.0" />
+         </font>
+      </Label>
+      <Button fx:id="loginButton" layoutX="270.0" layoutY="209.0" mnemonicParsing="false" onAction="#loginButtonPressed" style="-fx-background-color: #DBA067;" text="Login" />
+      <Button fx:id="cancelButton" layoutX="367.0" layoutY="209.0" mnemonicParsing="false" onAction="#cancelButtonPressed" style="-fx-background-color: #DBA067;" text="Cancel" />
+      <Label fx:id="languageLabel" disable="true" layoutX="14.0" layoutY="14.0" text="Language: EN">
+         <font>
+            <Font name="Roboto Light" size="18.0" />
+         </font>
+      </Label>
+   </children>
 </AnchorPane>

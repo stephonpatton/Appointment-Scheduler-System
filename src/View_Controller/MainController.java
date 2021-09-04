@@ -49,35 +49,7 @@ public class MainController extends Application implements Initializable {
      */
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Connection conn = null;
-        String username = "U08U87";
-        String password = "53689393671";
-        Properties connectionProps = new Properties();
-        connectionProps.put("user", username);
-        connectionProps.put("password", password);
-        try {
-            String databaseURL = "jdbc:mysql://wgudb.ucertify.com:3306/WJ08U87?verifyServerCertificate=false&useSSL=true";
-            conn = DriverManager.getConnection(databaseURL, connectionProps);
-            System.out.println("CONNECTED!");
-            Statement stmt = null;
-            String query = "select * from customers";
-            try {
-                stmt = conn.createStatement();
-                ResultSet rs = stmt.executeQuery(query);
-                while(rs.next()) {
-                    String name = rs.getString("Customer_Name");
-                    String postal = rs.getString("Postal_Code");
-                    System.out.println(name);
-                    System.out.println(postal);
-                }
-            }catch(SQLException e) {
-                throw new Error("Problem", e);
-            } finally {
-                if(stmt != null) {stmt.close();}
-            }
-        } catch (SQLException e) {
-            System.err.println("Connection not established.");
-        }
+
 //        finally {
 //            try {
 //                if(conn != null) {
@@ -87,9 +59,9 @@ public class MainController extends Application implements Initializable {
 //                System.err.println(e.getMessage());
 //            }
 //        }
-        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("../View_Controller/MainForm.fxml")));
-        primaryStage.setTitle("Main Page");
-        primaryStage.setScene(new Scene(root, 1100, 500));
+        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("../View_Controller/LoginPage.fxml")));
+        primaryStage.setTitle("Login Page");
+        primaryStage.setScene(new Scene(root, 600, 300));
         primaryStage.setResizable(false);
         primaryStage.show();
     }
