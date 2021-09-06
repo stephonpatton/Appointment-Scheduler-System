@@ -1,14 +1,67 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="View_Controller.MainForm"
-            prefHeight="400.0" prefWidth="600.0">
-
+<AnchorPane prefHeight="750.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View_Controller.MainForm">
+   <children>
+      <Pane layoutX="21.0" layoutY="14.0" prefHeight="363.0" prefWidth="758.0" style="-fx-border-width: 1; -fx-border-style: solid; -fx-border-radius: 25;">
+         <children>
+            <TableView fx:id="appointmentsTableView" layoutX="58.0" layoutY="113.0" prefHeight="197.0" prefWidth="667.0">
+              <columns>
+                <TableColumn prefWidth="111.0" text="Appointment ID" />
+                <TableColumn text="User ID" />
+                  <TableColumn prefWidth="102.0" text="Customer ID" />
+                  <TableColumn minWidth="7.0" prefWidth="84.0" text="Title" />
+                  <TableColumn prefWidth="89.0" text="Start Time" />
+                  <TableColumn minWidth="7.0" prefWidth="95.0" text="End Time" />
+                  <TableColumn prefWidth="103.0" text="Location" />
+              </columns>
+            </TableView>
+            <Label layoutX="316.0" layoutY="62.0" text="Appointments" underline="true">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Label>
+            <Label layoutX="282.0" layoutY="14.0" text="Scheduler Interface" underline="true">
+               <font>
+                  <Font name="System Bold" size="24.0" />
+               </font>
+            </Label>
+            <Button fx:id="addAppointButton" layoutX="170.0" layoutY="323.0" mnemonicParsing="false" text="Add Appointment" />
+            <Button fx:id="modifyAppointButton" layoutX="328.0" layoutY="323.0" mnemonicParsing="false" text="Modify Appointment" />
+            <Button fx:id="deleteAppointButton" layoutX="500.0" layoutY="323.0" mnemonicParsing="false" text="Delete Appointment" />
+         </children>
+      </Pane>
+      <Pane layoutX="21.0" layoutY="386.0" prefHeight="348.0" prefWidth="392.0" style="-fx-border-radius: 25; -fx-border-style: solid; -fx-border-width: 1;">
+         <children>
+            <Label layoutX="133.0" layoutY="14.0" text="Customers" underline="true">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Label>
+            <TableView fx:id="customersTableView" layoutX="9.0" layoutY="54.0" prefHeight="240.0" prefWidth="375.0">
+              <columns>
+                <TableColumn prefWidth="75.0" text="Customer ID" />
+                <TableColumn prefWidth="118.0" text="Name" />
+                  <TableColumn prefWidth="79.0" text="Division ID" />
+                  <TableColumn prefWidth="102.0" text="Phone Number" />
+              </columns>
+            </TableView>
+            <Button layoutX="14.0" layoutY="301.0" mnemonicParsing="false" text="Add Customer" />
+            <Button layoutX="143.0" layoutY="301.0" mnemonicParsing="false" text="Modify Customer" />
+            <Button layoutX="273.0" layoutY="301.0" mnemonicParsing="false" text="Delete Customer" />
+         </children>
+      </Pane>
+      <Pane layoutX="435.0" layoutY="386.0" prefHeight="348.0" prefWidth="344.0" style="-fx-border-radius: 25; -fx-border-style: solid; -fx-border-width: 1;">
+         <children>
+            <Label layoutX="81.0" layoutY="14.0" text="Other Navigation" underline="true">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Label>
+         </children>
+      </Pane>
+   </children>
 </AnchorPane>

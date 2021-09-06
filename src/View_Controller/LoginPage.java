@@ -83,7 +83,7 @@ public class LoginPage implements Initializable {
         root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("../View_Controller/MainForm.fxml")));
         Stage stage = new Stage();
         stage.setTitle("Main Screen");
-        stage.setScene(new Scene(root, 400, 500));
+        stage.setScene(new Scene(root, 800, 750));
         stage.setResizable(false);
         stage.show();
 
