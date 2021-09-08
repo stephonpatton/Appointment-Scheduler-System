@@ -18,6 +18,7 @@ import util.Query;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
@@ -25,6 +26,8 @@ public class LoginPage implements Initializable {
     // Username and password fields
     @FXML private TextField usernameTF;
     @FXML private PasswordField passwordTF;
+    @FXML private Button loginButton;
+    ResourceBundle rb;
 
     /**
      * Initialize database once program runs and loginpage is loaded
@@ -33,6 +36,14 @@ public class LoginPage implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+//
+//        System.out.println(Locale.getDefault());
+//        this.rb = resourceBundle;
+//
+//        //TODO: This sets fields after default locale has been established
+//        if(Locale.getDefault().getLanguage().equals("fr")) {
+//            loginButton.setText(rb.getString("login"));
+//        }
         Database.init();
     }
 

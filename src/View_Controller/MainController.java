@@ -1,33 +1,25 @@
 package View_Controller;
 
-import Model.*;
-
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.Locale;
 import java.util.Objects;
-import java.util.Properties;
 import java.util.ResourceBundle;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import static java.time.ZonedDateTime.now;
 
 /*
  * Javadoc location: /out/javadoc/index.html
@@ -49,16 +41,19 @@ public class MainController extends Application implements Initializable {
      */
     @Override
     public void start(Stage primaryStage) throws Exception{
+        //TODO: FIGURE OUT LOCATION HERE AND setDefault(new Locale(...)) here before loading login form
+//        Locale.setDefault(new Locale("fr"));
+//        ResourceBundle rb = ResourceBundle.getBundle("language_files/languages_en.properties", Locale.getDefault());
 
-//        finally {
-//            try {
-//                if(conn != null) {
-//                    conn.close();
-//                }
-//            } catch (SQLException e) {
-//                System.err.println(e.getMessage());
-//            }
-//        }
+        //TODO: TIME LOGIC BELOW -- can be used to help determine location (after ResourceBundle issue is fixed)
+        ZonedDateTime zone = ZonedDateTime.now();
+        ZoneId locationId = ZoneId.of(zone.getZone().toString());
+        System.out.println(LocalTime.now(locationId));
+        System.out.println(zone.getHour() + ":" + zone.getMinute() + ":" + zone.getSecond() + "    " + zone.getZone());
+
+        //TODO: Below is for setResource
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("../View_Controller/LoginPage.fxml"));
+//        loader.setResources(rb);
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("../View_Controller/LoginPage.fxml")));
         primaryStage.setTitle("Login Page");
         primaryStage.setScene(new Scene(root, 600, 300));

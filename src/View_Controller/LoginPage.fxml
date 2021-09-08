@@ -7,12 +7,12 @@
 <AnchorPane prefHeight="300.0" prefWidth="600.0" style="-fx-background-color: #66D4F2;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View_Controller.LoginPage">
    <children>
       <TextField fx:id="usernameTF" layoutX="270.0" layoutY="93.0" promptText="Username" />
-      <Label layoutX="147.0" layoutY="93.0" text="Username">
+      <Label fx:id="usernameLabel" layoutX="147.0" layoutY="93.0" text="Username">
          <font>
             <Font name="Roboto Light" size="18.0" />
          </font>
       </Label>
-      <Label layoutX="149.0" layoutY="143.0" text="Password">
+      <Label fx:id="passwordLabel" layoutX="149.0" layoutY="143.0" text="Password">
          <font>
             <Font name="Roboto Light" size="18.0" />
          </font>
