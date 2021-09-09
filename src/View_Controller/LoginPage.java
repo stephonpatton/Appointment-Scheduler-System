@@ -8,18 +8,16 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.stage.Stage;
 import util.AppointmentsCRUD;
+import util.CustomersCRUD;
 import util.Database;
 import util.Query;
 
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
-import java.util.Locale;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
@@ -72,7 +70,8 @@ public class LoginPage implements Initializable {
             invalidUserPassAlert();
         }
 
-        AppointmentsCRUD.getAllAppointments();
+        AppointmentsCRUD.loadAllAppointments();
+        CustomersCRUD.loadAllCustomers();
     }
 
     /**

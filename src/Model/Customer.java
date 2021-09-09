@@ -1,6 +1,10 @@
 package Model;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 import java.sql.Date;
+import java.sql.Timestamp;
 
 public class Customer {
     private int customerID;
@@ -8,11 +12,25 @@ public class Customer {
     private String address;
     private String postalCode;
     private String phone;
-    private Date createDate;
-    private Date lastUpdate; //TODO: Maybe not needed for object? Maybe use timestamp?
+    private Timestamp createDate;
+    private Timestamp lastUpdate; //TODO: Maybe not needed for object? Maybe use timestamp?
     private String createdBy;
     private int divisionID;
+    private String lastUpdatedBy;
 
+    private static ObservableList<Customer> allCustomers = FXCollections.observableArrayList();
+
+    public Customer() {
+
+    }
+
+    public static ObservableList<Customer> getAllCustomers() {
+        return allCustomers;
+    }
+
+    public static void addCustomer(Customer customer) {
+        allCustomers.add(customer);
+    }
 
     // CONSTRUCTOR WITH REQUIRED FIELDS NEEDED (NAME, ADDRESS, POSTAL CODE, PHONE NUMBER)
     /**
@@ -23,12 +41,13 @@ public class Customer {
      * @param phone Phone number of customer
      * @param divisionID First-level division ID
      */
-    public Customer(int customerID, String customerName, String address, String phone, int divisionID) {
+    public Customer(int customerID, String customerName, String address, String phone, String postalCode, int divisionID) {
         this.customerID = customerID;
         this.customerName = customerName;
         this.address = address;
         this.phone = phone;
         this.divisionID = divisionID;
+        this.postalCode = postalCode;
     }
 
     /**
@@ -43,7 +62,8 @@ public class Customer {
      * @param createdBy Which user created this Customer
      */
     public Customer(int customerID, String customerName, String address, String phone,
-                    int divisionID, Date createDate, Date lastUpdate, String createdBy) {
+                    String postalCode, int divisionID, Timestamp createDate, String lastUpdatedBy,
+                    Timestamp lastUpdate, String createdBy) {
         this.customerID = customerID;
         this.customerName = customerName;
         this.address = address;
@@ -52,6 +72,8 @@ public class Customer {
         this.createDate = createDate;
         this.lastUpdate = lastUpdate;
         this.createdBy = createdBy;
+        this.postalCode = postalCode;
+        this.lastUpdatedBy = lastUpdatedBy;
     }
 
     /**
@@ -138,7 +160,7 @@ public class Customer {
      * Gets the last update occurrence of a customer object
      * @return The last update occurrence of a customer
      */
-    public Date getLastUpdate() {
+    public Timestamp getLastUpdate() {
         return lastUpdate;
     }
 
@@ -146,7 +168,7 @@ public class Customer {
      * Sets the last updated occurrence of a customer object
      * @param lastUpdate Provided last updated information
      */
-    public void setLastUpdate(Date lastUpdate) {
+    public void setLastUpdate(Timestamp lastUpdate) {
         this.lastUpdate = lastUpdate;
     }
 
@@ -154,7 +176,7 @@ public class Customer {
      * Gets the creation date of a customer object
      * @return Date customer was created
      */
-    public Date getCreateDate() {
+    public Timestamp getCreateDate() {
         return createDate;
     }
 
@@ -162,7 +184,7 @@ public class Customer {
      * Sets the date a customer was created
      * @param createDate Provided creation date
      */
-    public void setCreateDate(Date createDate) {
+    public void setCreateDate(Timestamp createDate) {
         this.createDate = createDate;
     }
 

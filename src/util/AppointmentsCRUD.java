@@ -11,7 +11,7 @@ import java.text.SimpleDateFormat;
 
 public class AppointmentsCRUD {
     private static final SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    public static void getAllAppointments() throws SQLException {
+    public static void loadAllAppointments() throws SQLException {
         Connection conn = Database.getConnection();
         PreparedStatement ps;
         ResultSet rs;
