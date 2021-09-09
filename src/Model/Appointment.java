@@ -19,7 +19,6 @@ public class Appointment {
     private int userID;
     private int contactID;
 
-
     public int getAppointmentID() {
         return appointmentID;
     }

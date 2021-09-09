@@ -13,25 +13,48 @@ public class AppointmentsCRUD {
     private static ObservableList<Appointment> allAppointments = FXCollections.observableArrayList();
 
     public static ObservableList<Appointment> getAllAppointments() throws SQLException {
-        ObservableList<Appointment> temp = FXCollections.observableArrayList();
         Connection conn = Database.getConnection();
         PreparedStatement ps;
         ResultSet rs;
 
         try {
-            String query = "";
+            Appointment tempAppoint;
+            String query = "SELECT * FROM appointments"; //TODO: CHECK LATER
             ps = conn.prepareStatement(query);
             rs = ps.executeQuery();
 
             while(rs.next()) {
-                String appointmentID = rs.getString("Appointment_ID");
+                // Temp object to hold data
+                tempAppoint = new Appointment();
+
+                // Get data from database
+                int appointmentID = rs.getInt("Appointment_ID");
+                String title = rs.getString("Title");
+                String description = rs.getString("Description");
+                String location = rs.getString("Location");
+                String type = rs.getString("Type");
+
+                // Sets data to object
+                tempAppoint.setAppointmentID(appointmentID);
+                tempAppoint.setTitle(title);
+                tempAppoint.setDescription(description);
+                tempAppoint.setLocation(location);
+                tempAppoint.setType(type);
+
+                // Adds to appointment list
+                allAppointments.add(tempAppoint);
                 System.out.println("APPOINTMENT ID IS: " + appointmentID);
             }
         }catch(SQLException e) {
             throw new Error("Problem", e);
         }
 
-
-        return temp;
+        for (Appointment allAppointment : allAppointments) {
+            System.out.println(allAppointment.getType());
+        }
+        return allAppointments;
     }
+
+
+    //TODO: After UI, check if fields have valid data first, then make appointment object
 }

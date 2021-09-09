@@ -12,6 +12,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.stage.Stage;
+import util.AppointmentsCRUD;
 import util.Database;
 import util.Query;
 
@@ -70,6 +71,8 @@ public class LoginPage implements Initializable {
         } else {
             invalidUserPassAlert();
         }
+
+        AppointmentsCRUD.getAllAppointments();
     }
 
     /**
