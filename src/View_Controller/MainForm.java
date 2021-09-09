@@ -22,12 +22,15 @@ public class MainForm implements Initializable {
     @FXML private TableColumn<Appointment, Timestamp> startCol;
     @FXML private TableColumn<Appointment, Timestamp> endCol;
     @FXML private TableColumn<Appointment, String> locationCol;
+    @FXML private TableColumn<Appointment, String> descriptionCol;
 
     @FXML private TableView<Customer> customersTableView;
     @FXML private TableColumn<Customer, Integer> customerTVIDCol;
     @FXML private TableColumn<Customer, String> customerTVNameCol;
     @FXML private TableColumn<Customer, Integer> customerTVDivIDCol;
     @FXML private TableColumn<Customer, String> customerTVPhoneIDCol;
+    @FXML private TableColumn<Customer, String> customerTVAddressCol;
+    @FXML private TableColumn<Customer, String> customerTVPostalCol;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -46,6 +49,7 @@ public class MainForm implements Initializable {
         startCol.setCellValueFactory(new PropertyValueFactory<>("start"));
         endCol.setCellValueFactory(new PropertyValueFactory<>("end"));
         locationCol.setCellValueFactory(new PropertyValueFactory<>("location"));
+        descriptionCol.setCellValueFactory(new PropertyValueFactory<>("description"));
     }
 
     private void setCustomerCells() {
@@ -53,6 +57,8 @@ public class MainForm implements Initializable {
         customerTVNameCol.setCellValueFactory(new PropertyValueFactory<>("customerName"));
         customerTVDivIDCol.setCellValueFactory(new PropertyValueFactory<>("divisionID"));
         customerTVPhoneIDCol.setCellValueFactory(new PropertyValueFactory<>("phone"));
+        customerTVAddressCol.setCellValueFactory(new PropertyValueFactory<>("address"));
+        customerTVPostalCol.setCellValueFactory(new PropertyValueFactory<>("postalCode"));
     }
 
     private void populateAppointmentsTable() {
