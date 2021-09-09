@@ -4,6 +4,7 @@ import java.sql.Date;
 import java.sql.Timestamp;
 
 public class Appointment {
+    // Instance variables for object
     private int appointmentID;
     private String title;
     private String description;
@@ -19,114 +20,226 @@ public class Appointment {
     private int userID;
     private int contactID;
 
+    /**
+     * Gets the appointment ID of an appointment
+     * @return The appointment ID of an object
+     */
     public int getAppointmentID() {
         return appointmentID;
     }
 
+    /**
+     * Sets the appointment ID of an appointment object
+     * @param appointmentID Given appointment ID
+     */
     public void setAppointmentID(int appointmentID) {
         this.appointmentID = appointmentID;
     }
 
+    /**
+     * Gets the title of an appointment
+     * @return The title of an appointment
+     */
     public String getTitle() {
         return title;
     }
 
+    /**
+     * Sets the title of an appointment
+     * @param title Given title
+     */
     public void setTitle(String title) {
         this.title = title;
     }
 
+    /**
+     * Gets the description of an appointment
+     * @return The description of an appointment
+     */
     public String getDescription() {
         return description;
     }
 
+    /**
+     * Sets the description of an appointment
+     * @param description Given description of an appointment
+     */
     public void setDescription(String description) {
         this.description = description;
     }
 
+    /**
+     * Gets the location of an appointment
+     * @return The location of an appointment
+     */
     public String getLocation() {
         return location;
     }
 
+    /**
+     * Sets the location of an appointment
+     * @param location Given location of an appointment
+     */
     public void setLocation(String location) {
         this.location = location;
     }
 
+    /**
+     * Gets the type of an appointment
+     * @return The type of an appointment
+     */
     public String getType() {
         return type;
     }
 
+    /**
+     * Sets the type of an appointment
+     * @param type Given type of an appointment
+     */
     public void setType(String type) {
         this.type = type;
     }
 
+    /**
+     * Gets start date of an appointment
+     * @return The start date of an appointment
+     */
     public Date getStart() {
         return start;
     }
 
+    /**
+     * Sets the start date of an appointment
+     * @param start Given start date
+     */
     public void setStart(Date start) {
         this.start = start;
     }
 
+    /**
+     * Gets end date/time of an appointment
+     * @return The end date/time of an appointment
+     */
     public Date getEnd() {
         return end;
     }
 
+    /**
+     * Sets the end date/time of an appointment
+     * @param end Given end date/time of an appointment
+     */
     public void setEnd(Date end) {
         this.end = end;
     }
 
+    /**
+     * Gets creation date of an appointment
+     * @return The date an appointment was created
+     */
     public Date getCreatedDate() {
         return createdDate;
     }
 
+    /**
+     * Sets the creation date of an appointment
+     * @param createdDate Given creation date of an appointment
+     */
     public void setCreatedDate(Date createdDate) {
         this.createdDate = createdDate;
     }
 
+    /**
+     * Gets who/what created an appointment
+     * @return Who/what created an appointment
+     */
     public String getCreatedBy() {
         return createdBy;
     }
 
+    /**
+     * Sets who/what created an appointment
+     * @param createdBy Given information on who/what created an appointment
+     */
     public void setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
     }
 
+    /**
+     * Gets the time of the last update of an appointment
+     * @return The time of the last update
+     */
     public Timestamp getLastUpdate() {
         return lastUpdate;
     }
 
+    /**
+     * Sets the time an appointment was last updated
+     * @param lastUpdate Given time of last update
+     */
     public void setLastUpdate(Timestamp lastUpdate) {
         this.lastUpdate = lastUpdate;
     }
 
+    /**
+     * Gets who/what last updated an appointment
+     * @return Who/what last updated an appointment
+     */
     public String getLastUpdateBy() {
         return lastUpdateBy;
     }
 
+    /**
+     * Sets who/what last updated an appointment
+     * @param lastUpdateBy Given information on who/what last updated an appointment
+     */
     public void setLastUpdateBy(String lastUpdateBy) {
         this.lastUpdateBy = lastUpdateBy;
     }
 
+    /**
+     * Gets customerID of an appointment
+     * @return CustomerID of an appointment
+     */
     public int getCustomerID() {
         return customerID;
     }
 
+    /**
+     * Sets customerID of an appointment
+     * @param customerID Given customerID for an appointment
+     */
     public void setCustomerID(int customerID) {
         this.customerID = customerID;
     }
 
+    /**
+     * Gets userID of an appointment
+     * @return UserID of an appointment
+     */
     public int getUserID() {
         return userID;
     }
 
+    /**
+     * Sets userID of an appointment
+     * @param userID Given userID for an appointment
+     */
     public void setUserID(int userID) {
         this.userID = userID;
     }
 
+    /**
+     * Gets contactID of an appointment
+     * @return contactID of an appointment
+     */
     public int getContactID() {
         return contactID;
     }
 
+    /**
+     * Sets the contactID of an appointment
+     * @param contactID Given contactID of an appointment
+     */
     public void setContactID(int contactID) {
         this.contactID = contactID;
     }
