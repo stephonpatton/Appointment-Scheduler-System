@@ -1,5 +1,7 @@
 package Model;
 
+import util.UsersCRUD;
+
 import java.sql.Date;
 import java.sql.Timestamp;
 

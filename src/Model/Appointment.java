@@ -1,5 +1,8 @@
 package Model;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 import java.sql.Date;
 import java.sql.Timestamp;
 
@@ -10,15 +13,37 @@ public class Appointment {
     private String description;
     private String location;
     private String type;
-    private Date start;
-    private Date end;
-    private Date createdDate;
+    private Timestamp start;
+    private Timestamp end;
+    private Timestamp createdDate;
     private String createdBy;
     private Timestamp lastUpdate;
     private String lastUpdateBy;
     private int customerID;
     private int userID;
     private int contactID;
+
+    private static int appointmentCount; //TODO: Maybe make this 1 for tableview
+
+    private static ObservableList<Appointment> allAppointments = FXCollections.observableArrayList();
+
+    public static void addAppointment(Appointment appointment) {
+        allAppointments.add(appointment);
+
+        for (Appointment allAppointment : allAppointments) {
+            System.out.println(allAppointment.getType());
+            System.out.println(allAppointment.getCreatedBy());
+            System.out.println(allAppointment.getLastUpdate());
+            System.out.println(allAppointment.getUserID());
+            System.out.println(allAppointment.getCustomerID());
+        }
+
+        System.out.println("TOTAL COUNT " + allAppointments.size());
+    }
+
+    public static ObservableList<Appointment> getAllAppointments() {
+        return allAppointments;
+    }
 
     /**
      * Gets the appointment ID of an appointment
@@ -104,7 +129,7 @@ public class Appointment {
      * Gets start date of an appointment
      * @return The start date of an appointment
      */
-    public Date getStart() {
+    public Timestamp getStart() {
         return start;
     }
 
@@ -112,7 +137,7 @@ public class Appointment {
      * Sets the start date of an appointment
      * @param start Given start date
      */
-    public void setStart(Date start) {
+    public void setStart(Timestamp start) {
         this.start = start;
     }
 
@@ -120,7 +145,7 @@ public class Appointment {
      * Gets end date/time of an appointment
      * @return The end date/time of an appointment
      */
-    public Date getEnd() {
+    public Timestamp getEnd() {
         return end;
     }
 
@@ -128,7 +153,7 @@ public class Appointment {
      * Sets the end date/time of an appointment
      * @param end Given end date/time of an appointment
      */
-    public void setEnd(Date end) {
+    public void setEnd(Timestamp end) {
         this.end = end;
     }
 
@@ -136,7 +161,7 @@ public class Appointment {
      * Gets creation date of an appointment
      * @return The date an appointment was created
      */
-    public Date getCreatedDate() {
+    public Timestamp getCreatedDate() {
         return createdDate;
     }
 
@@ -144,7 +169,7 @@ public class Appointment {
      * Sets the creation date of an appointment
      * @param createdDate Given creation date of an appointment
      */
-    public void setCreatedDate(Date createdDate) {
+    public void setCreatedDate(Timestamp createdDate) {
         this.createdDate = createdDate;
     }
 
