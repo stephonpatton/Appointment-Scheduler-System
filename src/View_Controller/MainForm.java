@@ -2,21 +2,29 @@ package View_Controller;
 
 import Model.Appointment;
 import Model.Customer;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.net.URL;
 import java.sql.Timestamp;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class MainForm implements Initializable {
     @FXML private TableView<Appointment> appointmentsTableView;
     @FXML private TableColumn<Appointment, String> typeCol;
     @FXML private TableColumn<Appointment, Integer> appointIDCol;
-    @FXML private TableColumn<Appointment, Integer> userIDCol;
+    @FXML private TableColumn<Appointment, String> contactCol;
     @FXML private TableColumn<Appointment, Integer> customerIDCol;
     @FXML private TableColumn<Appointment, String> titleCol;
     @FXML private TableColumn<Appointment, Timestamp> startCol;
@@ -42,7 +50,7 @@ public class MainForm implements Initializable {
 
     private void setAppointmentCells() {
         appointIDCol.setCellValueFactory(new PropertyValueFactory<>("appointmentID"));
-        userIDCol.setCellValueFactory(new PropertyValueFactory<>("userID"));
+        contactCol.setCellValueFactory(new PropertyValueFactory<>("contactName"));
         customerIDCol.setCellValueFactory(new PropertyValueFactory<>("customerID"));
         typeCol.setCellValueFactory(new PropertyValueFactory<>("type"));
         titleCol.setCellValueFactory(new PropertyValueFactory<>("title"));
@@ -67,5 +75,19 @@ public class MainForm implements Initializable {
 
     private void populateCustomersTable() {
         customersTableView.setItems(Customer.getAllCustomers());
+    }
+
+    public void openAddAppointmentScreen(ActionEvent actionEvent) throws IOException {
+        Parent root;
+        root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("../View_Controller/AddAppointment.fxml")));
+        Stage stage = new Stage();
+        stage.setTitle("Main Screen");
+        stage.setScene(new Scene(root, 670, 500));
+        stage.setResizable(false);
+        stage.show();
+
+        //Hides current window
+        ((Node)(actionEvent.getSource())).getScene().getWindow().hide();
+
     }
 }

@@ -2,6 +2,7 @@ package Model;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import util.AppointmentsCRUD;
 
 import java.sql.Date;
 import java.sql.Timestamp;
@@ -22,6 +23,8 @@ public class Appointment {
     private int customerID;
     private int userID;
     private int contactID;
+
+    private String contactName;
 
     private static int appointmentCount; //TODO: Maybe make this 1 for tableview
 
@@ -267,5 +270,13 @@ public class Appointment {
      */
     public void setContactID(int contactID) {
         this.contactID = contactID;
+    }
+
+    public void setContactName() {
+        this.contactName = AppointmentsCRUD.getContactName(this.getContactID());
+    }
+
+    public String getContactName() {
+        return this.contactName;
     }
 }

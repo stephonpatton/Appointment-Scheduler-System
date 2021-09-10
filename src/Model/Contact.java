@@ -1,9 +1,26 @@
 package Model;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 public class Contact {
     private int contactID;
     private String contactName;
     private String email;
+
+    private static ObservableList<Contact> allContacts = FXCollections.observableArrayList();
+
+    public static ObservableList<Contact> getAllContacts() {
+        return allContacts;
+    }
+
+    public static ObservableList<String> getAllContactNames() {
+        ObservableList<String> temp = FXCollections.observableArrayList();
+        for(int i = 0; i < allContacts.size(); i++) {
+            temp.add(allContacts.get(i).getContactName());
+        }
+        return temp;
+    }
 
     /**
      * Get a contact object's ID
@@ -51,5 +68,9 @@ public class Contact {
      */
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String toString() {
+        return contactName;
     }
 }

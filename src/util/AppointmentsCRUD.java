@@ -57,6 +57,9 @@ public class AppointmentsCRUD {
                 tempAppoint.setCustomerID(customerID);
                 tempAppoint.setUserID(userID);
                 tempAppoint.setContactID(contactID);
+
+                // helper method for viewing appointment TableView
+                tempAppoint.setContactName();
 //                tempAppoint.setCreatedDate(Timestamp.valueOf(formatDate.format(createdDate))); // TODO: Maybe change... printing tailing .0 at the end; also useful for create operation
 
                 // Adds to appointment list
@@ -71,6 +74,31 @@ public class AppointmentsCRUD {
         if(!Appointment.getAllAppointments().contains(appointment)) {
             Appointment.addAppointment(appointment);
         }
+    }
+
+    public static int getNextIDCount() {
+        return Appointment.getAllAppointments().size() + 1;
+    }
+
+    public static String getContactName(int userID) {
+        String name = "";
+        try {
+            Connection conn = Database.getConnection();
+            PreparedStatement ps;
+            ResultSet rs = null;
+            String query = "SELECT Contact_Name FROM contacts INNER JOIN appointments WHERE contacts.Contact_ID = ? AND appointments.Contact_ID = ?";
+            ps = conn.prepareStatement(query);
+            ps.setInt(1, userID);
+            ps.setInt(2, userID);
+            rs = ps.executeQuery();
+
+            while(rs.next()) {
+                name = rs.getString("Contact_Name");
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return name;
     }
 
 
