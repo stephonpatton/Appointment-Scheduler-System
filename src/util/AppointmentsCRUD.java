@@ -101,6 +101,5 @@ public class AppointmentsCRUD {
         return name;
     }
 
-
     //TODO: After UI, check if fields have valid data first, then make appointment object
 }
