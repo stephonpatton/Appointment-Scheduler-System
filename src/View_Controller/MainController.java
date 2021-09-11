@@ -1,5 +1,6 @@
 package View_Controller;
 
+import Model.Contact;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -9,6 +10,9 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import util.AppointmentsCRUD;
+import util.ContactsCRUD;
+import util.CustomersCRUD;
 
 import java.io.IOException;
 import java.net.URL;
@@ -54,6 +58,11 @@ public class MainController extends Application implements Initializable {
         //TODO: Below is for setResource
         FXMLLoader loader = new FXMLLoader(getClass().getResource("../View_Controller/LoginPage.fxml"));
 //        loader.setResources(rb);
+
+
+        ContactsCRUD.loadAllContacts();
+        AppointmentsCRUD.loadAllAppointments();
+        CustomersCRUD.loadAllCustomers();
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("../View_Controller/LoginPage.fxml")));
         primaryStage.setTitle("Login Page");
         primaryStage.setScene(new Scene(root, 600, 300));

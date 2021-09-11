@@ -70,8 +70,8 @@ public class LoginPage implements Initializable {
             invalidUserPassAlert();
         }
 
-        AppointmentsCRUD.loadAllAppointments();
-        CustomersCRUD.loadAllCustomers();
+//        AppointmentsCRUD.loadAllAppointments();
+//        CustomersCRUD.loadAllCustomers();
     }
 
     /**

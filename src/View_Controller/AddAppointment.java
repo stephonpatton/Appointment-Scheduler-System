@@ -29,9 +29,10 @@ public class AddAppointment implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         addAppointIDTF.setText("AUTO GEN: " + AppointmentsCRUD.getNextIDCount());
 //        addAppointContactTF.setText(AppointmentsCRUD.getContactName(1));
-        ObservableList<Contact> contacts = FXCollections.observableArrayList();
-        contacts.addAll(Contact.getAllContacts());
-        addAppointContactCombo.setItems(contacts);
+//        ObservableList<Contact> contacts = FXCollections.observableArrayList();
+//        contacts.addAll(Contact.getAllContacts());
+//        addAppointContactCombo.setItems(contacts);
+        addAppointContactCombo.setItems(Contact.getAllContacts());
     }
 
 

@@ -13,7 +13,7 @@ public class CustomersCRUD {
 
         try {
             Customer tempCustomer;
-            String query = "SELECT * FROM customers"; //TODO: CHECK LATER
+            String query = "SELECT * FROM customers";
             ps = conn.prepareStatement(query);
             rs = ps.executeQuery();
 

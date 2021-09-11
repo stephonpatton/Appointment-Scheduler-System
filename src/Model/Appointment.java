@@ -26,8 +26,6 @@ public class Appointment {
 
     private String contactName;
 
-    private static int appointmentCount; //TODO: Maybe make this 1 for tableview
-
     private static ObservableList<Appointment> allAppointments = FXCollections.observableArrayList();
 
     public static void addAppointment(Appointment appointment) {

@@ -126,7 +126,4 @@ public class User {
         this.lastUpdatedBy = lastUpdatedBy;
     }
 
-    //TODO: Getters and setters for values
-    //TODO: Documentation
-    //TODO: Might have to check for username uniqueness in this class
 }

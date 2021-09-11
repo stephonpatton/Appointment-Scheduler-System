@@ -18,7 +18,7 @@ public class AppointmentsCRUD {
 
         try {
             Appointment tempAppoint;
-            String query = "SELECT * FROM appointments"; //TODO: CHECK LATER
+            String query = "SELECT * FROM appointments";
             ps = conn.prepareStatement(query);
             rs = ps.executeQuery();
 

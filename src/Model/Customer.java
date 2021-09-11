@@ -13,7 +13,7 @@ public class Customer {
     private String postalCode;
     private String phone;
     private Timestamp createDate;
-    private Timestamp lastUpdate; //TODO: Maybe not needed for object? Maybe use timestamp?
+    private Timestamp lastUpdate;
     private String createdBy;
     private int divisionID;
     private String lastUpdatedBy;
@@ -218,5 +218,13 @@ public class Customer {
      */
     public void setDivisionID(int divisionID) {
         this.divisionID = divisionID;
+    }
+
+    public String getLastUpdatedBy() {
+        return lastUpdatedBy;
+    }
+
+    public void setLastUpdatedBy(String lastUpdatedBy) {
+        this.lastUpdatedBy = lastUpdatedBy;
     }
 }

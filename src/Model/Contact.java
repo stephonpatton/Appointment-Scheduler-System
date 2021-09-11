@@ -10,14 +10,18 @@ public class Contact {
 
     private static ObservableList<Contact> allContacts = FXCollections.observableArrayList();
 
+    public static void addContact(Contact contact) {
+        allContacts.add(contact);
+    }
+
     public static ObservableList<Contact> getAllContacts() {
         return allContacts;
     }
 
     public static ObservableList<String> getAllContactNames() {
         ObservableList<String> temp = FXCollections.observableArrayList();
-        for(int i = 0; i < allContacts.size(); i++) {
-            temp.add(allContacts.get(i).getContactName());
+        for (Contact allContact : allContacts) {
+            temp.add(allContact.getContactName());
         }
         return temp;
     }
