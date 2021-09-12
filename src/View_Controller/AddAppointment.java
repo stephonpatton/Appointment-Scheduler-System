@@ -67,65 +67,93 @@ public class AddAppointment implements Initializable {
         endMinSpinner.setValueFactory(new SpinnerValueFactory.ListSpinnerValueFactory<Integer>(FXCollections.observableArrayList(mins)));
     }
 
-    public void createAppointObject() {
-        int appointmentID = AppointmentsCRUD.getNextIDCount();
-        String title = addAppointTitleTF.getText();
-        String description = addAppointDescriptionTF.getText();
-        String location = addAppointLocationTF.getText();
-        String type = addAppointTypeTF.getText();
+    public boolean createAppointObject() {
+        boolean isCreated;
+        try {
+            int appointmentID = AppointmentsCRUD.getNextIDCount();
+            String title = addAppointTitleTF.getText();
+            String description = addAppointDescriptionTF.getText();
+            String location = addAppointLocationTF.getText();
+            String type = addAppointTypeTF.getText();
 
-        int contactID = addAppointContactCombo.getValue().getContactID();
-        int customerID = Integer.parseInt(addAppointCustomerTF.getText());
-        int userID = Integer.parseInt(addAppointUserTF.getText());
+            int contactID = addAppointContactCombo.getValue().getContactID();
+            int customerID = Integer.parseInt(addAppointCustomerTF.getText());
+            int userID = Integer.parseInt(addAppointUserTF.getText());
 
-        Appointment appoint = new Appointment();
-        appoint.setAppointmentID(appointmentID);
-        appoint.setTitle(title);
-        appoint.setDescription(description);
-        appoint.setLocation(location);
-        appoint.setType(type);
-        appoint.setContactID(contactID);
-        appoint.setUserID(userID);
-        appoint.setCustomerID(customerID);
+            if(title.length() == 0 || description.length() == 0 || location.length() == 0 || type.length() == 0) {
+                isCreated = false;
+            } else {
+                Appointment appoint = new Appointment();
+                appoint.setAppointmentID(appointmentID);
+                appoint.setTitle(title);
+                appoint.setDescription(description);
+                appoint.setLocation(location);
+                appoint.setType(type);
+                appoint.setContactID(contactID);
+                appoint.setUserID(userID);
+                appoint.setCustomerID(customerID);
+                appoint.setContactName();
 
-        //TODO: TIME and DATES
+                //TODO: TIME and DATES
 
-        Appointment.addAppointment(appoint);
+                Appointment.addAppointment(appoint);
+                AppointmentsCRUD.insertAppointment(appoint);
+                isCreated = true;
+            }
+
+
+        }catch(Exception e) {
+            showErrorAlert();
+            isCreated = false;
+//            e.printStackTrace();
+        }
+
+
+        return isCreated;
     }
 
-    public boolean checkFields() {
-        boolean success = false;
-//        boolean success = true;
+    public void showErrorAlert() {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setHeaderText("Invalid data in field(s)");
+        alert.setContentText("Invalid data was provided. Please check fields highlighted in red");
+        alert.showAndWait().ifPresent(response -> {
 
-        return success;
+        });
     }
 
-
+    public void checkFields() {
+        checkTitleField();
+        checkDescription();
+        checkLocationField();
+        checkTypeField();
+        checkCustomerIDField();
+        checkUserIDField();
+        checkContactCombo();
+    }
 
     public void createAppointment(ActionEvent actionEvent) throws IOException {
-        if(checkFields()) {
-            createAppointObject();
+        checkFields();
+        highlightErrors();
+        if(createAppointObject()) {
             returnToMainScreen(actionEvent);
         } else {
-            highlightErrors();
+            setChecksToFalse();
         }
+//        if(checkFields()) {
+//            highlightErrors();
+//            createAppointObject();
+//            returnToMainScreen(actionEvent);
+//        } else {
+//            highlightErrors();
+//            setChecksToFalse();
+//        }
+        //check fields
+        // present errors
+        // boolean for create appointment
+            // else set all checks to false
     }
 
-    private void setChecksToFalse() {
-        titleCheck = false;
-        descriptionCheck = false;
-        locationCheck = false;
-        contactCheck = false;
-        typeCheck = false;
-        startDateCheck = false;
-        startTimeHrCheck = false;
-        endDateCheck = false;
-        endTimeHrCheck = false;
-        customerIDCheck = false;
-        userIDCheck = false;
-        startTimeMinCheck = false;
-        endTimeMinCheck = false;
-    }
+
 
     public void returnToMainScreen(ActionEvent actionEvent) throws IOException {
         Parent root;
@@ -208,6 +236,72 @@ public class AddAppointment implements Initializable {
         }
     }
 
+
+
+    private void checkTitleField() {
+        titleCheck = addAppointTitleTF.getLength() != 0;
+    }
+
+    private void checkDescription() {
+        descriptionCheck = addAppointDescriptionTF.getLength() != 0;
+    }
+
+    private void checkLocationField() {
+        locationCheck = addAppointLocationTF.getLength() != 0;
+    }
+
+    private void checkTypeField() {
+        typeCheck = addAppointTypeTF.getLength() != 0;
+    }
+
+    private void checkCustomerIDField() {
+        int tryCustID = 0;
+        if(addAppointCustomerTF.getLength() != 0) {
+            try {
+                tryCustID = Integer.parseInt(addAppointCustomerTF.getText().trim());
+                customerIDCheck = true;
+            } catch(Exception e) {
+                customerIDCheck = false;
+            }
+        } else {
+            customerIDCheck = false;
+        }
+    }
+
+    private void checkUserIDField() {
+        int tryUserID = 0;
+        if(addAppointUserTF.getLength() != 0) {
+            try {
+                tryUserID = Integer.parseInt(addAppointUserTF.getText().trim());
+                userIDCheck = true;
+            } catch(Exception e) {
+                userIDCheck = false;
+            }
+        } else {
+            userIDCheck = false;
+        }
+    }
+
+    private void checkContactCombo() {
+        contactCheck = addAppointContactCombo.getValue() != null;
+    }
+
+    private void setChecksToFalse() {
+        titleCheck = false;
+        descriptionCheck = false;
+        locationCheck = false;
+        contactCheck = false;
+        typeCheck = false;
+        startDateCheck = false;
+        startTimeHrCheck = false;
+        endDateCheck = false;
+        endTimeHrCheck = false;
+        customerIDCheck = false;
+        userIDCheck = false;
+        startTimeMinCheck = false;
+        endTimeMinCheck = false;
+    }
+
     private void initArrays() {
         for(int i = 0; i < 24; i++) {
             hours.add(i);
@@ -217,5 +311,4 @@ public class AddAppointment implements Initializable {
         mins.add(30);
         mins.add(45);
     }
-
 }

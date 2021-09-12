@@ -13,9 +13,11 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import util.AppointmentsCRUD;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Objects;
 import java.util.ResourceBundle;
@@ -42,6 +44,7 @@ public class MainForm implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
         setAppointmentCells();
         setCustomerCells();
         populateAppointmentsTable();

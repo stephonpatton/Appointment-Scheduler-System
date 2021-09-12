@@ -63,7 +63,10 @@ public class AppointmentsCRUD {
 //                tempAppoint.setCreatedDate(Timestamp.valueOf(formatDate.format(createdDate))); // TODO: Maybe change... printing tailing .0 at the end; also useful for create operation
 
                 // Adds to appointment list
+
+
                 Appointment.addAppointment(tempAppoint);
+
             }
         }catch(SQLException e) {
             throw new Error("Problem", e);
@@ -73,6 +76,22 @@ public class AppointmentsCRUD {
     public static void insertAppointment(Appointment appointment) {
         if(!Appointment.getAllAppointments().contains(appointment)) {
             Appointment.addAppointment(appointment);
+        }
+        try {
+            Connection conn = Database.getConnection();
+            PreparedStatement ps;
+            String query = "INSERT INTO appointments(Title, Description, Location, Type, Customer_ID, User_ID, Contact_ID) VALUES (?, ?, ?, ?, ? , ?, ?)";
+            ps = conn.prepareStatement(query);
+            ps.setString(1, appointment.getTitle().trim());
+            ps.setString(2, appointment.getDescription().trim());
+            ps.setString(3, appointment.getLocation().trim());
+            ps.setString(4, appointment.getType().trim());
+            ps.setInt(5, appointment.getCustomerID());
+            ps.setInt(6, appointment.getUserID());
+            ps.setInt(7, appointment.getContactID());
+            ps.executeUpdate();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
         }
     }
 
