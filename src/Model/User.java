@@ -6,6 +6,7 @@ import java.sql.Date;
 import java.sql.Timestamp;
 
 public class User {
+    private static String currentUser;
     private int userID;
     private String userName; // must be unique
     private String password;
@@ -126,4 +127,12 @@ public class User {
         this.lastUpdatedBy = lastUpdatedBy;
     }
 
+
+    public static String getCurrentUser() {
+        return currentUser;
+    }
+
+    public static void setCurrentUser(String username) {
+        currentUser = username;
+    }
 }

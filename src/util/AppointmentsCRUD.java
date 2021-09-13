@@ -78,9 +78,10 @@ public class AppointmentsCRUD {
             Appointment.addAppointment(appointment);
         }
         try {
+            //TODO: Add date/time to query
             Connection conn = Database.getConnection();
             PreparedStatement ps;
-            String query = "INSERT INTO appointments(Title, Description, Location, Type, Customer_ID, User_ID, Contact_ID) VALUES (?, ?, ?, ?, ? , ?, ?)";
+            String query = "INSERT INTO appointments(Title, Description, Location, Type, Customer_ID, User_ID, Contact_ID, Appointment_ID, Created_By) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
             ps = conn.prepareStatement(query);
             ps.setString(1, appointment.getTitle().trim());
             ps.setString(2, appointment.getDescription().trim());
@@ -89,6 +90,8 @@ public class AppointmentsCRUD {
             ps.setInt(5, appointment.getCustomerID());
             ps.setInt(6, appointment.getUserID());
             ps.setInt(7, appointment.getContactID());
+            ps.setInt(8, appointment.getAppointmentID());
+            ps.setString(9, appointment.getCreatedBy());
             ps.executeUpdate();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -104,7 +107,7 @@ public class AppointmentsCRUD {
         try {
             Connection conn = Database.getConnection();
             PreparedStatement ps;
-            ResultSet rs = null;
+            ResultSet rs;
             String query = "SELECT Contact_Name FROM contacts INNER JOIN appointments WHERE contacts.Contact_ID = ? AND appointments.Contact_ID = ?";
             ps = conn.prepareStatement(query);
             ps.setInt(1, userID);

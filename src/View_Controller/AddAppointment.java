@@ -2,6 +2,7 @@ package View_Controller;
 
 import Model.Appointment;
 import Model.Contact;
+import Model.User;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -17,7 +18,12 @@ import util.AppointmentsCRUD;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
@@ -79,7 +85,13 @@ public class AddAppointment implements Initializable {
             int contactID = addAppointContactCombo.getValue().getContactID();
             int customerID = Integer.parseInt(addAppointCustomerTF.getText());
             int userID = Integer.parseInt(addAppointUserTF.getText());
-
+            String startDate = addAppointStartPicker.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            String startHrTime = String.valueOf(startHrSpinner.getValue());
+            String startMinTime = String.valueOf(startMinSpinner.getValue());
+            String startTime = "0" + startHrTime + ":" + startMinTime + ":00";
+            System.out.println(startTime);
+            Timestamp ts = convertStringsToTime(startDate, startTime);
+            System.out.println("TIME ADDED");
             if(title.length() == 0 || description.length() == 0 || location.length() == 0 || type.length() == 0) {
                 isCreated = false;
             } else {
@@ -93,6 +105,10 @@ public class AddAppointment implements Initializable {
                 appoint.setUserID(userID);
                 appoint.setCustomerID(customerID);
                 appoint.setContactName();
+
+                appoint.setStart(ts);
+
+                appoint.setCreatedBy(User.getCurrentUser());
 
                 //TODO: TIME and DATES
 
@@ -110,6 +126,22 @@ public class AddAppointment implements Initializable {
 
 
         return isCreated;
+    }
+
+    private static Timestamp convertStringsToTime(String date, String time) {
+        try {
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String dateTime = date + " " + time;
+            Date parsedDate = formatter.parse(dateTime);
+            Timestamp ts = new Timestamp(parsedDate.getTime());
+            System.out.println("TIMESTAMP: " + ts.getTime());
+            return ts;
+//            Date dateObj = formatter.parse(dateTime);
+//            System.out.println(dateObj.getTime());
+//            return new Timestamp(dateObj.getTime());
+        }catch (Exception e) {
+            return null;
+        }
     }
 
     public void showErrorAlert() {

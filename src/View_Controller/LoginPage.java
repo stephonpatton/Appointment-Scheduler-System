@@ -1,5 +1,6 @@
 package View_Controller;
 
+import Model.User;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -64,6 +65,7 @@ public class LoginPage implements Initializable {
         String password = passwordTF.getText();
 
         if(Query.login(username, password)) {
+            User.setCurrentUser(username);
             System.out.println("LOGIN SUCCESSFUL");
             showMainScreen(actionEvent);
         } else {
