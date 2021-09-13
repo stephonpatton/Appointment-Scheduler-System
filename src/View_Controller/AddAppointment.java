@@ -85,12 +85,22 @@ public class AddAppointment implements Initializable {
             int contactID = addAppointContactCombo.getValue().getContactID();
             int customerID = Integer.parseInt(addAppointCustomerTF.getText());
             int userID = Integer.parseInt(addAppointUserTF.getText());
+
             String startDate = addAppointStartPicker.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
             String startHrTime = String.valueOf(startHrSpinner.getValue());
             String startMinTime = String.valueOf(startMinSpinner.getValue());
-            String startTime = "0" + startHrTime + ":" + startMinTime + ":00";
+            String startTime = "0" + startHrTime + ":" + startMinTime + ":00"; //TODO: Will need to check if starthrtime > 9, if so then do not add 0
+
+            // End date and time info
+            String endDate = addAppointEndPicker.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            String endHrTime = String.valueOf(endHrSpinner.getValue());
+            String endMinTime = String.valueOf(endMinSpinner.getValue());
+            String endTime = "0" + endHrTime + ":" + endMinTime + ":00";
+
+
             System.out.println(startTime);
-            Timestamp ts = convertStringsToTime(startDate, startTime);
+            Timestamp startTS = convertStringsToTime(startDate, startTime);
+            Timestamp endTS = convertStringsToTime(endDate, endTime);
             System.out.println("TIME ADDED");
             if(title.length() == 0 || description.length() == 0 || location.length() == 0 || type.length() == 0) {
                 isCreated = false;
@@ -106,7 +116,8 @@ public class AddAppointment implements Initializable {
                 appoint.setCustomerID(customerID);
                 appoint.setContactName();
 
-                appoint.setStart(ts);
+                appoint.setStart(startTS);
+                appoint.setEnd(endTS);
 
                 appoint.setCreatedBy(User.getCurrentUser());
 
@@ -136,9 +147,6 @@ public class AddAppointment implements Initializable {
             Timestamp ts = new Timestamp(parsedDate.getTime());
             System.out.println("TIMESTAMP: " + ts.getTime());
             return ts;
-//            Date dateObj = formatter.parse(dateTime);
-//            System.out.println(dateObj.getTime());
-//            return new Timestamp(dateObj.getTime());
         }catch (Exception e) {
             return null;
         }

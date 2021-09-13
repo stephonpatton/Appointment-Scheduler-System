@@ -58,6 +58,7 @@ public class AppointmentsCRUD {
                 tempAppoint.setUserID(userID);
                 tempAppoint.setContactID(contactID);
 
+
                 // helper method for viewing appointment TableView
                 tempAppoint.setContactName();
 //                tempAppoint.setCreatedDate(Timestamp.valueOf(formatDate.format(createdDate))); // TODO: Maybe change... printing tailing .0 at the end; also useful for create operation
@@ -81,7 +82,7 @@ public class AppointmentsCRUD {
             //TODO: Add date/time to query
             Connection conn = Database.getConnection();
             PreparedStatement ps;
-            String query = "INSERT INTO appointments(Title, Description, Location, Type, Customer_ID, User_ID, Contact_ID, Appointment_ID, Created_By) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String query = "INSERT INTO appointments(Title, Description, Location, Type, Customer_ID, User_ID, Contact_ID, Appointment_ID, Created_By, Start, End) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             ps = conn.prepareStatement(query);
             ps.setString(1, appointment.getTitle().trim());
             ps.setString(2, appointment.getDescription().trim());
@@ -92,6 +93,8 @@ public class AppointmentsCRUD {
             ps.setInt(7, appointment.getContactID());
             ps.setInt(8, appointment.getAppointmentID());
             ps.setString(9, appointment.getCreatedBy());
+            ps.setTimestamp(10, appointment.getStart());
+            ps.setTimestamp(11, appointment.getEnd());
             ps.executeUpdate();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
