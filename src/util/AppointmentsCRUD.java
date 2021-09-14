@@ -82,7 +82,9 @@ public class AppointmentsCRUD {
             //TODO: Add date/time to query
             Connection conn = Database.getConnection();
             PreparedStatement ps;
-            String query = "INSERT INTO appointments(Title, Description, Location, Type, Customer_ID, User_ID, Contact_ID, Appointment_ID, Created_By, Start, End) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String query = "INSERT INTO appointments(Title, Description, Location, Type, Customer_ID, " +
+                    "User_ID, Contact_ID, Appointment_ID, Created_By, Start, End) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             ps = conn.prepareStatement(query);
             ps.setString(1, appointment.getTitle().trim());
             ps.setString(2, appointment.getDescription().trim());

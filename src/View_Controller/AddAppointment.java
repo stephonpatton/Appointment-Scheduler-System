@@ -343,7 +343,7 @@ public class AddAppointment implements Initializable {
     }
 
     private void initArrays() {
-        for(int i = 0; i < 24; i++) {
+        for(int i = 8; i < 23; i++) { //TODO: May have to change later after conversion and stuff
             hours.add(i);
         }
         mins.add(0);

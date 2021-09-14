@@ -11,10 +11,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
-import util.AppointmentsCRUD;
-import util.CustomersCRUD;
-import util.Database;
-import util.Query;
+import util.*;
 
 import java.io.IOException;
 import java.net.URL;
@@ -67,6 +64,9 @@ public class LoginPage implements Initializable {
         if(Query.login(username, password)) {
             User.setCurrentUser(username);
             System.out.println("LOGIN SUCCESSFUL");
+            ContactsCRUD.loadAllContacts();
+            AppointmentsCRUD.loadAllAppointments();
+            CustomersCRUD.loadAllCustomers();
             showMainScreen(actionEvent);
         } else {
             invalidUserPassAlert();

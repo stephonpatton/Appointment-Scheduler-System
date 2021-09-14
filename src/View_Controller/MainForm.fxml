@@ -32,7 +32,7 @@
                </font>
             </Label>
             <Button fx:id="addAppointButton" layoutX="155.0" layoutY="323.0" mnemonicParsing="false" onAction="#openAddAppointmentScreen" text="Add Appointment" />
-            <Button fx:id="modifyAppointButton" layoutX="409.0" layoutY="323.0" mnemonicParsing="false" text="Modify Appointment" />
+            <Button fx:id="modifyAppointButton" layoutX="409.0" layoutY="323.0" mnemonicParsing="false" onAction="#getSelectedAppointment" text="Modify Appointment" />
             <Button fx:id="deleteAppointButton" layoutX="677.0" layoutY="323.0" mnemonicParsing="false" text="Delete Appointment" />
          </children>
       </Pane>

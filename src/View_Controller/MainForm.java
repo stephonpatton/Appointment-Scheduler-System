@@ -42,6 +42,9 @@ public class MainForm implements Initializable {
     @FXML private TableColumn<Customer, String> customerTVAddressCol;
     @FXML private TableColumn<Customer, String> customerTVPostalCol;
 
+    private static Appointment tempAppointment;
+    private static int appointmentIndex;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
@@ -84,13 +87,51 @@ public class MainForm implements Initializable {
         Parent root;
         root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("../View_Controller/AddAppointment.fxml")));
         Stage stage = new Stage();
-        stage.setTitle("Main Screen");
+        stage.setTitle("Add Appointment");
         stage.setScene(new Scene(root, 670, 500));
         stage.setResizable(false);
         stage.show();
 
         //Hides current window
         ((Node)(actionEvent.getSource())).getScene().getWindow().hide();
+    }
 
+
+    public void openModifyAppointment(ActionEvent actionEvent) throws IOException {
+        Parent root;
+        root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("../View_Controller/ModifyAppointment.fxml")));
+        Stage stage = new Stage();
+        stage.setTitle("Modify Appointment");
+        stage.setScene(new Scene(root, 670, 500));
+        stage.setResizable(false);
+        stage.show();
+
+        //Hides current window
+        ((Node)(actionEvent.getSource())).getScene().getWindow().hide();
+    }
+
+    public void getSelectedAppointment(ActionEvent actionEvent) {
+        try {
+            if(appointmentsTableView.getSelectionModel() == null) {
+                //TODO: CREATE ALERT
+            } else {
+                tempAppointment = appointmentsTableView.getSelectionModel().getSelectedItem();
+
+                // Setting the index
+                appointmentIndex = Appointment.getAllAppointments().indexOf(tempAppointment);
+                openModifyAppointment(actionEvent);
+            }
+        }catch(Exception e) {
+            System.err.println("Please select an appointment to modify");
+            // TODO: Maybe do an alert for this ^
+        }
+    }
+
+    public static Appointment appointmentToModify() {
+        return tempAppointment;
+    }
+
+    public static int appointmentIndexToModify() {
+        return appointmentIndex;
     }
 }

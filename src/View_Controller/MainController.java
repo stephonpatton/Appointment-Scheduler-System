@@ -60,9 +60,7 @@ public class MainController extends Application implements Initializable {
 //        loader.setResources(rb);
 
 
-        ContactsCRUD.loadAllContacts();
-        AppointmentsCRUD.loadAllAppointments();
-        CustomersCRUD.loadAllCustomers();
+
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("../View_Controller/LoginPage.fxml")));
         primaryStage.setTitle("Login Page");
         primaryStage.setScene(new Scene(root, 600, 300));
