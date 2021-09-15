@@ -6,6 +6,7 @@ import util.AppointmentsCRUD;
 
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 
 public class Appointment {
     // Instance variables for object
@@ -25,6 +26,12 @@ public class Appointment {
     private int contactID;
 
     private String contactName;
+    private Contact contact;
+    private int startHr, startMin;
+    private int endHr, endMin;
+    LocalDate startDate;
+    LocalDate endDate;
+
 
     private static ObservableList<Appointment> allAppointments = FXCollections.observableArrayList();
 
@@ -276,5 +283,61 @@ public class Appointment {
 
     public String getContactName() {
         return this.contactName;
+    }
+
+    public Contact getContact() {
+        return this.contact;
+    }
+
+    public void setContact(Contact contact) {
+        this.contact = contact;
+    }
+
+    public void setStartHr(int startHr) {
+        this.startHr = startHr;
+    }
+
+    public int getStartHr() {
+        return this.startHr;
+    }
+
+    public void setStartMin(int startMin) {
+        this.startMin = startMin;
+    }
+
+    public int getStartMin() {
+        return this.startMin;
+    }
+
+    public void setEndHr(int endHr) {
+        this.endHr = endHr;
+    }
+
+    public void setEndMin(int endMin) {
+        this.endMin = endMin;
+    }
+
+    public int getEndHr() {
+        return endHr;
+    }
+
+    public int getEndMin() {
+        return endMin;
+    }
+
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
+    }
+
+    public LocalDate getStartDate() {
+        return this.startDate;
+    }
+
+    public void setEndDate(LocalDate endDate) {
+        this.endDate = endDate;
+    }
+
+    public LocalDate getEndDate() {
+        return this.endDate;
     }
 }

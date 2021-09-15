@@ -26,6 +26,18 @@ public class Contact {
         return temp;
     }
 
+    public static Contact getContactByID(int id) {
+        Contact temp = null;
+
+        for (Contact allContact : allContacts) {
+            if (allContact.getContactID() == id) {
+                temp = allContact;
+            }
+        }
+
+        return temp;
+    }
+
     /**
      * Get a contact object's ID
      * @return The id of a contact

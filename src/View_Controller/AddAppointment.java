@@ -83,6 +83,7 @@ public class AddAppointment implements Initializable {
             String type = addAppointTypeTF.getText();
 
             int contactID = addAppointContactCombo.getValue().getContactID();
+
             int customerID = Integer.parseInt(addAppointCustomerTF.getText());
             int userID = Integer.parseInt(addAppointUserTF.getText());
 
@@ -116,8 +117,16 @@ public class AddAppointment implements Initializable {
                 appoint.setCustomerID(customerID);
                 appoint.setContactName();
 
+                appoint.setStartHr(startHrSpinner.getValue());
+                System.out.println("START HR SPINNER VALUE: " + startHrSpinner.getValue());
+                appoint.setStartMin(startMinSpinner.getValue());
+                appoint.setEndHr(endHrSpinner.getValue());
+                appoint.setEndMin(endMinSpinner.getValue());
+
                 appoint.setStart(startTS);
                 appoint.setEnd(endTS);
+                appoint.setStartDate(addAppointStartPicker.getValue());
+                appoint.setEndDate(addAppointEndPicker.getValue());
 
                 appoint.setCreatedBy(User.getCurrentUser());
 

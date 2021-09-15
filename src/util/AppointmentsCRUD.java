@@ -57,7 +57,14 @@ public class AppointmentsCRUD {
                 tempAppoint.setCustomerID(customerID);
                 tempAppoint.setUserID(userID);
                 tempAppoint.setContactID(contactID);
-
+                tempAppoint.setStartHr(start.toLocalDateTime().getHour());
+                tempAppoint.setStartMin(start.toLocalDateTime().getMinute());
+                tempAppoint.setEndHr(end.toLocalDateTime().getHour());
+                tempAppoint.setEndMin(end.toLocalDateTime().getMinute());
+                tempAppoint.setStartDate(start.toLocalDateTime().toLocalDate());
+                tempAppoint.setEndDate(end.toLocalDateTime().toLocalDate());
+                System.out.println("TIMESTAMP FROM DB" + start.toLocalDateTime().getHour() + ":" + start.toLocalDateTime().getMinute() + ":" + start.toLocalDateTime().getSecond());
+                // TODO: ^ THIS WILL GET THE INFO FOR ME
 
                 // helper method for viewing appointment TableView
                 tempAppoint.setContactName();
