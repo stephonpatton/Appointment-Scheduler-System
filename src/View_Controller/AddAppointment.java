@@ -178,6 +178,12 @@ public class AddAppointment implements Initializable {
         checkCustomerIDField();
         checkUserIDField();
         checkContactCombo();
+        checkStartDate();
+        checkEndDate();
+        checkStartHr();
+        checkStartMin();
+        checkEndHr();
+        checkEndMin();
     }
 
     public void createAppointment(ActionEvent actionEvent) throws IOException {
@@ -333,6 +339,30 @@ public class AddAppointment implements Initializable {
 
     private void checkContactCombo() {
         contactCheck = addAppointContactCombo.getValue() != null;
+    }
+
+    private void checkStartDate() {
+        startDateCheck = addAppointStartPicker.getValue() != null;
+    }
+
+    private void checkEndDate() {
+        endDateCheck = addAppointEndPicker.getValue() != null;
+    }
+
+    private void checkStartHr() {
+        startTimeHrCheck = startHrSpinner.getValue() != null;
+    }
+
+    private void checkStartMin() {
+        startTimeMinCheck = startMinSpinner.getValue() != null;
+    }
+
+    private void checkEndHr() {
+        endTimeHrCheck = endHrSpinner.getValue() != null;
+    }
+
+    private void checkEndMin() {
+        endTimeMinCheck = endMinSpinner.getValue() != null;
     }
 
     private void setChecksToFalse() {
