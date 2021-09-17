@@ -2,6 +2,7 @@ package View_Controller;
 
 import Model.Appointment;
 import Model.Contact;
+import Model.User;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -12,9 +13,14 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+import util.AppointmentsCRUD;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Date;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.ResourceBundle;
@@ -74,32 +80,86 @@ public class ModifyAppointment implements Initializable {
     public void modifyAppointment(ActionEvent actionEvent) throws IOException {
         checkFields();
         highlightErrors();
-        if(!checkDifferences()) {
+        if(checkDifferences()) {
             returnToMainScreen(actionEvent);
         } else {
-            if(modifyAppointmentObject()) {
-               returnToMainScreen(actionEvent);
+//            if(modifyAppointmentObject()) {
+//               returnToMainScreen(actionEvent);
+//            } else {
+//                showErrorAlert();
+//                setChecksToFalse();
+//            }
+            if(checkAllErrors()) {
+                modifyAppointmentObject();
+                returnToMainScreen(actionEvent);
             } else {
+                highlightErrors();
                 showErrorAlert();
-                setChecksToFalse();
             }
-        }
-        if(modifyAppointmentObject()) {
-            returnToMainScreen(actionEvent);
-        } else {
             setChecksToFalse();
         }
+//        if(modifyAppointmentObject()) {
+//            returnToMainScreen(actionEvent);
+//        } else {
+//            setChecksToFalse();
+//        }
     }
 
-    public boolean modifyAppointmentObject() {
+    public void modifyAppointmentObject() {
+        Appointment appoint = new Appointment();
         boolean isCreated = false;
         if(checkAllErrors()) {
-            // TODO: Set values to new obj
+            int custID = Integer.parseInt(modifyAppointCustomerTF.getText().trim());
+            int userID = Integer.parseInt(modifyAppointUserTF.getText().trim());
+            String description = modifyAppointDescriptionTF.getText().trim();
+            String type = modifyAppointTypeTF.getText().trim();
+            int contactID = modifyAppointContactCombo.getValue().getContactID();
+            String location = modifyAppointLocationTF.getText().trim();
+            String title = modifyAppointTitleTF.getText().trim();
+
+            String startDate = modifyAppointStartPicker.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            String startHrTime = String.valueOf(startHrSpinner.getValue());
+            String startMinTime = String.valueOf(startMinSpinner.getValue());
+            String startTime = "0" + startHrTime + ":" + startMinTime + ":00"; //TODO: Will need to check if starthrtime > 9, if so then do not add 0
+
+            // End date and time info
+            String endDate = modifyAppointEndPicker.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            String endHrTime = String.valueOf(endHrSpinner.getValue());
+            String endMinTime = String.valueOf(endMinSpinner.getValue());
+            String endTime = "0" + endHrTime + ":" + endMinTime + ":00";
+
+            Timestamp startTs = AddAppointment.convertStringsToTime(startDate, startTime);
+            Timestamp endTs = AddAppointment.convertStringsToTime(endDate, endTime);
+
+            appoint.setTitle(title);
+            appoint.setCustomerID(custID);
+            appoint.setUserID(userID);
+            appoint.setDescription(description);
+            appoint.setType(type);
+            appoint.setContactID(contactID);
+            appoint.setLocation(location);
+            appoint.setAppointmentID(Integer.parseInt(modifyAppointIDTF.getText()));
+            appoint.setContactName();
+            appoint.setContact(modifyAppointContactCombo.getValue());
+            appoint.setStartDate(modifyAppointStartPicker.getValue());
+            appoint.setEndDate(modifyAppointEndPicker.getValue());
+            appoint.setStartHr(startHrSpinner.getValue());
+            appoint.setStartMin(startMinSpinner.getValue());
+            appoint.setEndHr(endHrSpinner.getValue());
+            appoint.setEndMin(endMinSpinner.getValue());
+            appoint.setStart(startTs);
+            appoint.setEnd(endTs);
+            appoint.setLastUpdateBy(User.getCurrentUser());
+
+            //CONTACT AND DATES
+            Appointment.updateAppointment(appointmentIndexToModify(), appoint);
+            AppointmentsCRUD.updateAppointment(appoint.getAppointmentID(), appoint);
+            isCreated = true;
         } else {
             showErrorAlert();
         }
 
-        return isCreated;
+//        return isCreated;
     }
 
     public boolean checkAllErrors() {
@@ -146,13 +206,101 @@ public class ModifyAppointment implements Initializable {
         modifyAppointEndPicker.setValue(modifyAppointment.getEndDate());
     }
 
-
-    // TODO: Check if fields have been changed
-    // TODO: If fields have changed, check for validity
-    // TODO: If valid, update appointment object with new data
-
     public boolean checkDifferences() {
-        return true;
+        boolean differencesPresent;
+        differencesPresent = checkTitleDiff() && checkDescriptionDiff() && checkLocationDiff() && checkTypeDiff()
+                && checkCustomerIDDiff() && checkUserIDDiff() && checkContactDiff() && checkStartDateDiff()
+                && checkEndDateDiff() && checkStartHrDiff() && checkStartMinDiff() && checkEndHrDiff()
+                && checkEndMinDiff();
+        return differencesPresent;
+    }
+
+    private boolean checkContactDiff() {
+        boolean isDifferent;
+        isDifferent = modifyAppointContactCombo.getValue() != modifyAppointment.getContact();
+        return isDifferent;
+    }
+
+    private boolean checkEndHrDiff() {
+        boolean isDifferent;
+        isDifferent = endHrSpinner.getValue() != modifyAppointment.getEndHr();
+        return isDifferent;
+    }
+
+    private boolean checkEndMinDiff() {
+        boolean isDifferent;
+        isDifferent = endMinSpinner.getValue() != modifyAppointment.getEndMin();
+        return isDifferent;
+    }
+
+    private boolean checkStartMinDiff() {
+        boolean isDifferent;
+        isDifferent = startMinSpinner.getValue() != modifyAppointment.getStartMin();
+        return isDifferent;
+    }
+
+    private boolean checkStartHrDiff() {
+        boolean isDifferent;
+        isDifferent = startHrSpinner.getValue() != modifyAppointment.getStartHr();
+        return isDifferent;
+    }
+
+    private boolean checkStartDateDiff() {
+        boolean isDifferent;
+        isDifferent = modifyAppointStartPicker.getValue() != modifyAppointment.getStartDate();
+        return isDifferent;
+    }
+
+    private boolean checkEndDateDiff() {
+        boolean isDifferent;
+        isDifferent = modifyAppointEndPicker.getValue() != modifyAppointment.getEndDate();
+        return isDifferent;
+    }
+
+    private boolean checkUserIDDiff() {
+        boolean isDifferent;
+        isDifferent = Integer.parseInt(modifyAppointUserTF.getText()) != modifyAppointment.getUserID();
+        return isDifferent;
+    }
+
+    private boolean checkTitleDiff() {
+        boolean isDifferent;
+        isDifferent = !modifyAppointTitleTF.getText().equals(modifyAppointment.getTitle());
+        return isDifferent;
+    }
+
+    private boolean checkDescriptionDiff() {
+        boolean isDifferent;
+        isDifferent = !modifyAppointDescriptionTF.getText().equals(modifyAppointment.getDescription());
+        return isDifferent;
+    }
+
+    private boolean checkLocationDiff() {
+        boolean isDifferent;
+        isDifferent = !modifyAppointLocationTF.getText().equals(modifyAppointment.getLocation());
+        return isDifferent;
+    }
+
+    private boolean checkTypeDiff() {
+        boolean isDifferent;
+        isDifferent = !modifyAppointTypeTF.getText().equals(modifyAppointment.getType());
+        return isDifferent;
+    }
+
+    private boolean checkCustomerIDDiff() {
+        boolean isTheSame;
+        int tryInt;
+        try {
+            tryInt = Integer.parseInt(modifyAppointCustomerTF.getText().trim());
+            isTheSame = tryInt != modifyAppointment.getCustomerID();
+            System.out.println("BOOLEAN VALUE : " + isTheSame);
+            customerIDCheck = true;
+        }catch (Exception e) {
+            isTheSame = false;
+            customerIDCheck = false;
+        }
+//        isDifferent = Integer.parseInt(modifyAppointCustomerTF.getText()) != modifyAppointment.getCustomerID();
+        return isTheSame;
     }
 
     public void checkFields() {
@@ -192,6 +340,7 @@ public class ModifyAppointment implements Initializable {
         if(modifyAppointCustomerTF.getLength() != 0) {
             try {
                 tryCustID = Integer.parseInt(modifyAppointCustomerTF.getText().trim());
+                System.out.println("ID: " + tryCustID);
                 customerIDCheck = true;
             } catch(Exception e) {
                 customerIDCheck = false;

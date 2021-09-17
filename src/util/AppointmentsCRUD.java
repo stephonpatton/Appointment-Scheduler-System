@@ -8,8 +8,21 @@ import javafx.collections.ObservableList;
 import java.sql.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.*;
+import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
+import java.util.TimeZone;
+
+import static java.time.LocalDateTime.now;
+
+
 
 public class AppointmentsCRUD {
+
+    static final long timeAtLocal = System.currentTimeMillis(); // or System.currentTimeMillis(); or new Date().getTime(); etc.
+    static final long offset = TimeZone.getDefault().getOffset(timeAtLocal);
+    static final Timestamp timeAtUTC = new Timestamp(timeAtLocal - offset);
+
     private static final SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     public static void loadAllAppointments() throws SQLException {
         Connection conn = Database.getConnection();
@@ -86,7 +99,6 @@ public class AppointmentsCRUD {
             Appointment.addAppointment(appointment);
         }
         try {
-            //TODO: Add date/time to query
             Connection conn = Database.getConnection();
             PreparedStatement ps;
             String query = "INSERT INTO appointments(Title, Description, Location, Type, Customer_ID, " +
@@ -104,6 +116,34 @@ public class AppointmentsCRUD {
             ps.setString(9, appointment.getCreatedBy());
             ps.setTimestamp(10, appointment.getStart());
             ps.setTimestamp(11, appointment.getEnd());
+            ps.executeUpdate();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+    public static void updateAppointment(int id, Appointment appointment) {
+        OffsetDateTime now = OffsetDateTime.now(ZoneOffset.UTC);
+        try {
+            Connection conn = Database.getConnection();
+            PreparedStatement ps;
+            String query = "UPDATE appointments SET Title = ?, Description = ?, Location = ?, Type = ?, " +
+                    "Customer_ID = ?, User_ID = ?, Contact_ID = ?, Appointment_ID = ?, Last_Updated_By = ?," +
+                    "Start = ?, End = ?, Last_Update = ? WHERE Appointment_ID = ?";
+            ps = conn.prepareStatement(query);
+            ps.setString(1, appointment.getTitle().trim());
+            ps.setString(2, appointment.getDescription().trim());
+            ps.setString(3, appointment.getLocation().trim());
+            ps.setString(4, appointment.getType().trim());
+            ps.setInt(5, appointment.getCustomerID());
+            ps.setInt(6, appointment.getUserID());
+            ps.setInt(7, appointment.getContactID());
+            ps.setInt(8, appointment.getAppointmentID());
+            ps.setString(9, appointment.getLastUpdateBy());
+            ps.setTimestamp(10, appointment.getStart());
+            ps.setTimestamp(11, appointment.getEnd());
+            ps.setTimestamp(12, timeAtUTC);
+            ps.setInt(13, appointment.getAppointmentID());
             ps.executeUpdate();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -135,5 +175,9 @@ public class AppointmentsCRUD {
         return name;
     }
 
-    //TODO: After UI, check if fields have valid data first, then make appointment object
+    public static LocalDateTime toUTCFromLDT(String date, String time) {
+        DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime localDate =  LocalDateTime.parse(date + " " + time, format).atZone(ZoneId.systemDefault()).withZoneSameInstant(ZoneId.of("UTC")).toLocalDateTime();
+        return localDate;
+    }
 }

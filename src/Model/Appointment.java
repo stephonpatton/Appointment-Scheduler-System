@@ -49,6 +49,10 @@ public class Appointment {
         System.out.println("TOTAL COUNT " + allAppointments.size());
     }
 
+    public static void updateAppointment(int index, Appointment appointment) {
+        allAppointments.set(index, appointment);
+    }
+
     public static ObservableList<Appointment> getAllAppointments() {
         return allAppointments;
     }

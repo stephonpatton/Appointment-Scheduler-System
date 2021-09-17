@@ -130,8 +130,6 @@ public class AddAppointment implements Initializable {
 
                 appoint.setCreatedBy(User.getCurrentUser());
 
-                //TODO: TIME and DATES
-
                 Appointment.addAppointment(appoint);
                 AppointmentsCRUD.insertAppointment(appoint);
                 isCreated = true;
@@ -148,7 +146,7 @@ public class AddAppointment implements Initializable {
         return isCreated;
     }
 
-    private static Timestamp convertStringsToTime(String date, String time) {
+    public static Timestamp convertStringsToTime(String date, String time) {
         try {
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             String dateTime = date + " " + time;
