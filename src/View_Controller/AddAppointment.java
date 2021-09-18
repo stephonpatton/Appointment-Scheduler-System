@@ -115,7 +115,7 @@ public class AddAppointment implements Initializable {
                 appoint.setContactID(contactID);
                 appoint.setUserID(userID);
                 appoint.setCustomerID(customerID);
-                appoint.setContactName();
+                appoint.setContactName(addAppointContactCombo.getValue().getContactName());
 
                 appoint.setStartHr(startHrSpinner.getValue());
                 System.out.println("START HR SPINNER VALUE: " + startHrSpinner.getValue());

@@ -6,9 +6,13 @@ import java.util.Properties;
 public class Database {
 
     // Final variables for database credentials
-    private static final String DATABASE_URL = "jdbc:mysql://wgudb.ucertify.com:3306/WJ08U87?verifyServerCertificate=false&useSSL=true";
-    private static final String DB_PASSWORD = "53689393671";
-    private static final String DB_USERNAME = "U08U87";
+//    private static final String DATABASE_URL = "jdbc:mysql://wgudb.ucertify.com:3306/WJ08U87?verifyServerCertificate=false&useSSL=true";
+//    private static final String DB_PASSWORD = "53689393671";
+//    private static final String DB_USERNAME = "U08U87";
+
+    private static final String DATABASE_URL = "jdbc:mysql://localhost:3306/client_schedule?verifyServerCertificate=false&useSSL=true";
+    private static final String DB_PASSWORD = "Passw0rd!";
+    private static final String DB_USERNAME = "sqlUser";
 
     /**
      * Initializes the connection to the MySQL database

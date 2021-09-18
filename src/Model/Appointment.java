@@ -53,6 +53,10 @@ public class Appointment {
         allAppointments.set(index, appointment);
     }
 
+    public static boolean deleteAppointment(Appointment appointment) {
+        return allAppointments.remove(appointment);
+    }
+
     public static ObservableList<Appointment> getAllAppointments() {
         return allAppointments;
     }
@@ -281,8 +285,9 @@ public class Appointment {
         this.contactID = contactID;
     }
 
-    public void setContactName() {
-        this.contactName = AppointmentsCRUD.getContactName(this.getContactID());
+    public void setContactName(String contactName) {
+//        this.contactName = AppointmentsCRUD.getContactName(this.getContactID());
+        this.contactName = contactName;
     }
 
     public String getContactName() {

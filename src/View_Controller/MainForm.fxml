@@ -33,7 +33,7 @@
             </Label>
             <Button fx:id="addAppointButton" layoutX="155.0" layoutY="323.0" mnemonicParsing="false" onAction="#openAddAppointmentScreen" text="Add Appointment" />
             <Button fx:id="modifyAppointButton" layoutX="409.0" layoutY="323.0" mnemonicParsing="false" onAction="#getSelectedAppointment" text="Modify Appointment" />
-            <Button fx:id="deleteAppointButton" layoutX="677.0" layoutY="323.0" mnemonicParsing="false" text="Delete Appointment" />
+            <Button fx:id="deleteAppointButton" layoutX="677.0" layoutY="323.0" mnemonicParsing="false" onAction="#deleteSelectedAppointment" text="Delete Appointment" />
          </children>
       </Pane>
       <Pane layoutX="21.0" layoutY="386.0" prefHeight="348.0" prefWidth="583.0" style="-fx-border-radius: 25; -fx-border-style: solid; -fx-border-width: 1;">

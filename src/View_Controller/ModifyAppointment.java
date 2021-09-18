@@ -139,7 +139,8 @@ public class ModifyAppointment implements Initializable {
             appoint.setContactID(contactID);
             appoint.setLocation(location);
             appoint.setAppointmentID(Integer.parseInt(modifyAppointIDTF.getText()));
-            appoint.setContactName();
+//            appoint.setContactName();
+            appoint.setContactName(modifyAppointContactCombo.getValue().getContactName());
             appoint.setContact(modifyAppointContactCombo.getValue());
             appoint.setStartDate(modifyAppointStartPicker.getValue());
             appoint.setEndDate(modifyAppointEndPicker.getValue());

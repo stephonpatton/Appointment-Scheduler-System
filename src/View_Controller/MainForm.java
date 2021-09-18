@@ -9,6 +9,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -47,7 +49,6 @@ public class MainForm implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
         setAppointmentCells();
         setCustomerCells();
         populateAppointmentsTable();
@@ -112,8 +113,8 @@ public class MainForm implements Initializable {
 
     public void getSelectedAppointment(ActionEvent actionEvent) {
         try {
-            if(appointmentsTableView.getSelectionModel() == null) {
-                //TODO: CREATE ALERT
+            if(appointmentsTableView.getSelectionModel().getSelectedItem() == null) {
+                selectAppointmentAlert();
             } else {
                 tempAppointment = appointmentsTableView.getSelectionModel().getSelectedItem();
 
@@ -123,8 +124,61 @@ public class MainForm implements Initializable {
             }
         }catch(Exception e) {
             System.err.println("Please select an appointment to modify");
-            // TODO: Maybe do an alert for this ^
+            selectAppointmentAlert();
         }
+    }
+
+    public void deleteSelectedAppointment(ActionEvent actionEvent) {
+        try {
+            if(appointmentsTableView.getSelectionModel().getSelectedItem() == null) {
+                selectAppointmentAlert();
+            } else {
+                Appointment appoint = appointmentsTableView.getSelectionModel().getSelectedItem();
+                ButtonType deleteButton = new ButtonType("Delete");
+                ButtonType cancelButton = new ButtonType("Cancel");
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Deleting appointment...", deleteButton, cancelButton);
+                alert.setContentText("Are you sure you want to delete this appointment?");
+                alert.showAndWait().ifPresent(response -> {
+                    if(response == deleteButton) {
+                        if(Appointment.deleteAppointment(appoint)) {
+                            appointmentCancelledAlert(appoint);
+                            AppointmentsCRUD.deleteAppointment(appoint);
+                            populateAppointmentsTable();
+                            appointmentsTableView.getSelectionModel().clearSelection();
+                            alert.close();
+                        } else {
+                            System.err.println("Appointment failed to delete.");
+                            alert.close();
+                        }
+                    } else if(response == cancelButton) {
+                        alert.close();
+                    }
+                });
+            }
+        }catch(Exception e) {
+            System.err.println("Please select an appoint to delete");
+            selectAppointmentAlert();
+        }
+    }
+
+    private void selectAppointmentAlert() {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setHeaderText("Please select an appointment");
+        alert.setContentText("An appointment must be selected");
+        alert.showAndWait().ifPresent(response -> {
+
+        });
+    }
+
+    private void appointmentCancelledAlert(Appointment appointment) {
+        int id = appointment.getAppointmentID();
+        String type = appointment.getType();
+
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setHeaderText("Appointment Cancelled");
+        alert.setContentText("Appointment ID: " + id + "\n" + "Appointment Type: " + type + "\n" + "This appointment was successfully cancelled");
+        alert.showAndWait().ifPresent(response -> {
+        });
     }
 
     public static Appointment appointmentToModify() {

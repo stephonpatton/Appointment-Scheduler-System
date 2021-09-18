@@ -19,9 +19,9 @@ import static java.time.LocalDateTime.now;
 
 public class AppointmentsCRUD {
 
-    static final long timeAtLocal = System.currentTimeMillis(); // or System.currentTimeMillis(); or new Date().getTime(); etc.
-    static final long offset = TimeZone.getDefault().getOffset(timeAtLocal);
-    static final Timestamp timeAtUTC = new Timestamp(timeAtLocal - offset);
+//    static final long timeAtLocal = System.currentTimeMillis(); // or System.currentTimeMillis(); or new Date().getTime(); etc.
+//    static final long offset = TimeZone.getDefault().getOffset(timeAtLocal);
+//    static final Timestamp timeAtUTC = new Timestamp(timeAtLocal - offset);
 
     private static final SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     public static void loadAllAppointments() throws SQLException {
@@ -80,7 +80,8 @@ public class AppointmentsCRUD {
                 // TODO: ^ THIS WILL GET THE INFO FOR ME
 
                 // helper method for viewing appointment TableView
-                tempAppoint.setContactName();
+//                tempAppoint.setContactName();
+                tempAppoint.setContactName(AppointmentsCRUD.getContactName(contactID));
 //                tempAppoint.setCreatedDate(Timestamp.valueOf(formatDate.format(createdDate))); // TODO: Maybe change... printing tailing .0 at the end; also useful for create operation
 
                 // Adds to appointment list
@@ -95,6 +96,9 @@ public class AppointmentsCRUD {
     }
 
     public static void insertAppointment(Appointment appointment) {
+        final long timeAtLocal = System.currentTimeMillis(); // or System.currentTimeMillis(); or new Date().getTime(); etc.
+        long offset = TimeZone.getDefault().getOffset(timeAtLocal);
+        final Timestamp timeAtUTC = new Timestamp(timeAtLocal - offset);
         if(!Appointment.getAllAppointments().contains(appointment)) {
             Appointment.addAppointment(appointment);
         }
@@ -102,8 +106,8 @@ public class AppointmentsCRUD {
             Connection conn = Database.getConnection();
             PreparedStatement ps;
             String query = "INSERT INTO appointments(Title, Description, Location, Type, Customer_ID, " +
-                    "User_ID, Contact_ID, Appointment_ID, Created_By, Start, End) " +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                    "User_ID, Contact_ID, Appointment_ID, Created_By, Start, End, Create_Date, Last_Update) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             ps = conn.prepareStatement(query);
             ps.setString(1, appointment.getTitle().trim());
             ps.setString(2, appointment.getDescription().trim());
@@ -112,10 +116,13 @@ public class AppointmentsCRUD {
             ps.setInt(5, appointment.getCustomerID());
             ps.setInt(6, appointment.getUserID());
             ps.setInt(7, appointment.getContactID());
-            ps.setInt(8, appointment.getAppointmentID());
+//            ps.setInt(8, appointment.getAppointmentID());
+            ps.setInt(8, AppointmentsCRUD.getNextIDCount());
             ps.setString(9, appointment.getCreatedBy());
             ps.setTimestamp(10, appointment.getStart());
             ps.setTimestamp(11, appointment.getEnd());
+            ps.setTimestamp(12, timeAtUTC);
+            ps.setTimestamp(13, timeAtUTC);
             ps.executeUpdate();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -124,6 +131,9 @@ public class AppointmentsCRUD {
 
     public static void updateAppointment(int id, Appointment appointment) {
         OffsetDateTime now = OffsetDateTime.now(ZoneOffset.UTC);
+        final long timeAtLocal = System.currentTimeMillis(); // or System.currentTimeMillis(); or new Date().getTime(); etc.
+        long offset = TimeZone.getDefault().getOffset(timeAtLocal);
+        final Timestamp timeAtUTC = new Timestamp(timeAtLocal - offset);
         try {
             Connection conn = Database.getConnection();
             PreparedStatement ps;
@@ -150,8 +160,40 @@ public class AppointmentsCRUD {
         }
     }
 
+    public static void deleteAppointment(Appointment appointment) {
+        try {
+            Connection conn = Database.getConnection();
+            PreparedStatement ps;
+//            ResultSet rs;
+            String query = "DELETE FROM appointments WHERE Appointment_ID = ?";
+            ps = conn.prepareStatement(query);
+            ps.setInt(1, appointment.getAppointmentID());
+            ps.executeUpdate();
+            System.out.println("Appointment deleted from database...");
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
     public static int getNextIDCount() {
-        return Appointment.getAllAppointments().size() + 1;
+        int id = 0;
+        try {
+            Connection conn = Database.getConnection();
+            PreparedStatement ps;
+            ResultSet rs;
+            String query = "SELECT MAX(LAST_INSERT_ID(Appointment_ID)) + 1 AS NEXT_ID FROM appointments";
+            ps = conn.prepareStatement(query);
+            rs = ps.executeQuery();
+
+            while(rs.next()) {
+                id = rs.getInt("NEXT_ID");
+            }
+            System.out.println("ID IS " + id);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return id;
+//        return Appointment.getAllAppointments().size() + 1;
     }
 
     public static String getContactName(int userID) {
