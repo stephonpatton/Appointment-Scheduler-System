@@ -16,6 +16,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import util.AppointmentsCRUD;
+import util.CustomersCRUD;
 
 import java.io.IOException;
 import java.net.URL;
@@ -161,10 +162,52 @@ public class MainForm implements Initializable {
         }
     }
 
+    public void deleteSelectedCustomer(ActionEvent actionEvent) {
+        try {
+            if(customersTableView.getSelectionModel().getSelectedItem() == null) {
+                selectCustomerAlert();
+            } else {
+                Customer customer = customersTableView.getSelectionModel().getSelectedItem();
+                ButtonType deleteButton = new ButtonType("Delete");
+                ButtonType cancelButton = new ButtonType("Cancel");
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Deleting customer...", deleteButton, cancelButton);
+                alert.setContentText("Are you sure you want to delete this customer?");
+                alert.showAndWait().ifPresent(response -> {
+                    if(response == deleteButton) {
+                        if(Customer.deleteCustomer(customer)) {
+                            customerRemovedAlert(customer);
+                            CustomersCRUD.deleteCustomer(customer);
+                            populateCustomersTable();
+                            customersTableView.getSelectionModel().clearSelection();
+                            alert.close();
+                        } else {
+                            System.err.println("Customer failed to delete.");
+                            alert.close();
+                        }
+                    } else if(response == cancelButton) {
+                        alert.close();
+                    }
+                });
+            }
+        }catch(Exception e) {
+            System.err.println("Please select an appoint to delete");
+            selectCustomerAlert();
+        }
+    }
+
     private void selectAppointmentAlert() {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setHeaderText("Please select an appointment");
         alert.setContentText("An appointment must be selected");
+        alert.showAndWait().ifPresent(response -> {
+
+        });
+    }
+
+    private void selectCustomerAlert() {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setHeaderText("Please select a customer");
+        alert.setContentText("A customer must be selected");
         alert.showAndWait().ifPresent(response -> {
 
         });
@@ -177,6 +220,17 @@ public class MainForm implements Initializable {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setHeaderText("Appointment Cancelled");
         alert.setContentText("Appointment ID: " + id + "\n" + "Appointment Type: " + type + "\n" + "This appointment was successfully cancelled");
+        alert.showAndWait().ifPresent(response -> {
+        });
+    }
+
+    private void customerRemovedAlert(Customer customer) {
+        int id = customer.getCustomerID();
+        String name = customer.getCustomerName();
+
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setHeaderText("Customer Removed");
+        alert.setContentText("Customer ID: " + id + "\n" + "Customer Name: " + name + "\n" + "This customer was successfully removed");
         alert.showAndWait().ifPresent(response -> {
         });
     }

@@ -55,7 +55,7 @@
             </TableView>
             <Button layoutX="27.0" layoutY="301.0" mnemonicParsing="false" text="Add Customer" />
             <Button layoutX="238.0" layoutY="301.0" mnemonicParsing="false" text="Modify Customer" />
-            <Button layoutX="446.0" layoutY="301.0" mnemonicParsing="false" text="Delete Customer" />
+            <Button layoutX="446.0" layoutY="301.0" mnemonicParsing="false" onAction="#deleteSelectedCustomer" text="Delete Customer" />
          </children>
       </Pane>
       <Pane layoutX="632.0" layoutY="386.0" prefHeight="348.0" prefWidth="350.0" style="-fx-border-radius: 25; -fx-border-style: solid; -fx-border-width: 1;">

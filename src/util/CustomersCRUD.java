@@ -46,4 +46,9 @@ public class CustomersCRUD {
     public static void insertCustomer(Customer customer) {
 
     }
+
+    public static void deleteCustomer(Customer customer) {
+        // TODO: Implement this
+
+    }
 }

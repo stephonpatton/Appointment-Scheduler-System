@@ -32,6 +32,10 @@ public class Customer {
         allCustomers.add(customer);
     }
 
+    public static boolean deleteCustomer(Customer customer) {
+        return allCustomers.remove(customer);
+    }
+
     // CONSTRUCTOR WITH REQUIRED FIELDS NEEDED (NAME, ADDRESS, POSTAL CODE, PHONE NUMBER)
     /**
      * Constructor for customers with all the required fields for database entry
