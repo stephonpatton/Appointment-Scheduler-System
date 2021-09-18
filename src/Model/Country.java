@@ -1,15 +1,34 @@
 package Model;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 import java.sql.Date;
 import java.sql.Timestamp;
 
 public class Country {
     private int countryID;
     private String country;
-    private Date createDate;
+    private Timestamp createDate;
     private String createdBy;
     private Timestamp lastUpdate;
     private String lastUpdatedBy;
+
+    private static ObservableList<Country> allCountries = FXCollections.observableArrayList();
+
+
+    public static void addCountry(Country country) {
+        allCountries.add(country);
+    }
+
+    // TODO: Sure I can delete at the end
+    public static boolean deleteCountry(Country country) {
+        return allCountries.remove(country);
+    }
+
+    public static ObservableList<Country> getAllCountries() {
+        return allCountries;
+    }
 
     /**
      * Gets country ID of a Country object
@@ -47,7 +66,7 @@ public class Country {
      * Gets creation date of country object
      * @return Date country object was created
      */
-    public Date getCreateDate() {
+    public Timestamp getCreateDate() {
         return createDate;
     }
 
@@ -55,7 +74,7 @@ public class Country {
      * Sets creation date of country
      * @param createDate Date country object was created
      */
-    public void setCreateDate(Date createDate) {
+    public void setCreateDate(Timestamp createDate) {
         this.createDate = createDate;
     }
 

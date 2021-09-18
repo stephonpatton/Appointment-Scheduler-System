@@ -1,5 +1,6 @@
 package View_Controller;
 
+import Model.Country;
 import Model.User;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -67,13 +68,12 @@ public class LoginPage implements Initializable {
             ContactsCRUD.loadAllContacts();
             AppointmentsCRUD.loadAllAppointments();
             CustomersCRUD.loadAllCustomers();
+            CountriesCRUD.loadAllCountries();
+            FirstLevelDivisionCRUD.loadAllFirstLevel();
             showMainScreen(actionEvent);
         } else {
             invalidUserPassAlert();
         }
-
-//        AppointmentsCRUD.loadAllAppointments();
-//        CustomersCRUD.loadAllCustomers();
     }
 
     /**

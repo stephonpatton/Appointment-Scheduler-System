@@ -42,4 +42,8 @@ public class CustomersCRUD {
             throw new Error("Problem", e);
         }
     }
+
+    public static void insertCustomer(Customer customer) {
+
+    }
 }

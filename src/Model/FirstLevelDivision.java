@@ -1,16 +1,30 @@
 package Model;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 import java.sql.Date;
 import java.sql.Timestamp;
 
 public class FirstLevelDivision {
+    private static ObservableList<FirstLevelDivision> allDivisions = FXCollections.observableArrayList();
+
+
     private int divisionID;
     private String division;
-    private Date createDate;
+    private Timestamp createDate;
     private String createdBy;
     private Timestamp lastUpdate;
     private String lastUpdatedBy;
     private int countryID;
+
+    public static void addDivision(FirstLevelDivision division) {
+        allDivisions.add(division);
+    }
+
+    public static ObservableList<FirstLevelDivision> getAllDivisions() {
+        return allDivisions;
+    }
 
     /**
      * Gets the divisionID of a division
@@ -48,7 +62,7 @@ public class FirstLevelDivision {
      * Gets the creation date of a division
      * @return The date a division was created
      */
-    public Date getCreateDate() {
+    public Timestamp getCreateDate() {
         return createDate;
     }
 
@@ -56,7 +70,7 @@ public class FirstLevelDivision {
      * Sets the creation date of a division
      * @param createDate Given date a division was created
      */
-    public void setCreateDate(Date createDate) {
+    public void setCreateDate(Timestamp createDate) {
         this.createDate = createDate;
     }
 
