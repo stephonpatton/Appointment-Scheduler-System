@@ -48,7 +48,15 @@ public class CustomersCRUD {
     }
 
     public static void deleteCustomer(Customer customer) {
-        // TODO: Implement this
-
+        PreparedStatement ps;
+        try {
+            Connection conn = Database.getConnection();
+            String query = "DELETE FROM customers WHERE Customer_ID = ?";
+            ps = conn.prepareStatement(query);
+            ps.setInt(1, customer.getCustomerID());
+            ps.executeUpdate();
+        }catch(SQLException e) {
+            throw new Error("Problem", e);
+        }
     }
 }

@@ -152,6 +152,7 @@ public class MainForm implements Initializable {
                             alert.close();
                         }
                     } else if(response == cancelButton) {
+                        appointmentsTableView.getSelectionModel().clearSelection();
                         alert.close();
                     }
                 });
@@ -185,6 +186,7 @@ public class MainForm implements Initializable {
                             alert.close();
                         }
                     } else if(response == cancelButton) {
+                        customersTableView.getSelectionModel().clearSelection();
                         alert.close();
                     }
                 });
