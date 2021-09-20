@@ -18,6 +18,7 @@ import javafx.stage.Stage;
 import util.AppointmentsCRUD;
 import util.CustomersCRUD;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
@@ -243,5 +244,18 @@ public class MainForm implements Initializable {
 
     public static int appointmentIndexToModify() {
         return appointmentIndex;
+    }
+
+    public void openAddCustomer(ActionEvent actionEvent) throws IOException {
+        Parent root;
+        root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("../View_Controller/AddCustomer.fxml")));
+        Stage stage = new Stage();
+        stage.setTitle("Add Customer");
+        stage.setScene(new Scene(root, 670, 370));
+        stage.setResizable(false);
+        stage.show();
+
+        //Hides current window
+        ((Node)(actionEvent.getSource())).getScene().getWindow().hide();
     }
 }

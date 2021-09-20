@@ -8,6 +8,9 @@ import java.sql.Timestamp;
 
 public class FirstLevelDivision {
     private static ObservableList<FirstLevelDivision> allDivisions = FXCollections.observableArrayList();
+    private static ObservableList<FirstLevelDivision> usDivisions = FXCollections.observableArrayList();
+    private static ObservableList<FirstLevelDivision> ukDivisions = FXCollections.observableArrayList();
+    private static ObservableList<FirstLevelDivision> caDivisions = FXCollections.observableArrayList();
 
 
     private int divisionID;
@@ -18,12 +21,36 @@ public class FirstLevelDivision {
     private String lastUpdatedBy;
     private int countryID;
 
+    public static void addUSDivision(FirstLevelDivision division) {
+        usDivisions.add(division);
+    }
+
+    public static void addUKDivision(FirstLevelDivision division) {
+        ukDivisions.add(division);
+    }
+
+    public static void addCADivision(FirstLevelDivision division) {
+        caDivisions.add(division);
+    }
+
     public static void addDivision(FirstLevelDivision division) {
         allDivisions.add(division);
     }
 
     public static ObservableList<FirstLevelDivision> getAllDivisions() {
         return allDivisions;
+    }
+
+    public static ObservableList<FirstLevelDivision> getAllUSDivisions() {
+        return usDivisions;
+    }
+
+    public static ObservableList<FirstLevelDivision> getAllUKDivisions() {
+        return ukDivisions;
+    }
+
+    public static ObservableList<FirstLevelDivision> getAllCADivisions() {
+        return caDivisions;
     }
 
     /**
@@ -136,5 +163,9 @@ public class FirstLevelDivision {
      */
     public void setCountryID(int countryID) {
         this.countryID = countryID;
+    }
+
+    public String toString() {
+        return division;
     }
 }

@@ -59,4 +59,24 @@ public class CustomersCRUD {
             throw new Error("Problem", e);
         }
     }
+
+    public static int getNextCustomerID() {
+        int nextID = 0;
+        try {
+            Connection conn = Database.getConnection();
+            PreparedStatement ps;
+            ResultSet rs;
+            String query = "SELECT MAX(LAST_INSERT_ID(Customer_ID)) + 1 AS NEXT_ID FROM customers";
+            ps = conn.prepareStatement(query);
+            rs = ps.executeQuery();
+
+            while(rs.next()) {
+                nextID = rs.getInt("NEXT_ID");
+            }
+            System.out.println("ID IS " + nextID);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return nextID;
+    }
 }

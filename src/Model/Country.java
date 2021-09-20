@@ -125,4 +125,8 @@ public class Country {
     public void setLastUpdatedBy(String lastUpdatedBy) {
         this.lastUpdatedBy = lastUpdatedBy;
     }
+
+    public String toString() {
+        return country;
+    }
 }
