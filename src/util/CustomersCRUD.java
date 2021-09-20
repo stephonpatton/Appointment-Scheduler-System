@@ -44,7 +44,25 @@ public class CustomersCRUD {
     }
 
     public static void insertCustomer(Customer customer) {
+        PreparedStatement ps;
+        try {
+            Connection conn = Database.getConnection();
+            String query = "INSERT INTO customers(Customer_Name, Address, Postal_Code, Phone, Created_By, Division_ID) VALUES(?, ?, ?, ?, ?, ?)";
+            ps = conn.prepareStatement(query);
+            ps.setString(1, customer.getCustomerName());
+            ps.setString(2, customer.getAddress());
+            ps.setString(3, customer.getPostalCode());
+            ps.setString(4, customer.getPhone());
+            ps.setString(5, customer.getCreatedBy());
+            ps.setInt(6, customer.getDivisionID());
+            ps.executeUpdate();
+        }catch(SQLException e) {
+            throw new Error("Problem", e);
+        }
+    }
 
+    public static void updateCustomer(Customer customer) {
+        // TODO: TOMORROW OR TONIGHT
     }
 
     public static void deleteCustomer(Customer customer) {

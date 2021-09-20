@@ -1,9 +1,6 @@
 package View_Controller;
 
-import Model.Contact;
-import Model.Country;
-import Model.Customer;
-import Model.FirstLevelDivision;
+import Model.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -11,10 +8,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Spinner;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 import util.AppointmentsCRUD;
 import util.CustomersCRUD;
@@ -34,6 +28,13 @@ public class AddCustomer implements Initializable {
     @FXML private TextField customerPhoneTF;
     @FXML private TextField customerAddressTF;
 
+    private boolean nameCheck;
+    private boolean phoneCheck;
+    private boolean postalCheck;
+    private boolean addressCheck;
+    private boolean firstLevelCheck;
+    private boolean countryCheck;
+
 
 
     @Override
@@ -46,12 +47,72 @@ public class AddCustomer implements Initializable {
         FirstLevelDivisionCRUD.getCADivisions();
         customerFirstLevelCombo.setValue(FirstLevelDivision.getAllDivisions().get(0));
         customerCountryCombo.setValue(Country.getAllCountries().get(0));
+        filterByCountry();
     }
 
-    // TODO: Logic to check if country combo and display appropriate first division regions
+    public void createCustomer(ActionEvent actionEvent) throws IOException {
+        checkFields();
+        highlightErrors();
+        if(createCustomerObject()) {
+            returnToMainScreen(actionEvent);
+        } else {
+            setChecksToFalse();
+        }
+    }
 
-    public void createCustomer(ActionEvent actionEvent) {
+    public void checkFields() {
+        checkNameField();
+        checkPhoneField();
+        checkPostalField();
+        checkAddressField();
+        checkFirstLevelField();
+        checkCountryField();
+    }
 
+    private void setChecksToFalse() {
+        nameCheck = false;
+        phoneCheck = false;
+        postalCheck = false;
+        addressCheck = false;
+        firstLevelCheck = false;
+        countryCheck = false;
+    }
+
+    public boolean createCustomerObject() {
+        boolean success;
+        try {
+
+            int customerID = CustomersCRUD.getNextCustomerID();
+            String customerName = customerNameTF.getText().trim();
+            String address = customerAddressTF.getText().trim();
+            String postal = customerPostalTF.getText().trim();
+            String phone = customerPhoneTF.getText().trim();
+            int divisionID = customerFirstLevelCombo.getValue().getDivisionID();
+            String createdBy = User.getCurrentUser();
+            Customer customer = new Customer(customerID, customerName, address, phone, postal, divisionID);
+            // TODO: CREATE OBJECT (might need to add create_date and last_update)
+            customer.setCreatedBy(createdBy);
+            Customer.addCustomer(customer);
+            CustomersCRUD.insertCustomer(customer);
+
+            success = true;
+        }catch(Exception e) {
+            showErrorAlert();
+            System.err.println("SOMETHING FUCKED UP");
+            success = false;
+        }
+        return success;
+
+
+    }
+
+    private void showErrorAlert() {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setHeaderText("Failed to create customer");
+        alert.setContentText("Customer was not created.. please check highlighted fields and try again");
+        alert.showAndWait().ifPresent(response -> {
+
+        });
     }
 
     public void filterByCountry() {
@@ -78,5 +139,62 @@ public class AddCustomer implements Initializable {
 
         //Hides current window
         ((Node)(actionEvent.getSource())).getScene().getWindow().hide();
+    }
+
+    private void checkNameField() {
+        nameCheck = customerNameTF.getText().length() != 0 && !customerNameTF.getText().matches("[0-9]*");
+    }
+
+    private void checkPhoneField() {
+        phoneCheck = customerPhoneTF.getText().length() != 0;
+    }
+
+    private void checkPostalField() {
+        postalCheck = customerPostalTF.getText().length() != 0;
+    }
+
+    private void checkAddressField() {
+        addressCheck = customerAddressTF.getText().length() != 0;
+    }
+
+    private void checkFirstLevelField() {
+        firstLevelCheck = customerFirstLevelCombo.getValue() != null;
+    }
+
+    private void checkCountryField() {
+        countryCheck = customerCountryCombo.getValue() != null;
+    }
+
+    private void highlightErrors() {
+        if(!nameCheck) {
+            customerNameTF.setStyle("-fx-border-color: #ae0700");
+        } else {
+            customerNameTF.setStyle("-fx-border-color: #9f07");
+        }
+        if(!phoneCheck) {
+            customerPhoneTF.setStyle("-fx-border-color: #ae0700");
+        } else {
+            customerPhoneTF.setStyle("-fx-border-color: #9f07");
+        }
+        if(!postalCheck) {
+            customerPostalTF.setStyle("-fx-border-color: #ae0700");
+        } else {
+            customerPostalTF.setStyle("-fx-border-color: #9f07");
+        }
+        if(!addressCheck) {
+            customerAddressTF.setStyle("-fx-border-color: #ae0700");
+        } else {
+            customerAddressTF.setStyle("-fx-border-color: #9f07");
+        }
+        if(!firstLevelCheck) {
+            customerFirstLevelCombo.setStyle("-fx-border-color: #ae0700");
+        } else {
+            customerFirstLevelCombo.setStyle("-fx-border-color: #9f07");
+        }
+        if(!countryCheck) {
+            customerCountryCombo.setStyle("-fx-border-color: #ae0700");
+        } else {
+            customerCountryCombo.setStyle("-fx-border-color: #9f07");
+        }
     }
 }

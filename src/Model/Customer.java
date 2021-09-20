@@ -20,9 +20,9 @@ public class Customer {
 
     private static ObservableList<Customer> allCustomers = FXCollections.observableArrayList();
 
-    public Customer() {
-
-    }
+//    public Customer() {
+//
+//    }
 
     public static ObservableList<Customer> getAllCustomers() {
         return allCustomers;
