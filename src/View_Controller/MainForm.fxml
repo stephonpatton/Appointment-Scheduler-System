@@ -54,7 +54,7 @@
               </columns>
             </TableView>
             <Button layoutX="27.0" layoutY="301.0" mnemonicParsing="false" onAction="#openAddCustomer" text="Add Customer" />
-            <Button layoutX="238.0" layoutY="301.0" mnemonicParsing="false" text="Modify Customer" />
+            <Button layoutX="238.0" layoutY="301.0" mnemonicParsing="false" onAction="#getSelectedCustomer" text="Modify Customer" />
             <Button layoutX="446.0" layoutY="301.0" mnemonicParsing="false" onAction="#deleteSelectedCustomer" text="Delete Customer" />
          </children>
       </Pane>

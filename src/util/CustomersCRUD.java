@@ -1,6 +1,7 @@
 package util;
 
 import Model.Appointment;
+import Model.Country;
 import Model.Customer;
 
 import java.sql.*;
@@ -12,12 +13,13 @@ public class CustomersCRUD {
         ResultSet rs;
 
         try {
-            Customer tempCustomer;
             String query = "SELECT * FROM customers";
             ps = conn.prepareStatement(query);
             rs = ps.executeQuery();
 
             while(rs.next()) {
+                Customer tempCustomer = null;
+
                 // Get data from database
                 int customerID = rs.getInt("Customer_ID");
                 String customerName = rs.getString("Customer_Name");

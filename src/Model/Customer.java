@@ -18,6 +18,9 @@ public class Customer {
     private int divisionID;
     private String lastUpdatedBy;
 
+    // Helper variable
+    private Country country;
+
     private static ObservableList<Customer> allCustomers = FXCollections.observableArrayList();
 
 //    public Customer() {
@@ -231,4 +234,14 @@ public class Customer {
     public void setLastUpdatedBy(String lastUpdatedBy) {
         this.lastUpdatedBy = lastUpdatedBy;
     }
+
+    public void setCountry(Country country) {
+        this.country = country;
+    }
+
+    public Country getCountry() {
+        return this.country;
+    }
+
+
 }

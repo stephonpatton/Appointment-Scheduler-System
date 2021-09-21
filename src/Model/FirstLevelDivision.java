@@ -165,6 +165,17 @@ public class FirstLevelDivision {
         this.countryID = countryID;
     }
 
+    public static FirstLevelDivision getFirstLevelByID(int id) {
+        FirstLevelDivision temp = null;
+
+        for (FirstLevelDivision firstLevel : allDivisions) {
+            if (firstLevel.getDivisionID()== id) {
+                temp = firstLevel;
+            }
+        }
+        return temp;
+    }
+
     public String toString() {
         return division;
     }

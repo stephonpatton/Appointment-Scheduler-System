@@ -90,6 +90,7 @@ public class AddCustomer implements Initializable {
             int divisionID = customerFirstLevelCombo.getValue().getDivisionID();
             String createdBy = User.getCurrentUser();
             Customer customer = new Customer(customerID, customerName, address, phone, postal, divisionID);
+            customer.setCountry(customerCountryCombo.getValue());
             // TODO: CREATE OBJECT (might need to add create_date and last_update)
             customer.setCreatedBy(createdBy);
             Customer.addCustomer(customer);

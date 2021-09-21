@@ -49,6 +49,9 @@ public class MainForm implements Initializable {
     private static Appointment tempAppointment;
     private static int appointmentIndex;
 
+    private static Customer tempCustomer;
+    private static int customerIndex;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         setAppointmentCells();
@@ -246,11 +249,49 @@ public class MainForm implements Initializable {
         return appointmentIndex;
     }
 
+    public static Customer customerToModify() {
+        return tempCustomer;
+    }
+
+    public static int customerIndexToModify() {
+        return customerIndex;
+    }
+
+    public void getSelectedCustomer(ActionEvent actionEvent) {
+        try {
+            if(customersTableView.getSelectionModel().getSelectedItem() == null) {
+                selectCustomerAlert();
+            } else {
+                tempCustomer = customersTableView.getSelectionModel().getSelectedItem();
+
+                // Setting the index
+                customerIndex = Customer.getAllCustomers().indexOf(tempCustomer);
+                openModifyCustomer(actionEvent);
+            }
+        }catch(Exception e) {
+            System.err.println("Please select an customer to modify");
+            selectCustomerAlert();
+        }
+    }
+
     public void openAddCustomer(ActionEvent actionEvent) throws IOException {
         Parent root;
         root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("../View_Controller/AddCustomer.fxml")));
         Stage stage = new Stage();
         stage.setTitle("Add Customer");
+        stage.setScene(new Scene(root, 670, 370));
+        stage.setResizable(false);
+        stage.show();
+
+        //Hides current window
+        ((Node)(actionEvent.getSource())).getScene().getWindow().hide();
+    }
+
+    public void openModifyCustomer(ActionEvent actionEvent) throws IOException {
+        Parent root;
+        root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("../View_Controller/ModifyCustomer.fxml")));
+        Stage stage = new Stage();
+        stage.setTitle("Modify Customer");
         stage.setScene(new Scene(root, 670, 370));
         stage.setResizable(false);
         stage.show();
