@@ -81,7 +81,6 @@ public class AddCustomer implements Initializable {
     public boolean createCustomerObject() {
         boolean success;
         try {
-
             int customerID = CustomersCRUD.getNextCustomerID();
             String customerName = customerNameTF.getText().trim();
             String address = customerAddressTF.getText().trim();

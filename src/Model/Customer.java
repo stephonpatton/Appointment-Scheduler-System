@@ -23,9 +23,9 @@ public class Customer {
 
     private static ObservableList<Customer> allCustomers = FXCollections.observableArrayList();
 
-//    public Customer() {
-//
-//    }
+    public Customer() {
+
+    }
 
     public static ObservableList<Customer> getAllCustomers() {
         return allCustomers;
@@ -37,6 +37,10 @@ public class Customer {
 
     public static boolean deleteCustomer(Customer customer) {
         return allCustomers.remove(customer);
+    }
+
+    public static void updateCustomer(int index, Customer customer) {
+        allCustomers.set(index, customer);
     }
 
     // CONSTRUCTOR WITH REQUIRED FIELDS NEEDED (NAME, ADDRESS, POSTAL CODE, PHONE NUMBER)

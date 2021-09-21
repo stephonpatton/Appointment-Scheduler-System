@@ -3,8 +3,10 @@ package util;
 import Model.Appointment;
 import Model.Country;
 import Model.Customer;
+import Model.User;
 
 import java.sql.*;
+import java.util.TimeZone;
 
 public class CustomersCRUD {
     public static void loadAllCustomers() throws SQLException {
@@ -65,6 +67,28 @@ public class CustomersCRUD {
 
     public static void updateCustomer(Customer customer) {
         // TODO: TOMORROW OR TONIGHT
+        final long timeAtLocal = System.currentTimeMillis(); // or System.currentTimeMillis(); or new Date().getTime(); etc.
+        long offset = TimeZone.getDefault().getOffset(timeAtLocal);
+        final Timestamp timeAtUTC = new Timestamp(timeAtLocal - offset);
+
+        try {
+            Connection conn = Database.getConnection();
+            PreparedStatement ps;
+            String query = "UPDATE customers SET Customer_Name = ?, Address = ?, Postal_Code = ?, Phone = ?, " +
+                    "Last_Update = ?, Last_Updated_By = ?, Division_ID = ? WHERE Customer_ID = ?";
+            ps = conn.prepareStatement(query);
+            ps.setString(1, customer.getCustomerName());
+            ps.setString(2, customer.getAddress());
+            ps.setString(3, customer.getPostalCode());
+            ps.setString(4, customer.getPhone());
+            ps.setTimestamp(5, timeAtUTC);
+            ps.setString(6, User.getCurrentUser());
+            ps.setInt(7, customer.getDivisionID());
+            ps.setInt(8, customer.getCustomerID());
+            ps.executeUpdate();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
 
     public static void deleteCustomer(Customer customer) {
