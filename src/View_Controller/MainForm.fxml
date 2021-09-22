@@ -35,6 +35,13 @@
             <Button fx:id="addAppointButton" layoutX="155.0" layoutY="323.0" mnemonicParsing="false" onAction="#openAddAppointmentScreen" text="Add Appointment" />
             <Button fx:id="modifyAppointButton" layoutX="409.0" layoutY="323.0" mnemonicParsing="false" onAction="#getSelectedAppointment" text="Modify Appointment" />
             <Button fx:id="deleteAppointButton" layoutX="677.0" layoutY="323.0" mnemonicParsing="false" onAction="#deleteSelectedAppointment" text="Delete Appointment" />
+            <RadioButton fx:id="allFilter" layoutX="721.0" layoutY="58.0" mnemonicParsing="false" onAction="#populateAppointmentsTable" selected="true" text="All">
+               <toggleGroup>
+                  <ToggleGroup fx:id="filterButtons" />
+               </toggleGroup>
+            </RadioButton>
+            <RadioButton fx:id="weekFilter" layoutX="787.0" layoutY="58.0" mnemonicParsing="false" onAction="#populateByWeek" text="Current Week" toggleGroup="$filterButtons" />
+            <RadioButton fx:id="monthFilter" layoutX="903.0" layoutY="58.0" mnemonicParsing="false" onAction="#populateByMonth" text="Current Month" toggleGroup="$filterButtons" />
          </children>
       </Pane>
       <Pane layoutX="21.0" layoutY="386.0" prefHeight="348.0" prefWidth="604.0" style="-fx-border-radius: 25; -fx-border-style: solid; -fx-border-width: 1;">

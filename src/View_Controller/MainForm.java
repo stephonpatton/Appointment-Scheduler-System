@@ -2,6 +2,8 @@ package View_Controller;
 
 import Model.Appointment;
 import Model.Customer;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -9,20 +11,16 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import util.AppointmentsCRUD;
 import util.CustomersCRUD;
 
-import javax.swing.*;
 import java.io.IOException;
 import java.net.URL;
-import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
@@ -46,6 +44,13 @@ public class MainForm implements Initializable {
     @FXML private TableColumn<Customer, String> customerTVPhoneIDCol;
     @FXML private TableColumn<Customer, String> customerTVAddressCol;
     @FXML private TableColumn<Customer, String> customerTVPostalCol;
+
+    @FXML private RadioButton allFilter;
+    @FXML private RadioButton weekFilter;
+    @FXML private RadioButton monthFilter;
+
+
+
 
     private static Appointment tempAppointment;
     private static int appointmentIndex;
@@ -83,7 +88,7 @@ public class MainForm implements Initializable {
         customerTVPostalCol.setCellValueFactory(new PropertyValueFactory<>("postalCode"));
     }
 
-    private void populateAppointmentsTable() {
+    public void populateAppointmentsTable() {
         appointmentsTableView.setItems(Appointment.getAllAppointments());
     }
 
@@ -324,5 +329,41 @@ public class MainForm implements Initializable {
             }
         }
         return isEmpty;
+    }
+
+    public ObservableList<Appointment> filterByMonth() {
+        ObservableList<Appointment> monthAppointments = FXCollections.observableArrayList();
+        for(Appointment appoint : Appointment.getAllAppointments()) {
+            if(appoint.getStartDate().getMonth() == LocalDate.now().getMonth()) {
+                monthAppointments.add(appoint);
+            }
+        }
+        return monthAppointments;
+    }
+
+    public ObservableList<Appointment> filterByWeek() {
+        ObservableList<Appointment> weekAppointments = FXCollections.observableArrayList();
+        for(Appointment appoint : Appointment.getAllAppointments()) {
+            if((LocalDate.now().getDayOfYear() + 7 >= appoint.getStartDate().getDayOfYear()) && (LocalDate.now().getDayOfYear() <= appoint.getStartDate().getDayOfYear())) {
+                weekAppointments.add(appoint);
+            }
+        }
+        return weekAppointments;
+    }
+
+    public void populateByMonth() {
+        if(filterByMonth() == null) {
+            // TODO: Maybe show error
+        } else {
+            appointmentsTableView.setItems(filterByMonth());
+        }
+    }
+
+    public void populateByWeek() {
+        if(filterByWeek() == null) {
+            // TODO: Maybe show error
+        } else {
+            appointmentsTableView.setItems(filterByWeek());
+        }
     }
 }
