@@ -171,7 +171,8 @@ public class MainForm implements Initializable {
         try {
             if(customersTableView.getSelectionModel().getSelectedItem() == null) {
                 selectCustomerAlert();
-            } else {
+            }
+            if(areAppointsEmpty(customersTableView.getSelectionModel().getSelectedItem())) {
                 Customer customer = customersTableView.getSelectionModel().getSelectedItem();
                 ButtonType deleteButton = new ButtonType("Delete");
                 ButtonType cancelButton = new ButtonType("Cancel");
@@ -194,11 +195,22 @@ public class MainForm implements Initializable {
                         alert.close();
                     }
                 });
+            } else {
+                hasAppointmentsAlert();
             }
         }catch(Exception e) {
-            System.err.println("Please select an appoint to delete");
-            selectCustomerAlert();
+            System.err.println("Please select a customer.");
         }
+    }
+
+
+    private void hasAppointmentsAlert() {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setHeaderText("This customer still has scheduled appointments.");
+        alert.setContentText("Please cancel scheduled appointments for this customer before deleting customer");
+        alert.showAndWait().ifPresent(response -> {
+
+        });
     }
 
     private void selectAppointmentAlert() {
@@ -298,5 +310,17 @@ public class MainForm implements Initializable {
 
         //Hides current window
         ((Node)(actionEvent.getSource())).getScene().getWindow().hide();
+    }
+
+    public boolean areAppointsEmpty(Customer customer) {
+        boolean isEmpty = false;
+        for(int i = 0; i < Appointment.getAllAppointments().size(); i++) {
+            isEmpty = Appointment.getAllAppointments().get(i).getCustomerID() != customer.getCustomerID();
+            if(!isEmpty) {
+                i = Appointment.getAllAppointments().size() - 1;
+                return false;
+            }
+        }
+        return isEmpty;
     }
 }

@@ -51,7 +51,7 @@ public class CustomersCRUD {
         PreparedStatement ps;
         try {
             Connection conn = Database.getConnection();
-            String query = "INSERT INTO customers(Customer_Name, Address, Postal_Code, Phone, Created_By, Division_ID) VALUES(?, ?, ?, ?, ?, ?)";
+            String query = "INSERT INTO customers(Customer_Name, Address, Postal_Code, Phone, Created_By, Division_ID, Customer_ID) VALUES(?, ?, ?, ?, ?, ?, ?)";
             ps = conn.prepareStatement(query);
             ps.setString(1, customer.getCustomerName());
             ps.setString(2, customer.getAddress());
@@ -59,6 +59,7 @@ public class CustomersCRUD {
             ps.setString(4, customer.getPhone());
             ps.setString(5, customer.getCreatedBy());
             ps.setInt(6, customer.getDivisionID());
+            ps.setInt(7, customer.getCustomerID());
             ps.executeUpdate();
         }catch(SQLException e) {
             throw new Error("Problem", e);
@@ -66,7 +67,6 @@ public class CustomersCRUD {
     }
 
     public static void updateCustomer(Customer customer) {
-        // TODO: TOMORROW OR TONIGHT
         final long timeAtLocal = System.currentTimeMillis(); // or System.currentTimeMillis(); or new Date().getTime(); etc.
         long offset = TimeZone.getDefault().getOffset(timeAtLocal);
         final Timestamp timeAtUTC = new Timestamp(timeAtLocal - offset);
