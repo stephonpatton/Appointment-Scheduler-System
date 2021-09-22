@@ -4,11 +4,11 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="850.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View_Controller.MainForm">
+<AnchorPane prefHeight="850.0" prefWidth="1040.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View_Controller.MainForm">
    <children>
-      <Pane layoutX="14.0" layoutY="14.0" prefHeight="365.0" prefWidth="968.0" style="-fx-border-width: 1; -fx-border-style: solid; -fx-border-radius: 25;">
+      <Pane layoutX="14.0" layoutY="14.0" prefHeight="365.0" prefWidth="1017.0" style="-fx-border-width: 1; -fx-border-style: solid; -fx-border-radius: 25;">
          <children>
-            <TableView fx:id="appointmentsTableView" layoutX="3.0" layoutY="97.0" prefHeight="207.0" prefWidth="946.0">
+            <TableView fx:id="appointmentsTableView" layoutX="3.0" layoutY="97.0" prefHeight="207.0" prefWidth="1007.0">
               <columns>
                 <TableColumn fx:id="appointIDCol" prefWidth="35.0" text="ID" />
                 <TableColumn fx:id="contactCol" prefWidth="79.0" text="Contact" />
@@ -19,6 +19,7 @@
                   <TableColumn fx:id="locationCol" prefWidth="91.0" text="Location" />
                   <TableColumn fx:id="typeCol" prefWidth="120.0" text="Type" />
                   <TableColumn fx:id="descriptionCol" prefWidth="133.0" text="Description" />
+                  <TableColumn fx:id="userIDCol" prefWidth="75.0" text="UserID" />
               </columns>
             </TableView>
             <Label layoutX="409.0" layoutY="49.0" text="Appointments" underline="true">
@@ -36,21 +37,21 @@
             <Button fx:id="deleteAppointButton" layoutX="677.0" layoutY="323.0" mnemonicParsing="false" onAction="#deleteSelectedAppointment" text="Delete Appointment" />
          </children>
       </Pane>
-      <Pane layoutX="21.0" layoutY="386.0" prefHeight="348.0" prefWidth="583.0" style="-fx-border-radius: 25; -fx-border-style: solid; -fx-border-width: 1;">
+      <Pane layoutX="21.0" layoutY="386.0" prefHeight="348.0" prefWidth="604.0" style="-fx-border-radius: 25; -fx-border-style: solid; -fx-border-width: 1;">
          <children>
             <Label layoutX="234.0" layoutY="14.0" text="Customers" underline="true">
                <font>
                   <Font size="24.0" />
                </font>
             </Label>
-            <TableView fx:id="customersTableView" layoutX="9.0" layoutY="54.0" prefHeight="245.0" prefWidth="563.0">
+            <TableView fx:id="customersTableView" layoutX="9.0" layoutY="54.0" prefHeight="245.0" prefWidth="587.0">
               <columns>
                 <TableColumn fx:id="customerTVIDCol" prefWidth="34.0" text="ID" />
                 <TableColumn fx:id="customerTVNameCol" prefWidth="127.0" text="Name" />
                   <TableColumn fx:id="customerTVDivIDCol" prefWidth="76.0" text="Division ID" />
                   <TableColumn fx:id="customerTVPhoneIDCol" prefWidth="137.0" text="Phone Number" />
                   <TableColumn fx:id="customerTVAddressCol" prefWidth="114.0" text="Address" />
-                  <TableColumn fx:id="customerTVPostalCol" prefWidth="74.0" text="Postal Code" />
+                  <TableColumn fx:id="customerTVPostalCol" prefWidth="98.0" text="Postal Code" />
               </columns>
             </TableView>
             <Button layoutX="27.0" layoutY="301.0" mnemonicParsing="false" onAction="#openAddCustomer" text="Add Customer" />
@@ -58,7 +59,7 @@
             <Button layoutX="446.0" layoutY="301.0" mnemonicParsing="false" onAction="#deleteSelectedCustomer" text="Delete Customer" />
          </children>
       </Pane>
-      <Pane layoutX="632.0" layoutY="386.0" prefHeight="348.0" prefWidth="350.0" style="-fx-border-radius: 25; -fx-border-style: solid; -fx-border-width: 1;">
+      <Pane layoutX="632.0" layoutY="386.0" prefHeight="348.0" prefWidth="395.0" style="-fx-border-radius: 25; -fx-border-style: solid; -fx-border-width: 1;">
          <children>
             <Label layoutX="81.0" layoutY="14.0" text="Other Navigation" underline="true">
                <font>

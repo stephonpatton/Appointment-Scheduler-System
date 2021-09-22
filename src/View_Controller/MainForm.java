@@ -30,6 +30,7 @@ public class MainForm implements Initializable {
     @FXML private TableView<Appointment> appointmentsTableView;
     @FXML private TableColumn<Appointment, String> typeCol;
     @FXML private TableColumn<Appointment, Integer> appointIDCol;
+    @FXML private TableColumn<Appointment, Integer> userIDCol;
     @FXML private TableColumn<Appointment, String> contactCol;
     @FXML private TableColumn<Appointment, Integer> customerIDCol;
     @FXML private TableColumn<Appointment, String> titleCol;
@@ -70,6 +71,7 @@ public class MainForm implements Initializable {
         endCol.setCellValueFactory(new PropertyValueFactory<>("end"));
         locationCol.setCellValueFactory(new PropertyValueFactory<>("location"));
         descriptionCol.setCellValueFactory(new PropertyValueFactory<>("description"));
+        userIDCol.setCellValueFactory(new PropertyValueFactory<>("userID"));
     }
 
     private void setCustomerCells() {

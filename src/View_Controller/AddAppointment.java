@@ -213,7 +213,7 @@ public class AddAppointment implements Initializable {
         root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("../View_Controller/MainForm.fxml")));
         Stage stage = new Stage();
         stage.setTitle("Main Screen");
-        stage.setScene(new Scene(root, 1000, 850));
+        stage.setScene(new Scene(root, 1040, 850));
         stage.setResizable(false);
         stage.show();
 

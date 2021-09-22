@@ -17,15 +17,22 @@ import util.*;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.time.ZoneId;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class LoginPage implements Initializable {
     // Username and password fields
+    @FXML private Label passwordLabel;
+    @FXML private Label usernameLabel;
+    @FXML private Label languageLabel;
     @FXML private TextField usernameTF;
     @FXML private PasswordField passwordTF;
     @FXML private Button loginButton;
+    @FXML private Button cancelButton;
     ResourceBundle rb;
+    static Stage stage;
 
     /**
      * Initialize database once program runs and loginpage is loaded
@@ -34,14 +41,15 @@ public class LoginPage implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-//
-//        System.out.println(Locale.getDefault());
-//        this.rb = resourceBundle;
-//
-//        //TODO: This sets fields after default locale has been established
-//        if(Locale.getDefault().getLanguage().equals("fr")) {
-//            loginButton.setText(rb.getString("login"));
-//        }
+        this.rb = resourceBundle;
+        System.out.println(Locale.getDefault());
+        passwordLabel.setText(rb.getString("passwordLabel"));
+        usernameLabel.setText(rb.getString("usernameLabel"));
+        languageLabel.setText(String.valueOf(ZoneId.systemDefault()));
+        usernameTF.setPromptText(rb.getString("username"));
+        passwordTF.setPromptText(rb.getString("password"));
+        loginButton.setText(rb.getString("login"));
+        cancelButton.setText(rb.getString("cancel"));
         Database.init();
     }
 
@@ -65,6 +73,7 @@ public class LoginPage implements Initializable {
         if(Query.login(username, password)) {
             User.setCurrentUser(username);
             System.out.println("LOGIN SUCCESSFUL");
+            System.out.println("ZONE ID IS" + ZoneId.systemDefault());
             ContactsCRUD.loadAllContacts();
             AppointmentsCRUD.loadAllAppointments();
             CustomersCRUD.loadAllCustomers();
@@ -81,8 +90,8 @@ public class LoginPage implements Initializable {
      */
     public void invalidUserPassAlert() {
         Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setHeaderText("Invalid username and/or password");
-        alert.setContentText("Invalid username and/or password. Please try again.");
+        alert.setHeaderText(rb.getString("header"));
+        alert.setContentText(rb.getString("content"));
         alert.showAndWait().ifPresent(response -> {
 
         });
@@ -98,11 +107,19 @@ public class LoginPage implements Initializable {
         root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("../View_Controller/MainForm.fxml")));
         Stage stage = new Stage();
         stage.setTitle("Main Screen");
-        stage.setScene(new Scene(root, 1000, 850));
+        stage.setScene(new Scene(root, 1040, 850));
         stage.setResizable(false);
         stage.show();
 
         //Hides current window
         ((Node)(actionEvent.getSource())).getScene().getWindow().hide();
+    }
+
+    public static Stage getStage() {
+        return LoginPage.stage;
+    }
+
+    public static void setStage(Stage stage) {
+        LoginPage.stage = stage;
     }
 }

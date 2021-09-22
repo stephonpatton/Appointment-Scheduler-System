@@ -25,6 +25,8 @@ import java.util.ResourceBundle;
 
 import static java.time.ZonedDateTime.now;
 
+
+
 /*
  * Javadoc location: /out/javadoc/index.html
  */
@@ -38,6 +40,8 @@ import static java.time.ZonedDateTime.now;
 
 public class MainController extends Application implements Initializable {
 
+    ResourceBundle rb;
+
     /**
      * Starts application and loads up main screen (MainForm.fxml)
      * @param primaryStage main stage to be set after starting
@@ -45,6 +49,7 @@ public class MainController extends Application implements Initializable {
      */
     @Override
     public void start(Stage primaryStage) throws Exception{
+        Parent main = null;
         //TODO: FIGURE OUT LOCATION HERE AND setDefault(new Locale(...)) here before loading login form
 //        Locale.setDefault(new Locale("fr"));
 //        ResourceBundle rb = ResourceBundle.getBundle("language_files/languages_en.properties", Locale.getDefault());
@@ -55,16 +60,25 @@ public class MainController extends Application implements Initializable {
         System.out.println(LocalTime.now(locationId));
         System.out.println(zone.getHour() + ":" + zone.getMinute() + ":" + zone.getSecond() + "    " + zone.getZone());
 
+        System.out.println(ZoneId.getAvailableZoneIds());
+
+        Locale.setDefault(new Locale("fr"));
+        ResourceBundle rb = ResourceBundle.getBundle("languages/rb");
+
         //TODO: Below is for setResource
         FXMLLoader loader = new FXMLLoader(getClass().getResource("../View_Controller/LoginPage.fxml"));
-//        loader.setResources(rb);
+        loader.setResources(rb);
 
+        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("../View_Controller/LoginPage.fxml")), rb);
 
-
-        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("../View_Controller/LoginPage.fxml")));
-        primaryStage.setTitle("Login Page");
+        if(Locale.getDefault().getLanguage().equals("fr")) {
+            primaryStage.setTitle(rb.getString("title"));
+        } else {
+            primaryStage.setTitle("Login Page");
+        }
         primaryStage.setScene(new Scene(root, 600, 300));
         primaryStage.setResizable(false);
+        LoginPage.setStage(primaryStage);
         primaryStage.show();
     }
 
@@ -77,62 +91,11 @@ public class MainController extends Application implements Initializable {
         launch(args);
     }
 
-
-    /**
-     * Opens up the Add Part page when the add button is pressed
-     * @param actionEvent when a button is pressed
-     */
-    public void openAddPartWindow(ActionEvent actionEvent) {
-        Parent root;
-        try {
-            //Setting scene to AddPart window and setting properties for it
-            root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("../View_Controller/AddPart.fxml")));
-            Stage stage = new Stage();
-            stage.setTitle("Add Part");
-            stage.setScene(new Scene(root, 600, 400));
-            stage.setResizable(false);
-            stage.show();
-
-            //Hides current window
-            ((Node)(actionEvent.getSource())).getScene().getWindow().hide();
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Opens the add product window upon a click
-     * @param actionEvent button being pressed
-     */
-    public void openAddProductWindow(ActionEvent actionEvent) {
-        Parent root;
-        try {
-            //Setting new scene and adding properties to scene
-            root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("../View_Controller/AddProduct.fxml")));
-            Stage stage = new Stage();
-            stage.setTitle("Add Product");
-            stage.setScene(new Scene(root, 920, 500));
-            stage.setResizable(false);
-            stage.show();
-
-//            Hides current window after scene has been set
-            ((Node)(actionEvent.getSource())).getScene().getWindow().hide();
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Closes application when the exit button is pressed
-     */
-    public void closeApp() {
-        Platform.exit();
-    }
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
+        this.rb = resourceBundle;
+        System.out.println(Locale.getDefault());
+        Locale.setDefault(new Locale("no", "NO"));
+        ResourceBundle rb = ResourceBundle.getBundle("languages/rb");
     }
 }
