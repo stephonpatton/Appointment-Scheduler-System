@@ -14,9 +14,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
 import util.*;
 
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.URL;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Locale;
 import java.util.Objects;
@@ -71,6 +74,14 @@ public class LoginPage implements Initializable {
         String password = passwordTF.getText();
 
         if(Query.login(username, password)) {
+
+            String filename = "login_activity.txt";
+            FileWriter fWriter = new FileWriter(filename, true);
+            PrintWriter outputFile = new PrintWriter(fWriter);
+            outputFile.println(username + " logged in on " + LocalDateTime.now().toLocalDate() + " " + LocalDateTime.now().toLocalTime());
+            System.out.println(username + " logged in on " + LocalDateTime.now()); // TODO: Delete later
+            outputFile.close();
+
             User.setCurrentUser(username);
             System.out.println("LOGIN SUCCESSFUL");
             System.out.println("ZONE ID IS" + ZoneId.systemDefault());
@@ -81,6 +92,12 @@ public class LoginPage implements Initializable {
             FirstLevelDivisionCRUD.loadAllFirstLevel();
             showMainScreen(actionEvent);
         } else {
+            String filename = "login_activity.txt";
+            FileWriter fileWriter = new FileWriter(filename, true);
+            PrintWriter printWriter = new PrintWriter(fileWriter);
+            printWriter.println(username + " failed to login on" + LocalDateTime.now().toLocalDate() + " " + LocalDateTime.now().toLocalTime());
+            System.out.println(username + " failed to login on" + LocalDateTime.now().toLocalDate() + LocalDateTime.now().toLocalTime()); // TODO: Delete later
+            printWriter.close();
             invalidUserPassAlert();
         }
     }

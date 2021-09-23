@@ -45,12 +45,6 @@ public class MainForm implements Initializable {
     @FXML private TableColumn<Customer, String> customerTVAddressCol;
     @FXML private TableColumn<Customer, String> customerTVPostalCol;
 
-    @FXML private RadioButton allFilter;
-    @FXML private RadioButton weekFilter;
-    @FXML private RadioButton monthFilter;
-
-
-
 
     private static Appointment tempAppointment;
     private static int appointmentIndex;
@@ -352,18 +346,38 @@ public class MainForm implements Initializable {
     }
 
     public void populateByMonth() {
-        if(filterByMonth() == null) {
-            // TODO: Maybe show error
+        if(filterByMonth().isEmpty()) {
+            noAppointmentsMonthAlert();
+            populateAppointmentsTable();
         } else {
             appointmentsTableView.setItems(filterByMonth());
         }
     }
 
     public void populateByWeek() {
-        if(filterByWeek() == null) {
-            // TODO: Maybe show error
+        if(filterByWeek().isEmpty()) {
+            noAppointmentsWeekAlert();
+            populateAppointmentsTable();
         } else {
             appointmentsTableView.setItems(filterByWeek());
         }
+    }
+
+    private void noAppointmentsMonthAlert() {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setHeaderText("No appointments for this month.");
+        alert.setContentText("There are no appointments in this current month.");
+        alert.showAndWait().ifPresent(response -> {
+
+        });
+    }
+
+    private void noAppointmentsWeekAlert() {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setHeaderText("No appointments for this week.");
+        alert.setContentText("There are no appointments in this current week.");
+        alert.showAndWait().ifPresent(response -> {
+
+        });
     }
 }
