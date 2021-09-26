@@ -4,7 +4,6 @@ import Model.Appointment;
 import Model.Contact;
 import Model.User;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -15,15 +14,14 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import util.AppointmentsCRUD;
+import util.Time;
 
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Timestamp;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
@@ -96,13 +94,39 @@ public class AddAppointment implements Initializable {
             String endDate = addAppointEndPicker.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
             String endHrTime = String.valueOf(endHrSpinner.getValue());
             String endMinTime = String.valueOf(endMinSpinner.getValue());
-            String endTime = "0" + endHrTime + ":" + endMinTime + ":00";
+            String endTime = "0" + endHrTime + ":" + endMinTime + ":00.0";
 
 
             System.out.println(startTime);
-            Timestamp startTS = convertStringsToTime(startDate, startTime);
-            Timestamp endTS = convertStringsToTime(endDate, endTime);
+            Timestamp startTS = Time.convertStringsToTime(startDate, startTime);
+            Timestamp endTS = Time.convertStringsToTime(endDate, endTime);
             System.out.println("TIME ADDED");
+
+
+            //TODO: DO THIS LATER... MODIFY APPOINTMENT IS WORKING
+            //TESTING
+            assert startTS != null;
+            LocalDateTime startLdt = Time.convertTStoLDT(startTS);
+            LocalDateTime endLdt = Time.convertTStoLDT(endTS);
+            System.out.println("LDT UTC VALUE: " + startLdt);
+            boolean testing = Time.checkBusinessHours(startLdt);
+            System.out.println(testing);
+            if(Time.checkBusinessHours(startLdt) == true) {
+                System.out.println("VALUE OF LDT IN EST: " + startLdt);
+            } else {
+                startTimeHrCheck = false;
+                highlightErrors();
+                return false;
+            }
+
+            if(Time.checkBusinessHours(endLdt) == true) {
+                System.out.println("VALUE OF LDT END: " + endLdt);
+            } else {
+                endTimeHrCheck = false;
+                highlightErrors();
+                return false;
+            }
+
             if(title.length() == 0 || description.length() == 0 || location.length() == 0 || type.length() == 0) {
                 isCreated = false;
             } else {
@@ -146,18 +170,7 @@ public class AddAppointment implements Initializable {
         return isCreated;
     }
 
-    public static Timestamp convertStringsToTime(String date, String time) {
-        try {
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            String dateTime = date + " " + time;
-            Date parsedDate = formatter.parse(dateTime);
-            Timestamp ts = new Timestamp(parsedDate.getTime());
-            System.out.println("TIMESTAMP: " + ts.getTime());
-            return ts;
-        }catch (Exception e) {
-            return null;
-        }
-    }
+
 
     public void showErrorAlert() {
         Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -380,7 +393,7 @@ public class AddAppointment implements Initializable {
     }
 
     private void initArrays() {
-        for(int i = 8; i < 23; i++) { //TODO: May have to change later after conversion and stuff
+        for(int i = 0; i < 24; i++) { //TODO: May have to change later after conversion and stuff
             hours.add(i);
         }
         mins.add(0);

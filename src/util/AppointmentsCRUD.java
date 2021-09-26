@@ -77,16 +77,11 @@ public class AppointmentsCRUD {
                 tempAppoint.setStartDate(start.toLocalDateTime().toLocalDate());
                 tempAppoint.setEndDate(end.toLocalDateTime().toLocalDate());
                 System.out.println("TIMESTAMP FROM DB" + start.toLocalDateTime().getHour() + ":" + start.toLocalDateTime().getMinute() + ":" + start.toLocalDateTime().getSecond());
-                // TODO: ^ THIS WILL GET THE INFO FOR ME
 
                 // helper method for viewing appointment TableView
-//                tempAppoint.setContactName();
                 tempAppoint.setContactName(AppointmentsCRUD.getContactName(contactID));
-//                tempAppoint.setCreatedDate(Timestamp.valueOf(formatDate.format(createdDate))); // TODO: Maybe change... printing tailing .0 at the end; also useful for create operation
 
                 // Adds to appointment list
-
-
                 Appointment.addAppointment(tempAppoint);
 
             }

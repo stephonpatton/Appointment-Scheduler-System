@@ -14,6 +14,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import util.AppointmentsCRUD;
+import util.Time;
 
 import java.io.IOException;
 import java.net.URL;
@@ -128,8 +129,8 @@ public class ModifyAppointment implements Initializable {
             String endMinTime = String.valueOf(endMinSpinner.getValue());
             String endTime = "0" + endHrTime + ":" + endMinTime + ":00";
 
-            Timestamp startTs = AddAppointment.convertStringsToTime(startDate, startTime);
-            Timestamp endTs = AddAppointment.convertStringsToTime(endDate, endTime);
+            Timestamp startTs = Time.convertStringsToTime(startDate, startTime);
+            Timestamp endTs = Time.convertStringsToTime(endDate, endTime);
 
             appoint.setTitle(title);
             appoint.setCustomerID(custID);
@@ -199,7 +200,11 @@ public class ModifyAppointment implements Initializable {
         modifyAppointCustomerTF.setText(String.valueOf(modifyAppointment.getCustomerID()));
         modifyAppointUserTF.setText(String.valueOf(modifyAppointment.getUserID()));
 
-        startHrSpinner.getValueFactory().setValue(modifyAppointment.getStartHr());
+        LocalDateTime ts = Time.utcToLocalTime(modifyAppointment.getStart());
+        String hour = String.valueOf(ts.getHour());
+
+//        startHrSpinner.getValueFactory().setValue(modifyAppointment.getStartHr());
+        startHrSpinner.getValueFactory().setValue(Integer.valueOf(hour));
         startMinSpinner.getValueFactory().setValue(modifyAppointment.getStartMin());
         endHrSpinner.getValueFactory().setValue(modifyAppointment.getEndHr());
         endMinSpinner.getValueFactory().setValue(modifyAppointment.getEndMin());
@@ -395,7 +400,7 @@ public class ModifyAppointment implements Initializable {
 
 
     private void initArrays() {
-        for(int i = 8; i < 23; i++) { //TODO: May have to change later after conversion and stuff
+        for(int i = 0; i < 23; i++) { //TODO: May have to change later after conversion and stuff
             hours.add(i);
         }
         mins.add(0);
