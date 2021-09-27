@@ -217,4 +217,5 @@ public class AppointmentsCRUD {
         LocalDateTime localDate =  LocalDateTime.parse(date + " " + time, format).atZone(ZoneId.systemDefault()).withZoneSameInstant(ZoneId.of("UTC")).toLocalDateTime();
         return localDate;
     }
+
 }

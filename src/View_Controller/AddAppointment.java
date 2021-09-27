@@ -132,35 +132,47 @@ public class AddAppointment implements Initializable {
             if(title.length() == 0 || description.length() == 0 || location.length() == 0 || type.length() == 0) {
                 isCreated = false;
             } else {
-                Appointment appoint = new Appointment();
-                appoint.setAppointmentID(appointmentID);
-                appoint.setTitle(title);
-                appoint.setDescription(description);
-                appoint.setLocation(location);
-                appoint.setType(type);
-                appoint.setContactID(contactID);
-                appoint.setUserID(userID);
-                appoint.setCustomerID(customerID);
-                appoint.setContactName(addAppointContactCombo.getValue().getContactName());
+                if(startHrSpinner.getValue() > endHrSpinner.getValue() || (endHrSpinner.getValue() == startHrSpinner.getValue() && endMinSpinner.getValue() <= startMinSpinner.getValue())) {
+                    // TODO: Alert saying end time before start time
+                    System.err.println("END HOUR GREATER THAN START HOUR");
+                    startTimeHrCheck = false;
+                    endTimeHrCheck = false;
+                    startTimeMinCheck = false;
+                    endTimeMinCheck = false;
+                    highlightErrors();
+                    return false;
+                } else {
+                    Appointment appoint = new Appointment();
+                    appoint.setAppointmentID(appointmentID);
+                    appoint.setTitle(title);
+                    appoint.setDescription(description);
+                    appoint.setLocation(location);
+                    appoint.setType(type);
+                    appoint.setContactID(contactID);
+                    appoint.setUserID(userID);
+                    appoint.setCustomerID(customerID);
+                    appoint.setContactName(addAppointContactCombo.getValue().getContactName());
 
-                appoint.setStartHr(startHrSpinner.getValue());
-                System.out.println("START HR SPINNER VALUE: " + startHrSpinner.getValue());
-                appoint.setStartMin(startMinSpinner.getValue());
-                appoint.setEndHr(endHrSpinner.getValue());
-                appoint.setEndMin(endMinSpinner.getValue());
+                    appoint.setStartHr(startHrSpinner.getValue());
+                    System.out.println("START HR SPINNER VALUE: " + startHrSpinner.getValue());
+                    appoint.setStartMin(startMinSpinner.getValue());
+                    appoint.setEndHr(endHrSpinner.getValue());
+                    appoint.setEndMin(endMinSpinner.getValue());
 
 //                appoint.setStart(startTS);
-                appoint.setStart(Timestamp.valueOf(startTSUTC));
+                    appoint.setStart(Timestamp.valueOf(startTSUTC));
 //                appoint.setEnd(endTS);
-                appoint.setEnd(Timestamp.valueOf(endTSUTC));
-                appoint.setStartDate(addAppointStartPicker.getValue());
-                appoint.setEndDate(addAppointEndPicker.getValue());
+                    appoint.setEnd(Timestamp.valueOf(endTSUTC));
+                    appoint.setStartDate(addAppointStartPicker.getValue());
+                    appoint.setEndDate(addAppointEndPicker.getValue());
 
-                appoint.setCreatedBy(User.getCurrentUser());
+                    appoint.setCreatedBy(User.getCurrentUser());
 
-                Appointment.addAppointment(appoint);
-                AppointmentsCRUD.insertAppointment(appoint);
-                isCreated = true;
+                    Appointment.addAppointment(appoint);
+                    AppointmentsCRUD.insertAppointment(appoint);
+                    isCreated = true;
+                }
+
             }
 
 

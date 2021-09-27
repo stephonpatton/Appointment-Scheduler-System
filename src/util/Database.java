@@ -10,7 +10,7 @@ public class Database {
 //    private static final String DB_PASSWORD = "53689393671";
 //    private static final String DB_USERNAME = "U08U87";
 
-    private static final String DATABASE_URL = "jdbc:mysql://localhost:3306/client_schedule?verifyServerCertificate=false&useSSL=true";
+    private static final String DATABASE_URL = "jdbc:mysql://localhost:3306/client_schedule?verifyServerCertificate=false&useSSL=false";
     private static final String DB_PASSWORD = "Passw0rd!";
     private static final String DB_USERNAME = "sqlUser";
 
@@ -39,6 +39,11 @@ public class Database {
     public static Connection getConnection() throws SQLException {
         Connection conn = DriverManager.getConnection(DATABASE_URL, DB_USERNAME, DB_PASSWORD);
         return conn;
+    }
+
+    public static void closeConnection() throws SQLException {
+        Connection conn = DriverManager.getConnection(DATABASE_URL, DB_USERNAME, DB_PASSWORD);
+        conn.close();
     }
 }
 

@@ -68,11 +68,16 @@
       </Pane>
       <Pane layoutX="632.0" layoutY="386.0" prefHeight="348.0" prefWidth="395.0" style="-fx-border-radius: 25; -fx-border-style: solid; -fx-border-width: 1;">
          <children>
-            <Label layoutX="81.0" layoutY="14.0" text="Other Navigation" underline="true">
+            <Label layoutX="106.0" layoutY="14.0" text="Other Navigation" underline="true">
                <font>
                   <Font size="24.0" />
                </font>
             </Label>
+            <Button layoutX="157.0" layoutY="261.0" mnemonicParsing="false" onAction="#logoutUser" text="Logout">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Button>
          </children>
       </Pane>
    </children>

@@ -90,6 +90,13 @@ public class LoginPage implements Initializable {
             CustomersCRUD.loadAllCustomers();
             CountriesCRUD.loadAllCountries();
             FirstLevelDivisionCRUD.loadAllFirstLevel();
+            if(Time.checkIfAppointment15()) {
+                appointmentAlert();
+                System.out.println("APPOINTMENT IN 15");
+            } else {
+                noAppointmentAlert();
+                System.out.println("NO APPOINTMENT");
+            }
             showMainScreen(actionEvent);
         } else {
             String filename = "login_activity.txt";
@@ -138,5 +145,24 @@ public class LoginPage implements Initializable {
 
     public static void setStage(Stage stage) {
         LoginPage.stage = stage;
+    }
+
+    private void appointmentAlert() {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setHeaderText("Appointment in the next 15 minutes");
+        alert.setContentText("There is an appointment in the next 15 mins. \n ID: " + Time.getAppointmentSoon().getAppointmentID() +
+                "\n Date/Time: " + Time.getAppointmentSoon().getStartLocal());
+        alert.showAndWait().ifPresent(response -> {
+
+        });
+    }
+
+    private void noAppointmentAlert() {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setHeaderText("No appointments in the next 15 minutes");
+        alert.setContentText("There are no appointments in the next 15 minutes. Thank you.");
+        alert.showAndWait().ifPresent(response -> {
+
+        });
     }
 }

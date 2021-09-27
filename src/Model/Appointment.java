@@ -364,4 +364,21 @@ public class Appointment {
         return Timestamp.valueOf(Time.utcToLocalTime(end));
     }
 
+
+    public LocalDateTime getStartLDT() {
+        return Time.convertTStoLDT(start);
+    }
+
+    public static Appointment getByID(int appointmentID) {
+        Appointment temp = new Appointment();
+        for(Appointment appoint : allAppointments) {
+            if(appoint.getAppointmentID() == appointmentID) {
+                temp = appoint;
+                return temp;
+            }
+        }
+        return temp;
+    }
+
+
 }

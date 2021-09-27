@@ -1,14 +1,20 @@
 package util;
 
-import java.sql.Timestamp;
+import Model.Appointment;
+
+import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.ZoneId;
+import java.time.chrono.ChronoLocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.TimeZone;
 
 public class Time {
+    private static Appointment appointmentSoon;
     public void localTimeToEst() {
 
     }
@@ -66,6 +72,38 @@ public class Time {
 
         return isValid;
     }
+
+    public static boolean checkIfAppointment15() throws SQLException {
+        boolean isAppointment = false;
+        try {
+            Connection conn = Database.getConnection();
+            PreparedStatement ps;
+            ResultSet rs;
+            String query = "SELECT Appointment_ID, Start FROM appointments WHERE Start BETWEEN ? AND ?";
+            ps = conn.prepareStatement(query);
+            ps.setTimestamp(1, Timestamp.valueOf(LocalDateTime.now(ZoneId.of("UTC"))));
+            ps.setTimestamp(2, Timestamp.valueOf(LocalDateTime.now(ZoneId.of("UTC")).plusMinutes(15)));
+            rs = ps.executeQuery();
+            rs.next();
+                int appointmentId = rs.getInt("Appointment_ID");
+                Timestamp start = rs.getTimestamp("Start");
+
+                appointmentSoon = Appointment.getByID(appointmentId);
+                isAppointment = true;
+//                return true;
+
+        }catch(SQLException e) {
+            isAppointment = false;
+            System.err.println("NO RESULTS");
+        }
+        return isAppointment;
+    }
+
+
+
+//    public static boolean checkStartGreaterMin() {
+//        //todo: implmenent.. maybe not here
+//    }
 //    public static boolean checkBusinessHours(LocalDateTime utcLDT) {
 //        boolean isValid = false;
 //        int localStartHour = utcLDT.getHour();
@@ -134,5 +172,9 @@ public class Time {
 //    public static LocalDateTime convertStringToLDT(String date, String time) {
 //        DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
 //    }
+
+    public static Appointment getAppointmentSoon() {
+        return appointmentSoon;
+    }
 
 }

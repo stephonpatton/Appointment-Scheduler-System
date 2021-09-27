@@ -2,6 +2,7 @@ package View_Controller;
 
 import Model.Appointment;
 import Model.Customer;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -16,9 +17,11 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import util.AppointmentsCRUD;
 import util.CustomersCRUD;
+import util.Database;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.Objects;
@@ -381,5 +384,10 @@ public class MainForm implements Initializable {
         alert.showAndWait().ifPresent(response -> {
 
         });
+    }
+
+    public void logoutUser(ActionEvent actionEvent) throws SQLException, IOException {
+        Database.closeConnection();
+        Platform.exit();
     }
 }
