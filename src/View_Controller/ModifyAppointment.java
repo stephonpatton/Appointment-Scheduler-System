@@ -18,7 +18,6 @@ import util.Time;
 
 import java.io.IOException;
 import java.net.URL;
-import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -91,8 +90,12 @@ public class ModifyAppointment implements Initializable {
 //                setChecksToFalse();
 //            }
             if(checkAllErrors()) {
-                modifyAppointmentObject();
-                returnToMainScreen(actionEvent);
+                if(modifyAppointmentObject()) {
+                    returnToMainScreen(actionEvent);
+                } else {
+                    highlightErrors();
+                    showErrorAlert();
+                }
             } else {
                 highlightErrors();
                 showErrorAlert();
@@ -106,7 +109,7 @@ public class ModifyAppointment implements Initializable {
 //        }
     }
 
-    public void modifyAppointmentObject() {
+    public boolean modifyAppointmentObject() {
         Appointment appoint = new Appointment();
         boolean isCreated = false;
         if(checkAllErrors()) {
@@ -132,6 +135,30 @@ public class ModifyAppointment implements Initializable {
             Timestamp startTs = Time.convertStringsToTime(startDate, startTime);
             Timestamp endTs = Time.convertStringsToTime(endDate, endTime);
 
+            LocalDateTime startLdt = Time.convertTStoLDT(startTs);
+            LocalDateTime endLdt = Time.convertTStoLDT(endTs);
+
+            LocalDateTime startTSUTC = Time.convertTStoLDT(startTs);
+            LocalDateTime endTSUTC = Time.convertTStoLDT(endTs);
+
+            System.out.println("LDT UTC VALUE: " + startLdt);
+            boolean testing = Time.checkBusinessHours(startLdt);
+            System.out.println(testing);
+            if(Time.checkBusinessHours(startLdt)) {
+                if(Time.checkBusinessHours(endLdt)) {
+                    System.out.println("VALID HOURS");
+                } else {
+                    endTimeHrCheck = false;
+                    highlightErrors();
+                    return false;
+                }
+                System.out.println("VALID START HOUR");
+            } else {
+                startTimeHrCheck = false;
+                highlightErrors();
+                return false;
+            }
+
             appoint.setTitle(title);
             appoint.setCustomerID(custID);
             appoint.setUserID(userID);
@@ -140,7 +167,6 @@ public class ModifyAppointment implements Initializable {
             appoint.setContactID(contactID);
             appoint.setLocation(location);
             appoint.setAppointmentID(Integer.parseInt(modifyAppointIDTF.getText()));
-//            appoint.setContactName();
             appoint.setContactName(modifyAppointContactCombo.getValue().getContactName());
             appoint.setContact(modifyAppointContactCombo.getValue());
             appoint.setStartDate(modifyAppointStartPicker.getValue());
@@ -149,8 +175,8 @@ public class ModifyAppointment implements Initializable {
             appoint.setStartMin(startMinSpinner.getValue());
             appoint.setEndHr(endHrSpinner.getValue());
             appoint.setEndMin(endMinSpinner.getValue());
-            appoint.setStart(startTs);
-            appoint.setEnd(endTs);
+            appoint.setStart(Timestamp.valueOf(startTSUTC));
+            appoint.setEnd(Timestamp.valueOf(endTSUTC));
             appoint.setLastUpdateBy(User.getCurrentUser());
 
             //CONTACT AND DATES
@@ -161,7 +187,7 @@ public class ModifyAppointment implements Initializable {
             showErrorAlert();
         }
 
-//        return isCreated;
+        return isCreated;
     }
 
     public boolean checkAllErrors() {
@@ -200,13 +226,17 @@ public class ModifyAppointment implements Initializable {
         modifyAppointCustomerTF.setText(String.valueOf(modifyAppointment.getCustomerID()));
         modifyAppointUserTF.setText(String.valueOf(modifyAppointment.getUserID()));
 
-        LocalDateTime ts = Time.utcToLocalTime(modifyAppointment.getStart());
-        String hour = String.valueOf(ts.getHour());
+        LocalDateTime startLDT = Time.utcToLocalTime(modifyAppointment.getStart());
+        String hour = String.valueOf(startLDT.getHour());
+
+        LocalDateTime endLDT = Time.utcToLocalTime(modifyAppointment.getEnd());
+        String endHour = String.valueOf(endLDT.getHour());
 
 //        startHrSpinner.getValueFactory().setValue(modifyAppointment.getStartHr());
         startHrSpinner.getValueFactory().setValue(Integer.valueOf(hour));
         startMinSpinner.getValueFactory().setValue(modifyAppointment.getStartMin());
-        endHrSpinner.getValueFactory().setValue(modifyAppointment.getEndHr());
+//        endHrSpinner.getValueFactory().setValue(modifyAppointment.getEndHr());
+        endHrSpinner.getValueFactory().setValue(Integer.valueOf(endHour));
         endMinSpinner.getValueFactory().setValue(modifyAppointment.getEndMin());
         modifyAppointStartPicker.setValue(modifyAppointment.getStartDate());
         modifyAppointEndPicker.setValue(modifyAppointment.getEndDate());

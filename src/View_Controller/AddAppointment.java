@@ -100,6 +100,8 @@ public class AddAppointment implements Initializable {
             System.out.println(startTime);
             Timestamp startTS = Time.convertStringsToTime(startDate, startTime);
             Timestamp endTS = Time.convertStringsToTime(endDate, endTime);
+            LocalDateTime startTSUTC = Time.convertTStoLDT(startTS);
+            LocalDateTime endTSUTC = Time.convertTStoLDT(endTS);
             System.out.println("TIME ADDED");
 
 
@@ -147,8 +149,10 @@ public class AddAppointment implements Initializable {
                 appoint.setEndHr(endHrSpinner.getValue());
                 appoint.setEndMin(endMinSpinner.getValue());
 
-                appoint.setStart(startTS);
-                appoint.setEnd(endTS);
+//                appoint.setStart(startTS);
+                appoint.setStart(Timestamp.valueOf(startTSUTC));
+//                appoint.setEnd(endTS);
+                appoint.setEnd(Timestamp.valueOf(endTSUTC));
                 appoint.setStartDate(addAppointStartPicker.getValue());
                 appoint.setEndDate(addAppointEndPicker.getValue());
 

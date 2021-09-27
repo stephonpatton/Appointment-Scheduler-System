@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.TimeZone;
 
 public class Time {
     public void localTimeToEst() {
@@ -102,6 +103,25 @@ public class Time {
             return null;
         }
     }
+
+    public static Timestamp convertStringToUTCTS(String date, String time) {
+        final long timeAtLocal = System.currentTimeMillis(); // or System.currentTimeMillis(); or new Date().getTime(); etc.
+        long offset = TimeZone.getDefault().getOffset(timeAtLocal);
+        final Timestamp timeAtUTC = new Timestamp(timeAtLocal - offset);
+        try {
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//            formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+            String dateTime = date + " " + time;
+            Date parsedDate = formatter.parse(dateTime);
+            Timestamp ts = new Timestamp(parsedDate.getTime());
+            System.out.println("TIMESTAMP: " + ts.getTime());
+            return ts;
+        }catch (Exception e) {
+            return null;
+        }
+    }
+
+
 
     public static LocalDateTime ldtToEst(LocalDateTime ldt) {
 //        DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");

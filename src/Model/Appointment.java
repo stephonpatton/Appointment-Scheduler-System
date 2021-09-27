@@ -3,10 +3,12 @@ package Model;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import util.AppointmentsCRUD;
+import util.Time;
 
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class Appointment {
     // Instance variables for object
@@ -31,6 +33,9 @@ public class Appointment {
     private int endHr, endMin;
     LocalDate startDate;
     LocalDate endDate;
+
+    private LocalDateTime startLocal;
+    private LocalDateTime endLocal;
 
 
     private static ObservableList<Appointment> allAppointments = FXCollections.observableArrayList();
@@ -349,4 +354,14 @@ public class Appointment {
     public LocalDate getEndDate() {
         return this.endDate;
     }
+
+    public Timestamp getStartLocal() {
+//        return Time.utcToLocalTime(start);
+        return Timestamp.valueOf(Time.utcToLocalTime(start));
+    }
+
+    public Timestamp getEndLocal() {
+        return Timestamp.valueOf(Time.utcToLocalTime(end));
+    }
+
 }

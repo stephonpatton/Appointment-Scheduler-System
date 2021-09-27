@@ -66,8 +66,10 @@ public class MainForm implements Initializable {
         customerIDCol.setCellValueFactory(new PropertyValueFactory<>("customerID"));
         typeCol.setCellValueFactory(new PropertyValueFactory<>("type"));
         titleCol.setCellValueFactory(new PropertyValueFactory<>("title"));
-        startCol.setCellValueFactory(new PropertyValueFactory<>("start"));
-        endCol.setCellValueFactory(new PropertyValueFactory<>("end"));
+//        startCol.setCellValueFactory(new PropertyValueFactory<>("start"));
+        startCol.setCellValueFactory(new PropertyValueFactory<>("startLocal"));
+//        endCol.setCellValueFactory(new PropertyValueFactory<>("end"));
+        endCol.setCellValueFactory(new PropertyValueFactory<>("endLocal"));
         locationCol.setCellValueFactory(new PropertyValueFactory<>("location"));
         descriptionCol.setCellValueFactory(new PropertyValueFactory<>("description"));
         userIDCol.setCellValueFactory(new PropertyValueFactory<>("userID"));
