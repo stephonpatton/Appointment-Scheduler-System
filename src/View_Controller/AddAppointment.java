@@ -110,6 +110,13 @@ public class AddAppointment implements Initializable {
             assert startTS != null;
             LocalDateTime startLdt = Time.convertTStoLDT(startTS);
             LocalDateTime endLdt = Time.convertTStoLDT(endTS);
+            if(endLdt.getHour() == 2) {
+                if(endLdt.getMinute() != 0) {
+                    endTimeMinCheck = false;
+                    highlightErrors();
+                    return false;
+                }
+            }
             System.out.println("LDT UTC VALUE: " + startLdt);
             boolean testing = Time.checkBusinessHours(startLdt);
             System.out.println(testing);

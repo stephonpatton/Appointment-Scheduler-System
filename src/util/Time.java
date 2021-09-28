@@ -61,7 +61,7 @@ public class Time {
             if(localHour >= 12) {
                 System.out.println("VALID TIME PROVIDED");
                 isValid = true;
-            } else if(localHour < 2) {
+            } else if(localHour <= 2) {
                 isValid = true;
             } else {
                 isValid = false;

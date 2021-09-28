@@ -141,6 +141,21 @@ public class ModifyAppointment implements Initializable {
             LocalDateTime startTSUTC = Time.convertTStoLDT(startTs);
             LocalDateTime endTSUTC = Time.convertTStoLDT(endTs);
 
+            if(endLdt.getHour() == 2) {
+                if(endLdt.getMinute() != 0) {
+                    endTimeMinCheck = false;
+                    highlightErrors();
+                    return false;
+                }
+            }
+
+            if(startLdt.getHour() == 2) {
+                startTimeHrCheck = false;
+                highlightErrors();
+                return false;
+            }
+
+
             System.out.println("LDT UTC VALUE: " + startLdt);
             boolean testing = Time.checkBusinessHours(startLdt);
             System.out.println(testing);
@@ -159,30 +174,41 @@ public class ModifyAppointment implements Initializable {
                 return false;
             }
 
-            appoint.setTitle(title);
-            appoint.setCustomerID(custID);
-            appoint.setUserID(userID);
-            appoint.setDescription(description);
-            appoint.setType(type);
-            appoint.setContactID(contactID);
-            appoint.setLocation(location);
-            appoint.setAppointmentID(Integer.parseInt(modifyAppointIDTF.getText()));
-            appoint.setContactName(modifyAppointContactCombo.getValue().getContactName());
-            appoint.setContact(modifyAppointContactCombo.getValue());
-            appoint.setStartDate(modifyAppointStartPicker.getValue());
-            appoint.setEndDate(modifyAppointEndPicker.getValue());
-            appoint.setStartHr(startHrSpinner.getValue());
-            appoint.setStartMin(startMinSpinner.getValue());
-            appoint.setEndHr(endHrSpinner.getValue());
-            appoint.setEndMin(endMinSpinner.getValue());
-            appoint.setStart(Timestamp.valueOf(startTSUTC));
-            appoint.setEnd(Timestamp.valueOf(endTSUTC));
-            appoint.setLastUpdateBy(User.getCurrentUser());
+            if(startHrSpinner.getValue() > endHrSpinner.getValue() || (endHrSpinner.getValue() == startHrSpinner.getValue() && endMinSpinner.getValue() <= startMinSpinner.getValue())) {
+                // TODO: Alert saying end time before start time
+                System.err.println("END HOUR GREATER THAN START HOUR");
+                startTimeHrCheck = false;
+                endTimeHrCheck = false;
+                startTimeMinCheck = false;
+                endTimeMinCheck = false;
+                highlightErrors();
+                return false;
+            } else {
+                appoint.setTitle(title);
+                appoint.setCustomerID(custID);
+                appoint.setUserID(userID);
+                appoint.setDescription(description);
+                appoint.setType(type);
+                appoint.setContactID(contactID);
+                appoint.setLocation(location);
+                appoint.setAppointmentID(Integer.parseInt(modifyAppointIDTF.getText()));
+                appoint.setContactName(modifyAppointContactCombo.getValue().getContactName());
+                appoint.setContact(modifyAppointContactCombo.getValue());
+                appoint.setStartDate(modifyAppointStartPicker.getValue());
+                appoint.setEndDate(modifyAppointEndPicker.getValue());
+                appoint.setStartHr(startHrSpinner.getValue());
+                appoint.setStartMin(startMinSpinner.getValue());
+                appoint.setEndHr(endHrSpinner.getValue());
+                appoint.setEndMin(endMinSpinner.getValue());
+                appoint.setStart(Timestamp.valueOf(startTSUTC));
+                appoint.setEnd(Timestamp.valueOf(endTSUTC));
+                appoint.setLastUpdateBy(User.getCurrentUser());
 
-            //CONTACT AND DATES
-            Appointment.updateAppointment(appointmentIndexToModify(), appoint);
-            AppointmentsCRUD.updateAppointment(appoint.getAppointmentID(), appoint);
-            isCreated = true;
+                //CONTACT AND DATES
+                Appointment.updateAppointment(appointmentIndexToModify(), appoint);
+                AppointmentsCRUD.updateAppointment(appoint.getAppointmentID(), appoint);
+                isCreated = true;
+            }
         } else {
             showErrorAlert();
         }
