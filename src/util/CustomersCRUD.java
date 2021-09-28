@@ -6,6 +6,8 @@ import Model.Customer;
 import Model.User;
 
 import java.sql.*;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.TimeZone;
 
 public class CustomersCRUD {
@@ -122,5 +124,60 @@ public class CustomersCRUD {
             throwables.printStackTrace();
         }
         return nextID;
+    }
+
+    public static boolean isOverlap(int customerID, LocalDateTime startLocal, LocalDateTime endLocal) throws SQLException {
+        boolean overlap;
+        Connection conn = Database.getConnection();
+        PreparedStatement ps;
+        ResultSet rs;
+        ArrayList<Boolean> checkAppoints = new ArrayList<>();
+
+
+
+        try {
+            String query = "SELECT Start, End FROM appointments INNER JOIN customers AS c WHERE c.Customer_ID = ? AND appointments.Customer_ID = ?";
+            ps = conn.prepareStatement(query);
+            ps.setInt(1, customerID);
+            ps.setInt(2, customerID);
+            rs = ps.executeQuery();
+
+            while(rs.next()) {
+
+                Timestamp start = rs.getTimestamp("Start");
+                Timestamp end = rs.getTimestamp("End");
+
+                LocalDateTime startLdt = start.toLocalDateTime();
+                LocalDateTime endLdt = end.toLocalDateTime();
+
+                System.out.println("INPUT LDT" + startLocal);
+                System.out.println("DATABASE LDT" + startLdt);
+
+                if(startLocal.isEqual(startLdt) || endLocal.isEqual(endLdt)) {
+                    checkAppoints.add(true);
+//                    return true;
+                } else if(startLocal.isAfter(startLdt) && startLocal.isBefore(endLdt)) {
+                    checkAppoints.add(true);
+//                    return true;
+                } else {
+                    checkAppoints.add(false);
+//                    return false;
+                }
+            }
+        }catch(SQLException e) {
+            throw new Error("Problem", e);
+        }
+
+        if(checkAppoints.contains(true)) {
+            overlap = true;
+        } else {
+            overlap = false;
+        }
+        for(Boolean bool : checkAppoints) {
+            System.out.println(bool);
+        }
+        System.out.println("IS OVERLAP : " + overlap);
+
+        return overlap;
     }
 }

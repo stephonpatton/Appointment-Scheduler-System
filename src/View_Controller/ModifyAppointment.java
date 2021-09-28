@@ -14,10 +14,12 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import util.AppointmentsCRUD;
+import util.CustomersCRUD;
 import util.Time;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -77,7 +79,7 @@ public class ModifyAppointment implements Initializable {
     }
 
 
-    public void modifyAppointment(ActionEvent actionEvent) throws IOException {
+    public void modifyAppointment(ActionEvent actionEvent) throws IOException, SQLException {
         checkFields();
         highlightErrors();
         if(checkDifferences()) {
@@ -109,7 +111,7 @@ public class ModifyAppointment implements Initializable {
 //        }
     }
 
-    public boolean modifyAppointmentObject() {
+    public boolean modifyAppointmentObject() throws SQLException {
         Appointment appoint = new Appointment();
         boolean isCreated = false;
         if(checkAllErrors()) {
@@ -174,6 +176,18 @@ public class ModifyAppointment implements Initializable {
                 return false;
             }
 
+            if(CustomersCRUD.isOverlap(custID, startLdt, endLdt)) {
+                // TODO: ALERT SAYING OVERLAP
+                showOverlapAlert();
+                startTimeHrCheck = false;
+                endTimeHrCheck = false;
+                startTimeMinCheck = false;
+                endTimeMinCheck = false;
+                customerIDCheck = false;
+                highlightErrors();
+                return false;
+            }
+
             if(startHrSpinner.getValue() > endHrSpinner.getValue() || (endHrSpinner.getValue() == startHrSpinner.getValue() && endMinSpinner.getValue() <= startMinSpinner.getValue())) {
                 // TODO: Alert saying end time before start time
                 System.err.println("END HOUR GREATER THAN START HOUR");
@@ -214,6 +228,15 @@ public class ModifyAppointment implements Initializable {
         }
 
         return isCreated;
+    }
+
+    private void showOverlapAlert() {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setHeaderText("There is overlap for the customer with appointments.");
+        alert.setContentText("Please adjust the time settings to not overlap with other appointments");
+        alert.showAndWait().ifPresent(response -> {
+
+        });
     }
 
     public boolean checkAllErrors() {

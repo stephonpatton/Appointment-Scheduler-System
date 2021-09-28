@@ -14,6 +14,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import util.AppointmentsCRUD;
+import util.CustomersCRUD;
 import util.Time;
 
 import java.io.IOException;
@@ -136,6 +137,18 @@ public class AddAppointment implements Initializable {
                 return false;
             }
 
+            if(CustomersCRUD.isOverlap(customerID, startLdt, endLdt)) {
+                // TODO: ALERT SAYING OVERLAP
+                showOverlapAlert();
+                startTimeHrCheck = false;
+                endTimeHrCheck = false;
+                startTimeMinCheck = false;
+                endTimeMinCheck = false;
+                customerIDCheck = false;
+                highlightErrors();
+                return false;
+            }
+
             if(title.length() == 0 || description.length() == 0 || location.length() == 0 || type.length() == 0) {
                 isCreated = false;
             } else {
@@ -193,6 +206,14 @@ public class AddAppointment implements Initializable {
         return isCreated;
     }
 
+    private void showOverlapAlert() {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setHeaderText("There is overlap for the customer with appointments.");
+        alert.setContentText("Please adjust the time settings to not overlap with other appointments");
+        alert.showAndWait().ifPresent(response -> {
+
+        });
+    }
 
 
     public void showErrorAlert() {
