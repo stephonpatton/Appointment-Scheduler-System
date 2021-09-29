@@ -15,6 +15,7 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 import util.AppointmentsCRUD;
 import util.CustomersCRUD;
+import util.Query;
 import util.Time;
 
 import java.io.IOException;
@@ -153,6 +154,20 @@ public class AddAppointment implements Initializable {
                 // TODO: ALERT
                 startDateCheck = false;
                 endDateCheck = false;
+                highlightErrors();
+                return false;
+            }
+
+            if(!Query.checkCustomerInDB(customerID)) {
+                // TODO: alert saying customer not in database
+                customerIDCheck = false;
+                highlightErrors();
+                return false;
+            }
+
+            if(!Query.checkUserInDB(userID)) {
+                //TODO: alert saying user not in database
+                userIDCheck = false;
                 highlightErrors();
                 return false;
             }

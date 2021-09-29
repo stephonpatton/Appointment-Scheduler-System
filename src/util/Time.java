@@ -1,6 +1,7 @@
 package util;
 
 import Model.Appointment;
+import Model.User;
 
 import java.sql.*;
 import java.text.SimpleDateFormat;
@@ -79,10 +80,12 @@ public class Time {
             Connection conn = Database.getConnection();
             PreparedStatement ps;
             ResultSet rs;
-            String query = "SELECT Appointment_ID, Start FROM appointments WHERE Start BETWEEN ? AND ?";
+            String query = "SELECT Appointment_ID, Start FROM appointments WHERE User_ID = ? AND Start BETWEEN ? AND ?";
             ps = conn.prepareStatement(query);
-            ps.setTimestamp(1, Timestamp.valueOf(LocalDateTime.now(ZoneId.of("UTC"))));
-            ps.setTimestamp(2, Timestamp.valueOf(LocalDateTime.now(ZoneId.of("UTC")).plusMinutes(15)));
+            ps.setInt(1, UsersCRUD.getUserID(User.getCurrentUser()));
+            ps.setTimestamp(2, Timestamp.valueOf(LocalDateTime.now(ZoneId.of("UTC"))));
+            ps.setTimestamp(3, Timestamp.valueOf(LocalDateTime.now(ZoneId.of("UTC")).plusMinutes(15)));
+//            ps.setInt(3, UsersCRUD.getUserID(User.getCurrentUser()));
             rs = ps.executeQuery();
             rs.next();
                 int appointmentId = rs.getInt("Appointment_ID");

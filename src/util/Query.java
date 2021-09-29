@@ -39,4 +39,46 @@ public class Query {
         }
         return success;
     }
+
+    public static boolean checkCustomerInDB(int customerID) throws SQLException {
+        Connection conn = Database.getConnection();
+        PreparedStatement ps;
+        ResultSet rs;
+        boolean success = false;
+
+        try {
+            String query = "SELECT Customer_Name FROM customers WHERE Customer_ID = ?";
+            ps = conn.prepareStatement(query);
+            ps.setInt(1, customerID);
+            rs = ps.executeQuery();
+            while(rs.next()) {
+                String custName = rs.getString("Customer_Name");
+                success = true;
+            }
+        }catch(SQLException ex) {
+            throw new Error("Problem", ex);
+        }
+        return success;
+    }
+
+    public static boolean checkUserInDB(int userID) throws SQLException {
+        Connection conn = Database.getConnection();
+        PreparedStatement ps;
+        ResultSet rs;
+        boolean success = false;
+
+        try {
+            String query = "SELECT User_Name FROM users WHERE User_ID = ?";
+            ps = conn.prepareStatement(query);
+            ps.setInt(1, userID);
+            rs = ps.executeQuery();
+            while(rs.next()) {
+                String uName = rs.getString("User_Name");
+                success = true;
+            }
+        }catch(SQLException ex) {
+            throw new Error("Problem", ex);
+        }
+        return success;
+    }
 }
