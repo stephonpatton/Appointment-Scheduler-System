@@ -12,20 +12,18 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import util.AppointmentsCRUD;
 import util.CustomersCRUD;
 import util.FirstLevelDivisionCRUD;
 
 import java.io.IOException;
 import java.net.URL;
-import java.sql.Timestamp;
-import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
 import static View_Controller.MainForm.*;
 
 public class ModifyCustomer implements Initializable {
+    // FXML
     @FXML private TextField customerIDTF;
     @FXML private ComboBox<FirstLevelDivision> customerFirstLevelCombo;
     @FXML private ComboBox<Country> customerCountryCombo;
@@ -34,6 +32,7 @@ public class ModifyCustomer implements Initializable {
     @FXML private TextField customerPhoneTF;
     @FXML private TextField customerAddressTF;
 
+    // Boolean variables for error checking
     private boolean nameCheck;
     private boolean phoneCheck;
     private boolean postalCheck;
@@ -41,11 +40,15 @@ public class ModifyCustomer implements Initializable {
     private boolean firstLevelCheck;
     private boolean countryCheck;
 
+    // Modify customer variables
     int indexOfCustomer = customerIndexToModify();
     Customer modifyCustomer = customerToModify();
 
-
-
+    /**
+     * Initializes when ModifyCustomer screen is loaded
+     * @param url
+     * @param resourceBundle
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         FirstLevelDivisionCRUD.getUSDivisions();
@@ -54,6 +57,9 @@ public class ModifyCustomer implements Initializable {
         populateFields();
     }
 
+    /**
+     * Populates form fields with modify customer data
+     */
     public void populateFields() {
         customerIDTF.setText(String.valueOf(modifyCustomer.getCustomerID()));
         customerNameTF.setText(modifyCustomer.getCustomerName());
@@ -77,7 +83,11 @@ public class ModifyCustomer implements Initializable {
     }
 
 
-
+    /**
+     * Tries to modify customer object. Returns to main screen if successful
+     * @param actionEvent Save button press
+     * @throws IOException
+     */
     public void modifyCustomer(ActionEvent actionEvent) throws IOException {
         checkFields();
         highlightErrors();
@@ -95,9 +105,10 @@ public class ModifyCustomer implements Initializable {
         }
     }
 
-    // TODO: DO WHEN I GET BACK
+    /**
+     * Attempts to modify customer object based on provided data
+     */
     private void modifyCustomerObject() {
-//        Customer customer = new Customer();
         if(checkAllErrors()) {
             int customerID = customerToModify().getCustomerID();
             String customerName = customerNameTF.getText().trim();
@@ -108,7 +119,6 @@ public class ModifyCustomer implements Initializable {
             String createdBy = User.getCurrentUser();
             Customer customer = new Customer(customerID, customerName, address, phone, postal, divisionID);
             customer.setCountry(customerCountryCombo.getValue());
-            // TODO: CREATE OBJECT (might need to add create_date and last_update)
             customer.setCreatedBy(createdBy);
             customer.setLastUpdatedBy(User.getCurrentUser());
             Customer.updateCustomer(customerIndexToModify(), customer);
@@ -118,6 +128,10 @@ public class ModifyCustomer implements Initializable {
         }
     }
 
+    /**
+     * Checks all differences in fields
+     * @return True if differences are present
+     */
     public boolean checkDifferences() {
         boolean differencesPresent;
         differencesPresent = checkNameDiff() && checkPhoneDiff() && checkPostalDiff() && checkFirstLevelDiff()
@@ -125,48 +139,81 @@ public class ModifyCustomer implements Initializable {
         return differencesPresent;
     }
 
+    /**
+     * Checks address field for differences
+     * @return True if differences
+     */
     private boolean checkAddressDiff() {
         boolean isDifferent;
         isDifferent = !customerAddressTF.getText().equals(customerToModify().getAddress());
         return isDifferent;
     }
 
+    /**
+     * Checks country combo box for differences
+     * @return True if differences are present
+     */
     private boolean checkCountryDiff() {
         boolean isDifferent;
         isDifferent = customerCountryCombo.getValue() != customerToModify().getCountry();
         return isDifferent;
     }
 
+    /**
+     * Checks first level division combo box for differences
+     * @return True if differences are present
+     */
     private boolean checkFirstLevelDiff() {
         boolean isDifferent;
         isDifferent = customerFirstLevelCombo.getValue().getDivisionID() != customerToModify().getDivisionID();
         return isDifferent;
     }
 
+    /**
+     * Checks postal field for differences
+     * @return True if differences are present
+     */
     private boolean checkPostalDiff() {
         boolean isDifferent;
         isDifferent = !customerPostalTF.getText().equals(customerToModify().getPostalCode());
         return isDifferent;
     }
 
+    /**
+     * Checks phone for differences
+     * @return True if differences are present
+     */
     private boolean checkPhoneDiff() {
         boolean isDifferent;
         isDifferent = !customerPhoneTF.getText().equals(customerToModify().getPhone());
         return isDifferent;
     }
 
+    /**
+     * Checks name field for differences
+     * @return True if differences are present
+     */
     private boolean checkNameDiff() {
         boolean isDifferent;
         isDifferent = !customerNameTF.getText().equals(customerToModify().getCustomerName());
         return isDifferent;
     }
 
+    /**
+     * Checks all error variables
+     * @return True if all error variables are set to true
+     */
     public boolean checkAllErrors() {
         boolean isValid;
         isValid = nameCheck && phoneCheck && postalCheck && addressCheck && firstLevelCheck && countryCheck;
         return isValid;
     }
 
+    /**
+     * Returns to the main screen
+     * @param actionEvent Button press
+     * @throws IOException
+     */
     public void returnToMainScreen(ActionEvent actionEvent) throws IOException {
         Parent root;
         root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("../View_Controller/MainForm.fxml")));
@@ -180,6 +227,10 @@ public class ModifyCustomer implements Initializable {
         ((Node)(actionEvent.getSource())).getScene().getWindow().hide();
     }
 
+    /**
+     * Filters first level division combo box based on selected country
+     * @param actionEvent ComboBox selection
+     */
     public void filterByCountry(ActionEvent actionEvent) {
         if(customerCountryCombo.getValue().equals(Country.getAllCountries().get(0))) {
             customerFirstLevelCombo.setItems(FirstLevelDivision.getAllUSDivisions());
@@ -193,6 +244,9 @@ public class ModifyCustomer implements Initializable {
         }
     }
 
+    /**
+     * Checks all fields for valid data
+     */
     public void checkFields() {
         checkNameField();
         checkPhoneField();
@@ -202,35 +256,51 @@ public class ModifyCustomer implements Initializable {
         checkCountryField();
     }
 
+    /**
+     * Checks name field for valid data
+     */
     private void checkNameField() {
         nameCheck = customerNameTF.getText().length() != 0 && !customerNameTF.getText().matches("[0-9]*");
     }
 
+    /**
+     * Checks phone field for valid data
+     */
     private void checkPhoneField() {
         phoneCheck = customerPhoneTF.getText().length() != 0;
     }
 
+    /**
+     * Checks postal field for valid data
+     */
     private void checkPostalField() {
         postalCheck = customerPostalTF.getText().length() != 0;
     }
 
+    /**
+     * Checks address field for valid data
+     */
     private void checkAddressField() {
         addressCheck = customerAddressTF.getText().length() != 0;
     }
 
+    /**
+     * Checks first level division combo box for valid data
+     */
     private void checkFirstLevelField() {
         firstLevelCheck = customerFirstLevelCombo.getValue() != null;
     }
 
+    /**
+     * Checks country combo box for valid data
+     */
     private void checkCountryField() {
         countryCheck = customerCountryCombo.getValue() != null;
     }
 
-    // TODO: Check for valid data
-    // TODO: Check for differences
-    // TODO: Update object if differences
-    // TODO: Save to arraylist and then update database with new information
-
+    /**
+     * Lets user know that the customer was not modified and to check highlighted fields
+     */
     private void showErrorAlert() {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setHeaderText("Failed to modify customer");
@@ -240,7 +310,9 @@ public class ModifyCustomer implements Initializable {
         });
     }
 
-
+    /**
+     * Sets all error checking variables to false
+     */
     private void setChecksToFalse() {
         nameCheck = false;
         phoneCheck = false;
@@ -250,6 +322,9 @@ public class ModifyCustomer implements Initializable {
         countryCheck = false;
     }
 
+    /**
+     * Highlights all fields that contain errors
+     */
     private void highlightErrors() {
         if(!nameCheck) {
             customerNameTF.setStyle("-fx-border-color: #ae0700");

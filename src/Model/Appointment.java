@@ -2,10 +2,7 @@ package Model;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import util.AppointmentsCRUD;
 import util.Time;
-
-import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -34,34 +31,39 @@ public class Appointment {
     LocalDate startDate;
     LocalDate endDate;
 
-    private LocalDateTime startLocal;
-    private LocalDateTime endLocal;
-
-
+    // ObservableList containing all appointments in the database
     private static ObservableList<Appointment> allAppointments = FXCollections.observableArrayList();
 
+    /**
+     * Adds appointment to the ObservableList
+     * @param appointment Provided appointment object
+     */
     public static void addAppointment(Appointment appointment) {
         allAppointments.add(appointment);
-
-        for (Appointment allAppointment : allAppointments) {
-            System.out.println(allAppointment.getType());
-            System.out.println(allAppointment.getCreatedBy());
-            System.out.println(allAppointment.getLastUpdate());
-            System.out.println(allAppointment.getUserID());
-            System.out.println(allAppointment.getCustomerID());
-        }
-
-        System.out.println("TOTAL COUNT " + allAppointments.size());
     }
 
+    /**
+     * Updates the appointment object in the ObservableList
+     * @param index Index of appointment object to update
+     * @param appointment Updated appointment object
+     */
     public static void updateAppointment(int index, Appointment appointment) {
         allAppointments.set(index, appointment);
     }
 
+    /**
+     * Deletes an appointment object from the system
+     * @param appointment Provided appointment object to delete
+     * @return True if appointment was successfully deleted
+     */
     public static boolean deleteAppointment(Appointment appointment) {
         return allAppointments.remove(appointment);
     }
 
+    /**
+     * Returns all appointments in the ObservableList
+     * @return All appointments in the system
+     */
     public static ObservableList<Appointment> getAllAppointments() {
         return allAppointments;
     }
@@ -290,85 +292,165 @@ public class Appointment {
         this.contactID = contactID;
     }
 
+    /**
+     * Helper method for combobox to access contact name
+     * @param contactName Provided contact name
+     */
     public void setContactName(String contactName) {
 //        this.contactName = AppointmentsCRUD.getContactName(this.getContactID());
         this.contactName = contactName;
     }
 
+    /**
+     * Gets the contact name of an appointment (helper method)
+     * @return Contact name for a given appointment
+     */
     public String getContactName() {
         return this.contactName;
     }
 
+    /**
+     * Gets the contact object assigned to an appointment
+     * @return The contact object assigned to an appointment
+     */
     public Contact getContact() {
         return this.contact;
     }
 
+    /**
+     * Assigns a contact object to an appointment
+     * @param contact Provided contact object
+     */
     public void setContact(Contact contact) {
         this.contact = contact;
     }
 
+    /**
+     * Sets the start hour of an object (useful for spinner)
+     * @param startHr Inputted start hour
+     */
     public void setStartHr(int startHr) {
         this.startHr = startHr;
     }
 
+    /**
+     * Gets the start hour of an appointment
+     * @return The start hour of an appointment
+     */
     public int getStartHr() {
         return this.startHr;
     }
 
+    /**
+     * Sets the start minute of an appointment
+     * @param startMin Inputted start minute of an appointment
+     */
     public void setStartMin(int startMin) {
         this.startMin = startMin;
     }
 
+    /**
+     * Gets the start minutes of an appointment
+     * @return Start minute (time) of an appointment
+     */
     public int getStartMin() {
         return this.startMin;
     }
 
+    /**
+     * Sets the end hour time of an appointment
+     * @param endHr Inputted end hour time
+     */
     public void setEndHr(int endHr) {
         this.endHr = endHr;
     }
 
+    /**
+     * Sets the end minutes of an appointment
+     * @param endMin Inputted end minutes time
+     */
     public void setEndMin(int endMin) {
         this.endMin = endMin;
     }
 
+    /**
+     * Gets end hour time of an appointment
+     * @return The end hour time of an appointment
+     */
     public int getEndHr() {
         return endHr;
     }
 
+    /**
+     * Gets the end minutes time of an appointment
+     * @return The end minutes time of an appointment
+     */
     public int getEndMin() {
         return endMin;
     }
 
+    /**
+     * Sets the start date of an appointment
+     * @param startDate Inputted start date for an appointment
+     */
     public void setStartDate(LocalDate startDate) {
         this.startDate = startDate;
     }
 
+    /**
+     * Gets the start date of an appointment
+     * @return The start date of an appointment
+     */
     public LocalDate getStartDate() {
         return this.startDate;
     }
 
+    /**
+     * Sets the end date of an appointment
+     * @param endDate Inputted end date of an appointment
+     */
     public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
     }
 
+    /**
+     * Gets the end date of an appointment
+     * @return The end date of an appointment
+     */
     public LocalDate getEndDate() {
         return this.endDate;
     }
 
+    /**
+     * Gets the local start time of an appointment
+     * @return The local time of an appointment as a timestamp
+     */
     public Timestamp getStartLocal() {
-//        return Time.utcToLocalTime(start);
         return Timestamp.valueOf(Time.utcToLocalTime(start));
     }
 
+    /**
+     * Gets the local end time of an appointment
+     * @return The local end time of an appointment as a timestamp
+     */
     public Timestamp getEndLocal() {
         return Timestamp.valueOf(Time.utcToLocalTime(end));
     }
 
 
+    /**
+     * Gets the start time of an appointment as a LocalDateTime object
+     * @return Start time as LocalDateTime object
+     */
     public LocalDateTime getStartLDT() {
         return Time.convertTStoLDT(start);
     }
 
+    /**
+     * Gets an appointment object by a provided appointmentID
+     * @param appointmentID Provided appointment ID
+     * @return Appointment object assigned to provided appointment ID
+     */
     public static Appointment getByID(int appointmentID) {
         Appointment temp = new Appointment();
         for(Appointment appoint : allAppointments) {
@@ -379,6 +461,4 @@ public class Appointment {
         }
         return temp;
     }
-
-
 }

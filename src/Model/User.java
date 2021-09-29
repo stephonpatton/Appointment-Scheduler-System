@@ -1,14 +1,13 @@
 package Model;
 
-import util.UsersCRUD;
-
 import java.sql.Date;
 import java.sql.Timestamp;
 
 public class User {
+    // Local variables for user objects
     private static String currentUser;
     private int userID;
-    private String userName; // must be unique
+    private String userName;
     private String password;
     private Date createDate;
     private String createdBy;
@@ -127,11 +126,18 @@ public class User {
         this.lastUpdatedBy = lastUpdatedBy;
     }
 
-
+    /**
+     * Gets the current user logged into the system
+     * @return Username of current user logged in
+     */
     public static String getCurrentUser() {
         return currentUser;
     }
 
+    /**
+     * Sets the username of the current logged in user
+     * @param username Provided username at log in
+     */
     public static void setCurrentUser(String username) {
         currentUser = username;
     }

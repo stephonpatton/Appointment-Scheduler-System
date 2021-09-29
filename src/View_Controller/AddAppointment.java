@@ -28,6 +28,7 @@ import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class AddAppointment implements Initializable {
+    // FXML
     @FXML private TextField addAppointIDTF;
     @FXML private ComboBox<Contact> addAppointContactCombo;
     @FXML private TextField addAppointTitleTF;
@@ -58,39 +59,49 @@ public class AddAppointment implements Initializable {
     private boolean userIDCheck;
     private boolean contactCheck;
 
+    // Arrays to hold time data for spinners (loads)
     private final ArrayList<Integer> hours = new ArrayList<>();
     private final ArrayList<Integer> mins = new ArrayList<>();
 
+    /**
+     * Initializes when AddAppointment.fxml loads.
+     * Sets some items such as ID field, contact ComboBox, and time spinners
+     * @param url
+     * @param resourceBundle
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         addAppointIDTF.setText("AUTO GEN: " + AppointmentsCRUD.getNextIDCount());
         addAppointContactCombo.setItems(Contact.getAllContacts());
         initArrays();
-
         startHrSpinner.setValueFactory(new SpinnerValueFactory.ListSpinnerValueFactory<Integer>(FXCollections.observableArrayList(hours)));
         startMinSpinner.setValueFactory(new SpinnerValueFactory.ListSpinnerValueFactory<Integer>(FXCollections.observableArrayList(mins)));
         endHrSpinner.setValueFactory(new SpinnerValueFactory.ListSpinnerValueFactory<Integer>(FXCollections.observableArrayList(hours)));
         endMinSpinner.setValueFactory(new SpinnerValueFactory.ListSpinnerValueFactory<Integer>(FXCollections.observableArrayList(mins)));
     }
 
+    /**
+     * Tries to create appointment object based on data provided in form
+     * @return True if the appointment object was created
+     */
     public boolean createAppointObject() {
         boolean isCreated;
         try {
+            // Getting data from form fields
             int appointmentID = AppointmentsCRUD.getNextIDCount();
             String title = addAppointTitleTF.getText();
             String description = addAppointDescriptionTF.getText();
             String location = addAppointLocationTF.getText();
             String type = addAppointTypeTF.getText();
-
             int contactID = addAppointContactCombo.getValue().getContactID();
-
             int customerID = Integer.parseInt(addAppointCustomerTF.getText());
             int userID = Integer.parseInt(addAppointUserTF.getText());
 
+            // Start date and time infor
             String startDate = addAppointStartPicker.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
             String startHrTime = String.valueOf(startHrSpinner.getValue());
             String startMinTime = String.valueOf(startMinSpinner.getValue());
-            String startTime = "0" + startHrTime + ":" + startMinTime + ":00"; //TODO: Will need to check if starthrtime > 9, if so then do not add 0
+            String startTime = "0" + startHrTime + ":" + startMinTime + ":00";
 
             // End date and time info
             String endDate = addAppointEndPicker.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
@@ -98,20 +109,16 @@ public class AddAppointment implements Initializable {
             String endMinTime = String.valueOf(endMinSpinner.getValue());
             String endTime = "0" + endHrTime + ":" + endMinTime + ":00.0";
 
-
-            System.out.println(startTime);
             Timestamp startTS = Time.convertStringsToTime(startDate, startTime);
             Timestamp endTS = Time.convertStringsToTime(endDate, endTime);
+
             LocalDateTime startTSUTC = Time.convertTStoLDT(startTS);
             LocalDateTime endTSUTC = Time.convertTStoLDT(endTS);
-            System.out.println("TIME ADDED");
 
-
-            //TODO: DO THIS LATER... MODIFY APPOINTMENT IS WORKING
-            //TESTING
-            assert startTS != null;
             LocalDateTime startLdt = Time.convertTStoLDT(startTS);
             LocalDateTime endLdt = Time.convertTStoLDT(endTS);
+
+            // Checks if end time is not greater than 10, but maybe equals 10pm est
             if(endLdt.getHour() == 2) {
                 if(endLdt.getMinute() != 0) {
                     endTimeMinCheck = false;
@@ -119,27 +126,23 @@ public class AddAppointment implements Initializable {
                     return false;
                 }
             }
-            System.out.println("LDT UTC VALUE: " + startLdt);
-            boolean testing = Time.checkBusinessHours(startLdt);
-            System.out.println(testing);
-            if(Time.checkBusinessHours(startLdt) == true) {
-                System.out.println("VALUE OF LDT IN EST: " + startLdt);
-            } else {
+
+            // Checks if start time is within business hours
+            if(!Time.checkBusinessHours(startLdt)) {
                 startTimeHrCheck = false;
                 highlightErrors();
                 return false;
             }
 
-            if(Time.checkBusinessHours(endLdt) == true) {
-                System.out.println("VALUE OF LDT END: " + endLdt);
-            } else {
+            // Checks if end time is within business hours
+            if(!Time.checkBusinessHours(endLdt)) {
                 endTimeHrCheck = false;
                 highlightErrors();
                 return false;
             }
 
-            if(CustomersCRUD.isOverlap(customerID, startLdt, endLdt)) {
-                // TODO: ALERT SAYING OVERLAP
+            // Checks if customer has overlap with appointments
+            if(CustomersCRUD.isOverlap(customerID, startLdt, endLdt, appointmentID)) {
                 showOverlapAlert();
                 startTimeHrCheck = false;
                 endTimeHrCheck = false;
@@ -150,6 +153,7 @@ public class AddAppointment implements Initializable {
                 return false;
             }
 
+            // Checks if start date > end date (logical error)
             if(addAppointStartPicker.getValue().getDayOfYear() > addAppointEndPicker.getValue().getDayOfYear()) {
                 // TODO: ALERT
                 startDateCheck = false;
@@ -158,6 +162,7 @@ public class AddAppointment implements Initializable {
                 return false;
             }
 
+            // Checks if customer is in database before trying to assigning appointment
             if(!Query.checkCustomerInDB(customerID)) {
                 // TODO: alert saying customer not in database
                 customerIDCheck = false;
@@ -165,12 +170,14 @@ public class AddAppointment implements Initializable {
                 return false;
             }
 
+            // Checks if user is in database before assigning appointment
             if(!Query.checkUserInDB(userID)) {
                 //TODO: alert saying user not in database
                 userIDCheck = false;
                 highlightErrors();
                 return false;
             }
+
 
             if(title.length() == 0 || description.length() == 0 || location.length() == 0 || type.length() == 0) {
                 isCreated = false;
@@ -197,38 +204,31 @@ public class AddAppointment implements Initializable {
                     appoint.setContactName(addAppointContactCombo.getValue().getContactName());
 
                     appoint.setStartHr(startHrSpinner.getValue());
-                    System.out.println("START HR SPINNER VALUE: " + startHrSpinner.getValue());
                     appoint.setStartMin(startMinSpinner.getValue());
                     appoint.setEndHr(endHrSpinner.getValue());
                     appoint.setEndMin(endMinSpinner.getValue());
-
-//                appoint.setStart(startTS);
                     appoint.setStart(Timestamp.valueOf(startTSUTC));
-//                appoint.setEnd(endTS);
                     appoint.setEnd(Timestamp.valueOf(endTSUTC));
                     appoint.setStartDate(addAppointStartPicker.getValue());
                     appoint.setEndDate(addAppointEndPicker.getValue());
-
                     appoint.setCreatedBy(User.getCurrentUser());
 
+                    // Add locally and insert into database
                     Appointment.addAppointment(appoint);
                     AppointmentsCRUD.insertAppointment(appoint);
                     isCreated = true;
                 }
-
             }
-
-
         }catch(Exception e) {
             showErrorAlert();
             isCreated = false;
-//            e.printStackTrace();
         }
-
-
         return isCreated;
     }
 
+    /**
+     * Method to alert user overlap is present for a customer
+     */
     private void showOverlapAlert() {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setHeaderText("There is overlap for the customer with appointments.");
@@ -239,6 +239,9 @@ public class AddAppointment implements Initializable {
     }
 
 
+    /**
+     * Method to show user invalid data has been inputted
+     */
     public void showErrorAlert() {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setHeaderText("Invalid data in field(s)");
@@ -248,6 +251,9 @@ public class AddAppointment implements Initializable {
         });
     }
 
+    /**
+     * Checks all fields for valid data
+     */
     public void checkFields() {
         checkTitleField();
         checkDescription();
@@ -264,6 +270,11 @@ public class AddAppointment implements Initializable {
         checkEndMin();
     }
 
+    /**
+     * Method called when save button is pressed. Screen closes if appointment was created successfully
+     * @param actionEvent On save button press
+     * @throws IOException
+     */
     public void createAppointment(ActionEvent actionEvent) throws IOException {
         checkFields();
         highlightErrors();
@@ -272,22 +283,13 @@ public class AddAppointment implements Initializable {
         } else {
             setChecksToFalse();
         }
-//        if(checkFields()) {
-//            highlightErrors();
-//            createAppointObject();
-//            returnToMainScreen(actionEvent);
-//        } else {
-//            highlightErrors();
-//            setChecksToFalse();
-//        }
-        //check fields
-        // present errors
-        // boolean for create appointment
-            // else set all checks to false
     }
 
-
-
+    /**
+     * Returns to main screen
+     * @param actionEvent Cancel or save button press
+     * @throws IOException
+     */
     public void returnToMainScreen(ActionEvent actionEvent) throws IOException {
         Parent root;
         root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("../View_Controller/MainForm.fxml")));
@@ -301,6 +303,9 @@ public class AddAppointment implements Initializable {
         ((Node)(actionEvent.getSource())).getScene().getWindow().hide();
     }
 
+    /**
+     * Highlights fields that contain errors in the form
+     */
     private void highlightErrors() {
         if(!titleCheck) {
             addAppointTitleTF.setStyle("-fx-border-color: #ae0700");
@@ -369,24 +374,37 @@ public class AddAppointment implements Initializable {
         }
     }
 
-
-
+    /**
+     * Checks title field for valid data
+     */
     private void checkTitleField() {
         titleCheck = addAppointTitleTF.getLength() != 0;
     }
 
+    /**
+     * Checks description field for valid data
+     */
     private void checkDescription() {
         descriptionCheck = addAppointDescriptionTF.getLength() != 0;
     }
 
+    /**
+     * Checks location field for valid data
+     */
     private void checkLocationField() {
         locationCheck = addAppointLocationTF.getLength() != 0;
     }
 
+    /**
+     * Checks type field for valid data
+     */
     private void checkTypeField() {
         typeCheck = addAppointTypeTF.getLength() != 0;
     }
 
+    /**
+     * Checks customer ID field for valid data
+     */
     private void checkCustomerIDField() {
         int tryCustID = 0;
         if(addAppointCustomerTF.getLength() != 0) {
@@ -401,6 +419,9 @@ public class AddAppointment implements Initializable {
         }
     }
 
+    /**
+     * Checks user ID field for valid data
+     */
     private void checkUserIDField() {
         int tryUserID = 0;
         if(addAppointUserTF.getLength() != 0) {
@@ -415,34 +436,58 @@ public class AddAppointment implements Initializable {
         }
     }
 
+    /**
+     * Checks contact combo box for valid data
+     */
     private void checkContactCombo() {
         contactCheck = addAppointContactCombo.getValue() != null;
     }
 
+    /**
+     * Checks start date date picker for valid data
+     */
     private void checkStartDate() {
         startDateCheck = addAppointStartPicker.getValue() != null;
     }
 
+    /**
+     * Checks end date date picker for valid data
+     */
     private void checkEndDate() {
         endDateCheck = addAppointEndPicker.getValue() != null;
     }
 
+    /**
+     * Checks start hr spinner for valid data
+     */
     private void checkStartHr() {
         startTimeHrCheck = startHrSpinner.getValue() != null;
     }
 
+    /**
+     * Checks start min spinner for valid data
+     */
     private void checkStartMin() {
         startTimeMinCheck = startMinSpinner.getValue() != null;
     }
 
+    /**
+     * Checks end hr spinner for valid data
+     */
     private void checkEndHr() {
         endTimeHrCheck = endHrSpinner.getValue() != null;
     }
 
+    /**
+     * Checks end min spinner for valid data
+     */
     private void checkEndMin() {
         endTimeMinCheck = endMinSpinner.getValue() != null;
     }
 
+    /**
+     * Sets all error checks to false
+     */
     private void setChecksToFalse() {
         titleCheck = false;
         descriptionCheck = false;
@@ -459,8 +504,11 @@ public class AddAppointment implements Initializable {
         endTimeMinCheck = false;
     }
 
+    /**
+     * Initializes arrays for minutes and hours upon screen load
+     */
     private void initArrays() {
-        for(int i = 0; i < 24; i++) { //TODO: May have to change later after conversion and stuff
+        for(int i = 0; i < 24; i++) {
             hours.add(i);
         }
         mins.add(0);

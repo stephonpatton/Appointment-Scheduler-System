@@ -28,6 +28,7 @@ import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class MainForm implements Initializable {
+    // Appointment TableView FXML
     @FXML private TableView<Appointment> appointmentsTableView;
     @FXML private TableColumn<Appointment, String> typeCol;
     @FXML private TableColumn<Appointment, Integer> appointIDCol;
@@ -40,6 +41,7 @@ public class MainForm implements Initializable {
     @FXML private TableColumn<Appointment, String> locationCol;
     @FXML private TableColumn<Appointment, String> descriptionCol;
 
+    // Customer TableView FXML
     @FXML private TableView<Customer> customersTableView;
     @FXML private TableColumn<Customer, Integer> customerTVIDCol;
     @FXML private TableColumn<Customer, String> customerTVNameCol;
@@ -48,13 +50,19 @@ public class MainForm implements Initializable {
     @FXML private TableColumn<Customer, String> customerTVAddressCol;
     @FXML private TableColumn<Customer, String> customerTVPostalCol;
 
-
+    // Appointment to modify variables
     private static Appointment tempAppointment;
     private static int appointmentIndex;
 
+    // Customer to modify variables
     private static Customer tempCustomer;
     private static int customerIndex;
 
+    /**
+     * Initializes once the main screen has loaded. Sets the cells for both tables and populates the tables
+     * @param url
+     * @param resourceBundle
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         setAppointmentCells();
@@ -63,21 +71,25 @@ public class MainForm implements Initializable {
         populateCustomersTable();
     }
 
+    /**
+     * Sets the cells for appointments table view
+     */
     private void setAppointmentCells() {
         appointIDCol.setCellValueFactory(new PropertyValueFactory<>("appointmentID"));
         contactCol.setCellValueFactory(new PropertyValueFactory<>("contactName"));
         customerIDCol.setCellValueFactory(new PropertyValueFactory<>("customerID"));
         typeCol.setCellValueFactory(new PropertyValueFactory<>("type"));
         titleCol.setCellValueFactory(new PropertyValueFactory<>("title"));
-//        startCol.setCellValueFactory(new PropertyValueFactory<>("start"));
         startCol.setCellValueFactory(new PropertyValueFactory<>("startLocal"));
-//        endCol.setCellValueFactory(new PropertyValueFactory<>("end"));
         endCol.setCellValueFactory(new PropertyValueFactory<>("endLocal"));
         locationCol.setCellValueFactory(new PropertyValueFactory<>("location"));
         descriptionCol.setCellValueFactory(new PropertyValueFactory<>("description"));
         userIDCol.setCellValueFactory(new PropertyValueFactory<>("userID"));
     }
 
+    /**
+     * Sets the cells for customers table view
+     */
     private void setCustomerCells() {
         customerTVIDCol.setCellValueFactory(new PropertyValueFactory<>("customerID"));
         customerTVNameCol.setCellValueFactory(new PropertyValueFactory<>("customerName"));
@@ -87,14 +99,25 @@ public class MainForm implements Initializable {
         customerTVPostalCol.setCellValueFactory(new PropertyValueFactory<>("postalCode"));
     }
 
+    /**
+     * Populates appointments table with data
+     */
     public void populateAppointmentsTable() {
         appointmentsTableView.setItems(Appointment.getAllAppointments());
     }
 
+    /**
+     * Populates custombers table with data
+     */
     private void populateCustomersTable() {
         customersTableView.setItems(Customer.getAllCustomers());
     }
 
+    /**
+     * Opens the AddAppointment screen upon add button press
+     * @param actionEvent Add button press
+     * @throws IOException
+     */
     public void openAddAppointmentScreen(ActionEvent actionEvent) throws IOException {
         Parent root;
         root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("../View_Controller/AddAppointment.fxml")));
@@ -109,6 +132,11 @@ public class MainForm implements Initializable {
     }
 
 
+    /**
+     * Opens the ModifyAppointment screen upon modify button press
+     * @param actionEvent Modify button press
+     * @throws IOException
+     */
     public void openModifyAppointment(ActionEvent actionEvent) throws IOException {
         Parent root;
         root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("../View_Controller/ModifyAppointment.fxml")));
@@ -122,6 +150,10 @@ public class MainForm implements Initializable {
         ((Node)(actionEvent.getSource())).getScene().getWindow().hide();
     }
 
+    /**
+     * Gets the selected appointment after a button has been pressed
+     * @param actionEvent Modify button press
+     */
     public void getSelectedAppointment(ActionEvent actionEvent) {
         try {
             if(appointmentsTableView.getSelectionModel().getSelectedItem() == null) {
@@ -134,12 +166,14 @@ public class MainForm implements Initializable {
                 openModifyAppointment(actionEvent);
             }
         }catch(Exception e) {
-            System.err.println("Please select an appointment to modify");
             selectAppointmentAlert();
         }
     }
 
-    public void deleteSelectedAppointment(ActionEvent actionEvent) {
+    /**
+     * Deletes selected appointment from the table and database
+     */
+    public void deleteSelectedAppointment() {
         try {
             if(appointmentsTableView.getSelectionModel().getSelectedItem() == null) {
                 selectAppointmentAlert();
@@ -168,12 +202,14 @@ public class MainForm implements Initializable {
                 });
             }
         }catch(Exception e) {
-            System.err.println("Please select an appoint to delete");
             selectAppointmentAlert();
         }
     }
 
-    public void deleteSelectedCustomer(ActionEvent actionEvent) {
+    /**
+     * Deletes selected customer from customer table
+     */
+    public void deleteSelectedCustomer() {
         try {
             if(customersTableView.getSelectionModel().getSelectedItem() == null) {
                 selectCustomerAlert();
@@ -210,6 +246,9 @@ public class MainForm implements Initializable {
     }
 
 
+    /**
+     * Lets the user know that the customer still has scheduled appointments and cannot be deleted currently
+     */
     private void hasAppointmentsAlert() {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setHeaderText("This customer still has scheduled appointments.");
@@ -219,6 +258,9 @@ public class MainForm implements Initializable {
         });
     }
 
+    /**
+     * Lets the user know that they did not select an appointment in the table
+     */
     private void selectAppointmentAlert() {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setHeaderText("Please select an appointment");
@@ -228,6 +270,9 @@ public class MainForm implements Initializable {
         });
     }
 
+    /**
+     * Lets the user know that they did not select a customer in the table
+     */
     private void selectCustomerAlert() {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setHeaderText("Please select a customer");
@@ -237,6 +282,10 @@ public class MainForm implements Initializable {
         });
     }
 
+    /**
+     * Lets the user know that the appointment they deleted has been cancelled
+     * @param appointment Appointment to cancel
+     */
     private void appointmentCancelledAlert(Appointment appointment) {
         int id = appointment.getAppointmentID();
         String type = appointment.getType();
@@ -248,6 +297,10 @@ public class MainForm implements Initializable {
         });
     }
 
+    /**
+     * Lets the user know that the customer has successfully been removed
+     * @param customer Customer to remove
+     */
     private void customerRemovedAlert(Customer customer) {
         int id = customer.getCustomerID();
         String name = customer.getCustomerName();
@@ -259,22 +312,42 @@ public class MainForm implements Initializable {
         });
     }
 
+    /**
+     * Gets the appointment to modify
+     * @return Appointment to modify
+     */
     public static Appointment appointmentToModify() {
         return tempAppointment;
     }
 
+    /**
+     * Gets the index of the appointment to modify
+     * @return The index of the appointment to modify
+     */
     public static int appointmentIndexToModify() {
         return appointmentIndex;
     }
 
+    /**
+     * Gets the customer to modify
+     * @return Customer to modify
+     */
     public static Customer customerToModify() {
         return tempCustomer;
     }
 
+    /**
+     * Gets the customer index to modify
+     * @return Gets the customer index to modify
+     */
     public static int customerIndexToModify() {
         return customerIndex;
     }
 
+    /**
+     * Gets the selected customer from the customer table
+     * @param actionEvent Modify button pressed
+     */
     public void getSelectedCustomer(ActionEvent actionEvent) {
         try {
             if(customersTableView.getSelectionModel().getSelectedItem() == null) {
@@ -287,11 +360,15 @@ public class MainForm implements Initializable {
                 openModifyCustomer(actionEvent);
             }
         }catch(Exception e) {
-            System.err.println("Please select an customer to modify");
             selectCustomerAlert();
         }
     }
 
+    /**
+     * Opens add customer screen
+     * @param actionEvent Add button pressed
+     * @throws IOException
+     */
     public void openAddCustomer(ActionEvent actionEvent) throws IOException {
         Parent root;
         root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("../View_Controller/AddCustomer.fxml")));
@@ -305,6 +382,11 @@ public class MainForm implements Initializable {
         ((Node)(actionEvent.getSource())).getScene().getWindow().hide();
     }
 
+    /**
+     * Opens modify customer screen
+     * @param actionEvent Modify button pressed
+     * @throws IOException
+     */
     public void openModifyCustomer(ActionEvent actionEvent) throws IOException {
         Parent root;
         root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("../View_Controller/ModifyCustomer.fxml")));
@@ -318,6 +400,11 @@ public class MainForm implements Initializable {
         ((Node)(actionEvent.getSource())).getScene().getWindow().hide();
     }
 
+    /**
+     * Checks if customer has any appointments or not
+     * @param customer Provided customer to check
+     * @return true if customer doesn't have appointments
+     */
     public boolean areAppointsEmpty(Customer customer) {
         boolean isEmpty = false;
         for(int i = 0; i < Appointment.getAllAppointments().size(); i++) {
@@ -330,6 +417,10 @@ public class MainForm implements Initializable {
         return isEmpty;
     }
 
+    /**
+     * Filters appointments by month
+     * @return ObservableList of appointments for this month
+     */
     public ObservableList<Appointment> filterByMonth() {
         ObservableList<Appointment> monthAppointments = FXCollections.observableArrayList();
         for(Appointment appoint : Appointment.getAllAppointments()) {
@@ -340,6 +431,10 @@ public class MainForm implements Initializable {
         return monthAppointments;
     }
 
+    /**
+     * Filters appointments by week
+     * @return ObservableList of appointments for the next 7 days
+     */
     public ObservableList<Appointment> filterByWeek() {
         ObservableList<Appointment> weekAppointments = FXCollections.observableArrayList();
         for(Appointment appoint : Appointment.getAllAppointments()) {
@@ -350,6 +445,9 @@ public class MainForm implements Initializable {
         return weekAppointments;
     }
 
+    /**
+     * Populates table with appointments for the month
+     */
     public void populateByMonth() {
         if(filterByMonth().isEmpty()) {
             noAppointmentsMonthAlert();
@@ -359,6 +457,9 @@ public class MainForm implements Initializable {
         }
     }
 
+    /**
+     * Populates table with appointments for the week
+     */
     public void populateByWeek() {
         if(filterByWeek().isEmpty()) {
             noAppointmentsWeekAlert();
@@ -368,6 +469,9 @@ public class MainForm implements Initializable {
         }
     }
 
+    /**
+     * Lets the user know that there aren't any appointments for the current month
+     */
     private void noAppointmentsMonthAlert() {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setHeaderText("No appointments for this month.");
@@ -377,6 +481,9 @@ public class MainForm implements Initializable {
         });
     }
 
+    /**
+     * Lets the user know that there are no appointments for the next 7 days
+     */
     private void noAppointmentsWeekAlert() {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setHeaderText("No appointments for this week.");
@@ -386,7 +493,11 @@ public class MainForm implements Initializable {
         });
     }
 
-    public void logoutUser(ActionEvent actionEvent) throws SQLException, IOException {
+    /**
+     * Logs the user out
+     * @throws SQLException
+     */
+    public void logoutUser() throws SQLException {
         Database.closeConnection();
         Platform.exit();
     }

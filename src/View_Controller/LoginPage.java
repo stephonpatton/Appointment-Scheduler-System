@@ -45,7 +45,6 @@ public class LoginPage implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.rb = resourceBundle;
-        System.out.println(Locale.getDefault());
         passwordLabel.setText(rb.getString("passwordLabel"));
         usernameLabel.setText(rb.getString("usernameLabel"));
         languageLabel.setText(String.valueOf(ZoneId.systemDefault()));
@@ -74,14 +73,7 @@ public class LoginPage implements Initializable {
         String password = passwordTF.getText();
 
         if(Query.login(username, password)) {
-
-            String filename = "login_activity.txt";
-            FileWriter fWriter = new FileWriter(filename, true);
-            PrintWriter outputFile = new PrintWriter(fWriter);
-            outputFile.println(username + " logged in on " + LocalDateTime.now().toLocalDate() + " " + LocalDateTime.now().toLocalTime());
-            System.out.println(username + " logged in on " + LocalDateTime.now()); // TODO: Delete later
-            outputFile.close();
-
+            Logger.logUser(username);
             User.setCurrentUser(username);
             System.out.println("LOGIN SUCCESSFUL");
             System.out.println("ZONE ID IS" + ZoneId.systemDefault());
@@ -139,14 +131,25 @@ public class LoginPage implements Initializable {
         ((Node)(actionEvent.getSource())).getScene().getWindow().hide();
     }
 
+    /**
+     * Gets login stage
+     * @return Login stage
+     */
     public static Stage getStage() {
         return LoginPage.stage;
     }
 
+    /**
+     * Sets the stage to the login stage
+     * @param stage Login stage
+     */
     public static void setStage(Stage stage) {
         LoginPage.stage = stage;
     }
 
+    /**
+     * Lets the user know they have an appointment in the next 15 mins
+     */
     private void appointmentAlert() {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setHeaderText("Appointment in the next 15 minutes");
@@ -157,6 +160,9 @@ public class LoginPage implements Initializable {
         });
     }
 
+    /**
+     * Lets the user know they do not have any appointments in the next 15 mins
+     */
     private void noAppointmentAlert() {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setHeaderText("No appointments in the next 15 minutes");

@@ -32,6 +32,7 @@ import static View_Controller.MainForm.appointmentIndexToModify;
 import static View_Controller.MainForm.appointmentToModify;
 
 public class ModifyAppointment implements Initializable {
+    // FXML
     @FXML private TextField modifyAppointIDTF;
     @FXML private ComboBox<Contact> modifyAppointContactCombo;
     @FXML private TextField modifyAppointTitleTF;
@@ -47,10 +48,11 @@ public class ModifyAppointment implements Initializable {
     @FXML private TextField modifyAppointCustomerTF;
     @FXML private TextField modifyAppointUserTF;
 
+    // Arrays for time spinners
     private final ArrayList<Integer> hours = new ArrayList<>();
     private final ArrayList<Integer> mins = new ArrayList<>();
 
-
+    // Appointment to modify data
     int indexOfAppointment = appointmentIndexToModify();
     Appointment modifyAppointment = appointmentToModify();
 
@@ -69,6 +71,11 @@ public class ModifyAppointment implements Initializable {
     private boolean userIDCheck;
     private boolean contactCheck;
 
+    /**
+     * Initializes when ModifyAppointment screen is loaded
+     * @param url
+     * @param resourceBundle
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         initArrays();
@@ -80,18 +87,18 @@ public class ModifyAppointment implements Initializable {
     }
 
 
+    /**
+     * Tries to modify appointment object. Returns to main screen if successful
+     * @param actionEvent
+     * @throws IOException
+     * @throws SQLException
+     */
     public void modifyAppointment(ActionEvent actionEvent) throws IOException, SQLException {
         checkFields();
         highlightErrors();
         if(checkDifferences()) {
             returnToMainScreen(actionEvent);
         } else {
-//            if(modifyAppointmentObject()) {
-//               returnToMainScreen(actionEvent);
-//            } else {
-//                showErrorAlert();
-//                setChecksToFalse();
-//            }
             if(checkAllErrors()) {
                 if(modifyAppointmentObject()) {
                     returnToMainScreen(actionEvent);
@@ -105,13 +112,13 @@ public class ModifyAppointment implements Initializable {
             }
             setChecksToFalse();
         }
-//        if(modifyAppointmentObject()) {
-//            returnToMainScreen(actionEvent);
-//        } else {
-//            setChecksToFalse();
-//        }
     }
 
+    /**
+     * Tries to modify an appointment based on provided input from user
+     * @return True if the appointment was successfully modified
+     * @throws SQLException
+     */
     public boolean modifyAppointmentObject() throws SQLException {
         Appointment appoint = new Appointment();
         boolean isCreated = false;
@@ -158,27 +165,20 @@ public class ModifyAppointment implements Initializable {
                 return false;
             }
 
-
-            System.out.println("LDT UTC VALUE: " + startLdt);
-            boolean testing = Time.checkBusinessHours(startLdt);
-            System.out.println(testing);
             if(Time.checkBusinessHours(startLdt)) {
                 if(Time.checkBusinessHours(endLdt)) {
-                    System.out.println("VALID HOURS");
                 } else {
                     endTimeHrCheck = false;
                     highlightErrors();
                     return false;
                 }
-                System.out.println("VALID START HOUR");
             } else {
                 startTimeHrCheck = false;
                 highlightErrors();
                 return false;
             }
 
-            if(CustomersCRUD.isOverlap(custID, startLdt, endLdt)) {
-                // TODO: ALERT SAYING OVERLAP
+            if(CustomersCRUD.isOverlap(custID, startLdt, endLdt, Integer.parseInt(modifyAppointIDTF.getText()))) {
                 showOverlapAlert();
                 startTimeHrCheck = false;
                 endTimeHrCheck = false;
@@ -249,7 +249,6 @@ public class ModifyAppointment implements Initializable {
         } else {
             showErrorAlert();
         }
-
         return isCreated;
     }
 
@@ -262,9 +261,12 @@ public class ModifyAppointment implements Initializable {
         });
     }
 
+    /**
+     * Checks all error checking variables for form fields
+     * @return True if all error checking variables are true
+     */
     public boolean checkAllErrors() {
         boolean isValid;
-
         isValid = descriptionCheck && titleCheck && locationCheck && typeCheck && startDateCheck
                 && startTimeHrCheck && startTimeMinCheck && endDateCheck && endTimeHrCheck && endTimeMinCheck
                 && customerIDCheck && userIDCheck && contactCheck;
@@ -272,6 +274,11 @@ public class ModifyAppointment implements Initializable {
         return isValid;
     }
 
+    /**
+     * Returns to the main screen
+     * @param actionEvent Button press
+     * @throws IOException
+     */
     public void returnToMainScreen(ActionEvent actionEvent) throws IOException {
         Parent root;
         root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("../View_Controller/MainForm.fxml")));
@@ -285,6 +292,9 @@ public class ModifyAppointment implements Initializable {
         ((Node)(actionEvent.getSource())).getScene().getWindow().hide();
     }
 
+    /**
+     * Populates the form fields with appointment object data in the system
+     */
     private void populateFields() {
         // Gets appointment to modify
         Appointment appointmentToModify = Appointment.getAllAppointments().get(indexOfAppointment);
@@ -304,16 +314,18 @@ public class ModifyAppointment implements Initializable {
         LocalDateTime endLDT = Time.utcToLocalTime(modifyAppointment.getEnd());
         String endHour = String.valueOf(endLDT.getHour());
 
-//        startHrSpinner.getValueFactory().setValue(modifyAppointment.getStartHr());
         startHrSpinner.getValueFactory().setValue(Integer.valueOf(hour));
         startMinSpinner.getValueFactory().setValue(modifyAppointment.getStartMin());
-//        endHrSpinner.getValueFactory().setValue(modifyAppointment.getEndHr());
         endHrSpinner.getValueFactory().setValue(Integer.valueOf(endHour));
         endMinSpinner.getValueFactory().setValue(modifyAppointment.getEndMin());
         modifyAppointStartPicker.setValue(modifyAppointment.getStartDate());
         modifyAppointEndPicker.setValue(modifyAppointment.getEndDate());
     }
 
+    /**
+     * Checks the form fields for differences against the appointment object
+     * @return True if differences are present
+     */
     public boolean checkDifferences() {
         boolean differencesPresent;
         differencesPresent = checkTitleDiff() && checkDescriptionDiff() && checkLocationDiff() && checkTypeDiff()
@@ -323,78 +335,130 @@ public class ModifyAppointment implements Initializable {
         return differencesPresent;
     }
 
+    /**
+     * Checks contact field for differences
+     * @return True if differences are present
+     */
     private boolean checkContactDiff() {
         boolean isDifferent;
         isDifferent = modifyAppointContactCombo.getValue() != modifyAppointment.getContact();
         return isDifferent;
     }
 
+    /**
+     * Checks end hour spinner for differences
+     * @return True if differences are present
+     */
     private boolean checkEndHrDiff() {
         boolean isDifferent;
         isDifferent = endHrSpinner.getValue() != modifyAppointment.getEndHr();
         return isDifferent;
     }
 
+    /**
+     * Checks end minute field for differences
+     * @return True if differences are present
+     */
     private boolean checkEndMinDiff() {
         boolean isDifferent;
         isDifferent = endMinSpinner.getValue() != modifyAppointment.getEndMin();
         return isDifferent;
     }
 
+    /**
+     * Checks start minute spinner for differences
+     * @return True if differences are present
+     */
     private boolean checkStartMinDiff() {
         boolean isDifferent;
         isDifferent = startMinSpinner.getValue() != modifyAppointment.getStartMin();
         return isDifferent;
     }
 
+    /**
+     * Checks start hour spinner for differences
+     * @return True if differences are present
+     */
     private boolean checkStartHrDiff() {
         boolean isDifferent;
         isDifferent = startHrSpinner.getValue() != modifyAppointment.getStartHr();
         return isDifferent;
     }
 
+    /**
+     * Checks start date picker for differences
+     * @return True if differences are present
+     */
     private boolean checkStartDateDiff() {
         boolean isDifferent;
         isDifferent = modifyAppointStartPicker.getValue() != modifyAppointment.getStartDate();
         return isDifferent;
     }
 
+    /**
+     * Checks end date picker for differences
+     * @return True if differences are present
+     */
     private boolean checkEndDateDiff() {
         boolean isDifferent;
         isDifferent = modifyAppointEndPicker.getValue() != modifyAppointment.getEndDate();
         return isDifferent;
     }
 
+    /**
+     * Checks user ID field for differences
+     * @return True if differences are present
+     */
     private boolean checkUserIDDiff() {
         boolean isDifferent;
         isDifferent = Integer.parseInt(modifyAppointUserTF.getText()) != modifyAppointment.getUserID();
         return isDifferent;
     }
 
+    /**
+     * Checks title field for differences
+     * @return True if differences are present
+     */
     private boolean checkTitleDiff() {
         boolean isDifferent;
         isDifferent = !modifyAppointTitleTF.getText().equals(modifyAppointment.getTitle());
         return isDifferent;
     }
 
+    /**
+     * Checks description field for differences
+     * @return True if differences are present
+     */
     private boolean checkDescriptionDiff() {
         boolean isDifferent;
         isDifferent = !modifyAppointDescriptionTF.getText().equals(modifyAppointment.getDescription());
         return isDifferent;
     }
 
+    /**
+     * Checks location field for differences
+     * @return True if differences are present
+     */
     private boolean checkLocationDiff() {
         boolean isDifferent;
         isDifferent = !modifyAppointLocationTF.getText().equals(modifyAppointment.getLocation());
         return isDifferent;
     }
 
+    /**
+     * Checks type field for differences
+     * @return True if differences are present
+     */
     private boolean checkTypeDiff() {
         boolean isDifferent;
         isDifferent = !modifyAppointTypeTF.getText().equals(modifyAppointment.getType());
         return isDifferent;
     }
 
+    /**
+     * Checks customer ID field for differences
+     * @return True if differences are present
+     */
     private boolean checkCustomerIDDiff() {
         boolean isTheSame;
         int tryInt;
@@ -407,10 +471,12 @@ public class ModifyAppointment implements Initializable {
             isTheSame = false;
             customerIDCheck = false;
         }
-//        isDifferent = Integer.parseInt(modifyAppointCustomerTF.getText()) != modifyAppointment.getCustomerID();
         return isTheSame;
     }
 
+    /**
+     * Checks all fields for valid data
+     */
     public void checkFields() {
         checkTitleField();
         checkDescription();
@@ -427,28 +493,42 @@ public class ModifyAppointment implements Initializable {
         checkEndMin();
     }
 
+    /**
+     * Checks title field for valid data
+     */
     public void checkTitleField() {
         titleCheck = modifyAppointTitleTF.getLength() != 0;
     }
 
+    /**
+     * Checks description field for valid data
+     */
     public void checkDescription() {
         descriptionCheck = modifyAppointDescriptionTF.getLength() != 0;
     }
 
+    /**
+     * Checks location field for valid data
+     */
     public void checkLocationField() {
         locationCheck = modifyAppointLocationTF.getLength() != 0;
     }
 
+    /**
+     * Checks type field for valid data
+     */
     public void checkTypeField() {
         typeCheck = modifyAppointTypeTF.getLength() != 0;
     }
 
+    /**
+     * Checks customer ID field for valid data
+     */
     public void checkCustomerIDField() {
         int tryCustID = 0;
         if(modifyAppointCustomerTF.getLength() != 0) {
             try {
                 tryCustID = Integer.parseInt(modifyAppointCustomerTF.getText().trim());
-                System.out.println("ID: " + tryCustID);
                 customerIDCheck = true;
             } catch(Exception e) {
                 customerIDCheck = false;
@@ -458,6 +538,9 @@ public class ModifyAppointment implements Initializable {
         }
     }
 
+    /**
+     * Checks user ID field for valid data
+     */
     public void checkUserIDField() {
         int tryUserID = 0;
         if(modifyAppointUserTF.getLength() != 0) {
@@ -472,35 +555,58 @@ public class ModifyAppointment implements Initializable {
         }
     }
 
+    /**
+     * Checks contact ComboBox for valid data
+     */
     public void checkContactCombo() {
         contactCheck = modifyAppointContactCombo.getValue() != null;
     }
 
+    /**
+     * Checks start picker for valid data
+     */
     private void checkStartDate() {
         startDateCheck = modifyAppointStartPicker.getValue() != null;
     }
 
+    /**
+     * Checks end date picker for valid data
+     */
     private void checkEndDate() {
         endDateCheck = modifyAppointEndPicker.getValue() != null;
     }
 
+    /**
+     * Checks start hour picker for valid data
+     */
     private void checkStartHr() {
         startTimeHrCheck = startHrSpinner.getValue() != null;
     }
 
+    /**
+     * Checks start minute spinner for valid data
+     */
     private void checkStartMin() {
         startTimeMinCheck = startMinSpinner.getValue() != null;
     }
 
+    /**
+     * Checks end hour spinner for valid data
+     */
     private void checkEndHr() {
         endTimeHrCheck = endHrSpinner.getValue() != null;
     }
 
+    /**
+     * Checks end min spinner for valid data
+     */
     private void checkEndMin() {
         endTimeMinCheck = endMinSpinner.getValue() != null;
     }
 
-
+    /**
+     * Initializes time arrays for spinner
+     */
     private void initArrays() {
         for(int i = 0; i < 23; i++) { //TODO: May have to change later after conversion and stuff
             hours.add(i);
@@ -511,6 +617,9 @@ public class ModifyAppointment implements Initializable {
         mins.add(45);
     }
 
+    /**
+     * Sets all error checks to false for form fields
+     */
     private void setChecksToFalse() {
         titleCheck = false;
         descriptionCheck = false;
@@ -527,6 +636,9 @@ public class ModifyAppointment implements Initializable {
         endTimeMinCheck = false;
     }
 
+    /**
+     * Shows user that invalid data was provided
+     */
     public void showErrorAlert() {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setHeaderText("Invalid data in field(s)");
@@ -536,7 +648,9 @@ public class ModifyAppointment implements Initializable {
         });
     }
 
-
+    /**
+     * Highlights fields in the form with invalid data
+     */
     private void highlightErrors() {
         if(!titleCheck) {
             modifyAppointTitleTF.setStyle("-fx-border-color: #ae0700");

@@ -1,7 +1,5 @@
 package util;
 
-import Model.User;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -31,7 +29,6 @@ public class Query {
             rs = ps.executeQuery();
             while(rs.next()) {
                 String userID = rs.getString("User_ID");
-                System.out.println("USER ID IS: " + userID);
                 success = true;
             }
         }catch(SQLException ex) {
@@ -40,6 +37,12 @@ public class Query {
         return success;
     }
 
+    /**
+     * Checks if a customer is in the database based on customerID
+     * @param customerID Provided customer ID
+     * @return true if customer is in the database
+     * @throws SQLException If customer is not in the database or connection fails
+     */
     public static boolean checkCustomerInDB(int customerID) throws SQLException {
         Connection conn = Database.getConnection();
         PreparedStatement ps;
@@ -61,6 +64,12 @@ public class Query {
         return success;
     }
 
+    /**
+     * Checks if a user is in the database based on a user ID
+     * @param userID Provided user ID
+     * @return True if user is in the database
+     * @throws SQLException If connection failed or user is not in the database
+     */
     public static boolean checkUserInDB(int userID) throws SQLException {
         Connection conn = Database.getConnection();
         PreparedStatement ps;

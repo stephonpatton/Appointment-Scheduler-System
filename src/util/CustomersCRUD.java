@@ -1,7 +1,5 @@
 package util;
 
-import Model.Appointment;
-import Model.Country;
 import Model.Customer;
 import Model.User;
 
@@ -11,6 +9,10 @@ import java.util.ArrayList;
 import java.util.TimeZone;
 
 public class CustomersCRUD {
+    /**
+     * Loads all customer data from the database
+     * @throws SQLException If loading fails
+     */
     public static void loadAllCustomers() throws SQLException {
         Connection conn = Database.getConnection();
         PreparedStatement ps;
@@ -22,7 +24,7 @@ public class CustomersCRUD {
             rs = ps.executeQuery();
 
             while(rs.next()) {
-                Customer tempCustomer = null;
+                Customer tempCustomer;
 
                 // Get data from database
                 int customerID = rs.getInt("Customer_ID");
@@ -49,11 +51,18 @@ public class CustomersCRUD {
         }
     }
 
+    /**
+     * Inserts a customer into the datbase
+     * @param customer Provided customer object
+     */
     public static void insertCustomer(Customer customer) {
+        final long timeAtLocal = System.currentTimeMillis();
+        long offset = TimeZone.getDefault().getOffset(timeAtLocal);
+        final Timestamp timeAtUTC = new Timestamp(timeAtLocal - offset);
         PreparedStatement ps;
         try {
             Connection conn = Database.getConnection();
-            String query = "INSERT INTO customers(Customer_Name, Address, Postal_Code, Phone, Created_By, Division_ID, Customer_ID) VALUES(?, ?, ?, ?, ?, ?, ?)";
+            String query = "INSERT INTO customers(Customer_Name, Address, Postal_Code, Phone, Created_By, Division_ID, Customer_ID, Create_Date, Last_Update) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
             ps = conn.prepareStatement(query);
             ps.setString(1, customer.getCustomerName());
             ps.setString(2, customer.getAddress());
@@ -62,14 +71,21 @@ public class CustomersCRUD {
             ps.setString(5, customer.getCreatedBy());
             ps.setInt(6, customer.getDivisionID());
             ps.setInt(7, customer.getCustomerID());
+            ps.setTimestamp(8, timeAtUTC);
+            ps.setTimestamp(9, timeAtUTC);
             ps.executeUpdate();
         }catch(SQLException e) {
             throw new Error("Problem", e);
         }
     }
 
+    /**
+     * Updates customer information at a given index
+     * @param customer Provided customer object
+     */
     public static void updateCustomer(Customer customer) {
-        final long timeAtLocal = System.currentTimeMillis(); // or System.currentTimeMillis(); or new Date().getTime(); etc.
+        // Used to convert local time to utc time
+        final long timeAtLocal = System.currentTimeMillis();
         long offset = TimeZone.getDefault().getOffset(timeAtLocal);
         final Timestamp timeAtUTC = new Timestamp(timeAtLocal - offset);
 
@@ -93,6 +109,10 @@ public class CustomersCRUD {
         }
     }
 
+    /**
+     * Deletes a customer object from the database
+     * @param customer Provided customer object
+     */
     public static void deleteCustomer(Customer customer) {
         PreparedStatement ps;
         try {
@@ -106,6 +126,10 @@ public class CustomersCRUD {
         }
     }
 
+    /**
+     * Gets the next customer ID for database entry
+     * @return Next ID used in the database
+     */
     public static int getNextCustomerID() {
         int nextID = 0;
         try {
@@ -119,65 +143,55 @@ public class CustomersCRUD {
             while(rs.next()) {
                 nextID = rs.getInt("NEXT_ID");
             }
-            System.out.println("ID IS " + nextID);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
         return nextID;
     }
 
-    public static boolean isOverlap(int customerID, LocalDateTime startLocal, LocalDateTime endLocal) throws SQLException {
+    /**
+     * Checks if provided appointment information for a customer will cause overlap
+     * @param customerID Provided by user
+     * @param startLocal Provided by user
+     * @param endLocal Provided by user
+     * @return true if overlap will occur
+     * @throws SQLException If database check fails to occur
+     */
+    public static boolean isOverlap(int customerID, LocalDateTime startLocal, LocalDateTime endLocal, int appointmentID) throws SQLException {
         boolean overlap;
         Connection conn = Database.getConnection();
         PreparedStatement ps;
         ResultSet rs;
         ArrayList<Boolean> checkAppoints = new ArrayList<>();
 
-
-
         try {
-            String query = "SELECT Start, End FROM appointments INNER JOIN customers AS c WHERE c.Customer_ID = ? AND appointments.Customer_ID = ?";
+            String query = "SELECT Start, End FROM appointments INNER JOIN customers AS c WHERE c.Customer_ID = ? AND appointments.Customer_ID = ? AND Appointment_ID != ?";
             ps = conn.prepareStatement(query);
             ps.setInt(1, customerID);
             ps.setInt(2, customerID);
+            ps.setInt(3, appointmentID);
             rs = ps.executeQuery();
 
             while(rs.next()) {
-
                 Timestamp start = rs.getTimestamp("Start");
                 Timestamp end = rs.getTimestamp("End");
 
                 LocalDateTime startLdt = start.toLocalDateTime();
                 LocalDateTime endLdt = end.toLocalDateTime();
 
-                System.out.println("INPUT LDT" + startLocal);
-                System.out.println("DATABASE LDT" + startLdt);
-
                 if(startLocal.isEqual(startLdt) || endLocal.isEqual(endLdt)) {
                     checkAppoints.add(true);
-//                    return true;
                 } else if(startLocal.isAfter(startLdt) && startLocal.isBefore(endLdt)) {
                     checkAppoints.add(true);
-//                    return true;
                 } else {
                     checkAppoints.add(false);
-//                    return false;
                 }
             }
         }catch(SQLException e) {
             throw new Error("Problem", e);
         }
 
-        if(checkAppoints.contains(true)) {
-            overlap = true;
-        } else {
-            overlap = false;
-        }
-        for(Boolean bool : checkAppoints) {
-            System.out.println(bool);
-        }
-        System.out.println("IS OVERLAP : " + overlap);
-
+        overlap = checkAppoints.contains(true);
         return overlap;
     }
 }

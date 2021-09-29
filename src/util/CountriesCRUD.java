@@ -1,11 +1,12 @@
 package util;
 
 import Model.Country;
-import javafx.collections.ObservableList;
-
 import java.sql.*;
 
 public class CountriesCRUD {
+    /**
+     * Loads all country data from the database
+     */
     public static void loadAllCountries() {
         try {
             Connection conn = Database.getConnection();
@@ -14,6 +15,7 @@ public class CountriesCRUD {
             String query = "SELECT * FROM countries";
             ps = conn.prepareStatement(query);
             rs = ps.executeQuery();
+
             while(rs.next()) {
                 int countryID = rs.getInt("Country_ID");
                 String countryName = rs.getString("Country");
@@ -34,6 +36,4 @@ public class CountriesCRUD {
             throwables.printStackTrace();
         }
     }
-
-
 }

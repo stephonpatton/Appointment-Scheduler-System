@@ -1,14 +1,12 @@
 package util;
 
-import Model.Country;
 import Model.FirstLevelDivision;
-import javafx.collections.ObservableList;
-
 import java.sql.*;
 
-
-
 public class FirstLevelDivisionCRUD {
+    /**
+     * Loads all first level division data from database and stores locally
+     */
     public static void loadAllFirstLevel() {
         Connection conn;
         try {
@@ -36,6 +34,7 @@ public class FirstLevelDivisionCRUD {
                 firstLevel.setLastUpdatedBy(lastUpdatedBy);
                 firstLevel.setCountryID(countryID);
 
+                // Adds locally
                 FirstLevelDivision.addDivision(firstLevel);
             }
         } catch (SQLException throwables) {
@@ -43,6 +42,9 @@ public class FirstLevelDivisionCRUD {
         }
     }
 
+    /**
+     * Gets all US division data from database
+     */
     public static void getUSDivisions() {
         Connection conn;
         try {
@@ -71,13 +73,15 @@ public class FirstLevelDivisionCRUD {
                 firstLevel.setCountryID(countryID);
 
                 FirstLevelDivision.addUSDivision(firstLevel);
-                System.out.println(firstLevel);
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
     }
 
+    /**
+     * Gets all UK division data from database
+     */
     public static void getUKDivisions() {
         Connection conn;
         try {
@@ -106,13 +110,15 @@ public class FirstLevelDivisionCRUD {
                 firstLevel.setCountryID(countryID);
 
                 FirstLevelDivision.addUKDivision(firstLevel);
-                System.out.println(firstLevel);
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
     }
 
+    /**
+     * Gets all Canadian division data from database
+     */
     public static void getCADivisions() {
         Connection conn;
         try {
@@ -141,7 +147,6 @@ public class FirstLevelDivisionCRUD {
                 firstLevel.setCountryID(countryID);
 
                 FirstLevelDivision.addCADivision(firstLevel);
-                System.out.println(firstLevel);
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();

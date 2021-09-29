@@ -6,24 +6,15 @@ import Model.User;
 import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.ZoneId;
-import java.time.chrono.ChronoLocalDate;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.TimeZone;
 
 public class Time {
     private static Appointment appointmentSoon;
-    public void localTimeToEst() {
 
-    }
-
-//    public static LocalDateTime localTimeToUTC() {
-//
-//    }
-
+    // TODO: Maybe delete later
     public static Timestamp localTimeToUTCTS(LocalDateTime ldt) {
         Timestamp ts;
         DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
@@ -31,32 +22,39 @@ public class Time {
         return ts;
     }
 
+    /**
+     * Converts a timestamp to LDT object in UTC
+     * @param ts Timestamp object
+     * @return LocalDateTime object in UTC timezone
+     */
     public static LocalDateTime convertTStoLDT(Timestamp ts) {
-//        LocalDateTime ldt = ts.toLocalDateTime().atZone(ZoneId.of("UTC")).withZoneSameInstant(ZoneId.systemDefault()).toLocalDateTime();
-        LocalDateTime ldt = ts.toLocalDateTime().atZone(ZoneId.systemDefault()).withZoneSameInstant(ZoneId.of("UTC")).toLocalDateTime();
-
-        return ldt;
+        return ts.toLocalDateTime().atZone(ZoneId.systemDefault()).withZoneSameInstant(ZoneId.of("UTC")).toLocalDateTime();
     }
 
+    // TODO: Maybe delete later
     public static LocalDateTime timestampToESTLDT(Timestamp dateTime) {
         DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
         return LocalDateTime.parse(dateTime.toString(), format).atZone(ZoneId.of("UTC")).withZoneSameInstant(ZoneId.of("EST")).toLocalDateTime();
     }
 
+    /**
+     * Converts UTC Timestamp object to LocalDateTime object in users local time
+     * @param dateTime Timestamp object
+     * @return LocalDateTime object in users local time
+     */
     public static LocalDateTime utcToLocalTime(Timestamp dateTime) {
         DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
         return LocalDateTime.parse(dateTime.toString(), format).atZone(ZoneId.of("UTC")).withZoneSameInstant(ZoneId.systemDefault()).toLocalDateTime();
     }
 
-
+    /**
+     * Checks if inputted hours are within business hours in EST (8am - 10pm)
+     * @param utcLDT Time inputted (LocalDateTime object)
+     * @return True if it is within business hours
+     */
     public static boolean checkBusinessHours(LocalDateTime utcLDT) {
-        // TODO: End time could be equal to 200 UTC but nothing over
-        // TODO: Start time cannot be 200 UTC at all
         boolean isValid = false;
         int localHour = utcLDT.getHour();
-        int localMin = utcLDT.getMinute();
-//        LocalDateTime test = LocalDateTime.parse(utcLDT.getYear() + "-" + utcLDT.getMonth() + "-" + utcLDT.getDayOfMonth() + "T" + "02:15");
-//        System.out.println("CLOSING TIME: " + test);
         try {
             System.out.println("VALUE OF UTC LDT" + utcLDT);
             if(localHour >= 12) {
@@ -70,11 +68,14 @@ public class Time {
         }catch(Exception e) {
             e.printStackTrace();
         }
-
         return isValid;
     }
 
-    public static boolean checkIfAppointment15() throws SQLException {
+    /**
+     * Checks if user who logged in has an appointment within the next 15 minutes
+     * @return True if the user does have an appointment scheduled in the next 15 minutes
+     */
+    public static boolean checkIfAppointment15() {
         boolean isAppointment = false;
         try {
             Connection conn = Database.getConnection();
@@ -85,7 +86,6 @@ public class Time {
             ps.setInt(1, UsersCRUD.getUserID(User.getCurrentUser()));
             ps.setTimestamp(2, Timestamp.valueOf(LocalDateTime.now(ZoneId.of("UTC"))));
             ps.setTimestamp(3, Timestamp.valueOf(LocalDateTime.now(ZoneId.of("UTC")).plusMinutes(15)));
-//            ps.setInt(3, UsersCRUD.getUserID(User.getCurrentUser()));
             rs = ps.executeQuery();
             rs.next();
                 int appointmentId = rs.getInt("Appointment_ID");
@@ -93,8 +93,6 @@ public class Time {
 
                 appointmentSoon = Appointment.getByID(appointmentId);
                 isAppointment = true;
-//                return true;
-
         }catch(SQLException e) {
             isAppointment = false;
             System.err.println("NO RESULTS");
@@ -102,36 +100,12 @@ public class Time {
         return isAppointment;
     }
 
-
-
-//    public static boolean checkStartGreaterMin() {
-//        //todo: implmenent.. maybe not here
-//    }
-//    public static boolean checkBusinessHours(LocalDateTime utcLDT) {
-//        boolean isValid = false;
-//        int localStartHour = utcLDT.getHour();
-//        try {
-//            LocalDateTime tmp = ldtToEst(utcLDT);
-//            System.out.println("VALUE OF TMP" + tmp);
-//            int estStartHour = tmp.getHour();
-////        int estStartHour = 8;
-//            if(estStartHour >= 8 && estStartHour <= 22) {
-//                isValid = true;
-//            } else {
-//                isValid = false;
-//            }
-//        } catch(Exception e) {
-//            e.printStackTrace();
-//        }
-//
-//
-//        return isValid;
-//    }
-
-    public void utcToEST() {
-
-    }
-
+    /**
+     * Takes two strings and converts them to a timestamp
+     * @param date Date provided in string format
+     * @param time Time provided in string format
+     * @return Timestamp formatted (yyyy-MM-dd HH:mm:ss)
+     */
     public static Timestamp convertStringsToTime(String date, String time) {
         try {
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -145,13 +119,13 @@ public class Time {
         }
     }
 
+    // TODO: Probably delete later
     public static Timestamp convertStringToUTCTS(String date, String time) {
         final long timeAtLocal = System.currentTimeMillis(); // or System.currentTimeMillis(); or new Date().getTime(); etc.
         long offset = TimeZone.getDefault().getOffset(timeAtLocal);
         final Timestamp timeAtUTC = new Timestamp(timeAtLocal - offset);
         try {
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//            formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
             String dateTime = date + " " + time;
             Date parsedDate = formatter.parse(dateTime);
             Timestamp ts = new Timestamp(parsedDate.getTime());
@@ -164,20 +138,16 @@ public class Time {
 
 
 
+    // TODO: Probably delete later
     public static LocalDateTime ldtToEst(LocalDateTime ldt) {
-//        DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
-//        return LocalDateTime.parse(ldt.toString(), format).atZone(ZoneId.of("UTC")).withZoneSameInstant(ZoneId.of("EST")).toLocalDateTime();
-//        return ldt.atZone(ZoneId.systemDefault()).withZoneSameInstant(ZoneId.of("America/New_York")).toLocalDateTime();
         return ldt.atZone(ZoneId.of("UTC")).withZoneSameInstant(ZoneId.of("America/New_York")).toLocalDateTime();
-
     }
 
-//    public static LocalDateTime convertStringToLDT(String date, String time) {
-//        DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
-//    }
-
+    /**
+     * Helper method to transfer which appointment is coming within the next 15 mins
+     * @return Appointment object of appointment in next 15 mins
+     */
     public static Appointment getAppointmentSoon() {
         return appointmentSoon;
     }
-
 }

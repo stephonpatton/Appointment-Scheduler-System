@@ -8,6 +8,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class ContactsCRUD {
+    /**
+     * Loads all contacts from the database
+     */
     public static void loadAllContacts() {
         try {
             Connection conn = Database.getConnection();
@@ -16,7 +19,6 @@ public class ContactsCRUD {
             String query = "SELECT * FROM contacts";
             ps = conn.prepareStatement(query);
             rs = ps.executeQuery();
-
 
             while(rs.next()) {
                 Contact temp = new Contact();
@@ -27,6 +29,7 @@ public class ContactsCRUD {
                 temp.setContactName(contactName);
                 temp.setEmail(email);
 
+                // Adds to local system
                 Contact.addContact(temp);
             }
         } catch (SQLException throwables) {

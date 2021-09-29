@@ -2,11 +2,10 @@ package Model;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-
-import java.sql.Date;
 import java.sql.Timestamp;
 
 public class Customer {
+    // Local variables for customer objects
     private int customerID;
     private String customerName;
     private String address;
@@ -21,24 +20,42 @@ public class Customer {
     // Helper variable
     private Country country;
 
+    // ObservableList holding all customers
     private static ObservableList<Customer> allCustomers = FXCollections.observableArrayList();
 
-    public Customer() {
+    // Default constructor
+    public Customer() { }
 
-    }
-
+    /**
+     * Gets all customers for ObservableList
+     * @return An ObservableList of all customers
+     */
     public static ObservableList<Customer> getAllCustomers() {
         return allCustomers;
     }
 
+    /**
+     * Adds a customer to the ObservableList
+     * @param customer Provided customer object
+     */
     public static void addCustomer(Customer customer) {
         allCustomers.add(customer);
     }
 
+    /**
+     * Deletes a customer from the ObservableList
+     * @param customer Provided customer object
+     * @return True if the customer was deleted from the ObservableList
+     */
     public static boolean deleteCustomer(Customer customer) {
         return allCustomers.remove(customer);
     }
 
+    /**
+     * Updates the customer at a given index
+     * @param index Provided index of customer being updated
+     * @param customer New customer object
+     */
     public static void updateCustomer(int index, Customer customer) {
         allCustomers.set(index, customer);
     }
@@ -231,21 +248,35 @@ public class Customer {
         this.divisionID = divisionID;
     }
 
+    /**
+     * Gets the user who last updated a customer object
+     * @return User name of who lasted updated
+     */
     public String getLastUpdatedBy() {
         return lastUpdatedBy;
     }
 
+    /**
+     * Sets the user who last updated a customer
+     * @param lastUpdatedBy Provided username of who last updated
+     */
     public void setLastUpdatedBy(String lastUpdatedBy) {
         this.lastUpdatedBy = lastUpdatedBy;
     }
 
+    /**
+     * Sets the country a customer is living in
+     * @param country Provided country object
+     */
     public void setCountry(Country country) {
         this.country = country;
     }
 
+    /**
+     * Gets the country a customer is living in
+     * @return Country object
+     */
     public Country getCountry() {
         return this.country;
     }
-
-
 }

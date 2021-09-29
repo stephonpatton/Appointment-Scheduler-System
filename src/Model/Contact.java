@@ -4,20 +4,34 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 public class Contact {
+    // Local variables for contact object
     private int contactID;
     private String contactName;
     private String email;
 
+    // ObservableList holding all contacts in the database
     private static ObservableList<Contact> allContacts = FXCollections.observableArrayList();
 
+    /**
+     * Adds a contact to the ObservableList
+     * @param contact Provided contact object
+     */
     public static void addContact(Contact contact) {
         allContacts.add(contact);
     }
 
+    /**
+     * Returns all contacts in the ObservableList
+     * @return All contacts in the system
+     */
     public static ObservableList<Contact> getAllContacts() {
         return allContacts;
     }
 
+    /**
+     * Gets the name of all contacts in the ObservableList
+     * @return ObservableList of all contact names in the system
+     */
     public static ObservableList<String> getAllContactNames() {
         ObservableList<String> temp = FXCollections.observableArrayList();
         for (Contact allContact : allContacts) {
@@ -26,15 +40,18 @@ public class Contact {
         return temp;
     }
 
+    /**
+     * Gets a contact object based on a given ID
+     * @param id Provided contact ID
+     * @return Contact object with provided contact ID
+     */
     public static Contact getContactByID(int id) {
         Contact temp = null;
-
         for (Contact allContact : allContacts) {
             if (allContact.getContactID() == id) {
                 temp = allContact;
             }
         }
-
         return temp;
     }
 
@@ -86,6 +103,10 @@ public class Contact {
         this.email = email;
     }
 
+    /**
+     * Method used for ComboBox to convert contact object to presentable data
+     * @return Name of contact
+     */
     public String toString() {
         return contactName;
     }

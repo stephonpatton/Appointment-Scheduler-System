@@ -6,6 +6,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class UsersCRUD {
+    /**
+     * Gets userID based on username provided
+     * @param username Provided username
+     * @return User ID of a user based on username
+     * @throws SQLException If database issues occur
+     */
     public static int getUserID(String username) throws SQLException {
         Connection conn = Database.getConnection();
         PreparedStatement ps;
@@ -26,6 +32,13 @@ public class UsersCRUD {
         return userID;
     }
 
+    /**
+     * Gets username based on a given user ID
+     * @param userID Provided user ID
+     * @return Username of a user based on user ID
+     * @throws SQLException If database issues occur
+     */
+    // TODO: Maybe delete later
     public static String getUserName(int userID) throws SQLException {
         Connection conn = Database.getConnection();
         PreparedStatement ps;
@@ -45,5 +58,4 @@ public class UsersCRUD {
         }
         return username;
     }
-
 }

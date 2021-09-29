@@ -2,11 +2,10 @@ package Model;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-
-import java.sql.Date;
 import java.sql.Timestamp;
 
 public class Country {
+    // Local variables for country object
     private int countryID;
     private String country;
     private Timestamp createDate;
@@ -14,18 +13,22 @@ public class Country {
     private Timestamp lastUpdate;
     private String lastUpdatedBy;
 
+    // ObservableList holding all country objects
     private static ObservableList<Country> allCountries = FXCollections.observableArrayList();
 
-
+    /**
+     * Adds a country object to the ObservableList
+     * @param country Provided country object
+     */
     public static void addCountry(Country country) {
         allCountries.add(country);
     }
 
-    // TODO: Sure I can delete at the end
-    public static boolean deleteCountry(Country country) {
-        return allCountries.remove(country);
-    }
 
+    /**
+     * Returns all countries in the system
+     * @return All country objects in the system
+     */
     public static ObservableList<Country> getAllCountries() {
         return allCountries;
     }
@@ -126,6 +129,10 @@ public class Country {
         this.lastUpdatedBy = lastUpdatedBy;
     }
 
+    /**
+     * Helper method for ComboBox to present country object to user
+     * @return Country name
+     */
     public String toString() {
         return country;
     }

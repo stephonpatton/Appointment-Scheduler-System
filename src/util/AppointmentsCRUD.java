@@ -1,34 +1,23 @@
 package util;
 
 import Model.Appointment;
-import Model.User;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-
 import java.sql.*;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
 import java.util.TimeZone;
 
-import static java.time.LocalDateTime.now;
-
-
-
 public class AppointmentsCRUD {
+//    private static final SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); // TODO: Delete at end of project if not needed
 
-//    static final long timeAtLocal = System.currentTimeMillis(); // or System.currentTimeMillis(); or new Date().getTime(); etc.
-//    static final long offset = TimeZone.getDefault().getOffset(timeAtLocal);
-//    static final Timestamp timeAtUTC = new Timestamp(timeAtLocal - offset);
-
-    private static final SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    /**
+     * Loads all appointments from the database to store locally
+     * @throws SQLException If appointments fail to be loaded from database
+     */
     public static void loadAllAppointments() throws SQLException {
         Connection conn = Database.getConnection();
         PreparedStatement ps;
         ResultSet rs;
-
         try {
             Appointment tempAppoint;
             String query = "SELECT * FROM appointments";
@@ -76,27 +65,33 @@ public class AppointmentsCRUD {
                 tempAppoint.setEndMin(end.toLocalDateTime().getMinute());
                 tempAppoint.setStartDate(start.toLocalDateTime().toLocalDate());
                 tempAppoint.setEndDate(end.toLocalDateTime().toLocalDate());
-                System.out.println("TIMESTAMP FROM DB" + start.toLocalDateTime().getHour() + ":" + start.toLocalDateTime().getMinute() + ":" + start.toLocalDateTime().getSecond());
 
                 // helper method for viewing appointment TableView
                 tempAppoint.setContactName(AppointmentsCRUD.getContactName(contactID));
 
                 // Adds to appointment list
                 Appointment.addAppointment(tempAppoint);
-
             }
         }catch(SQLException e) {
             throw new Error("Problem", e);
         }
     }
 
+    /**
+     * Inserts appointment into the database after user has provided all information
+     * @param appointment Appointment object provided
+     */
     public static void insertAppointment(Appointment appointment) {
-        final long timeAtLocal = System.currentTimeMillis(); // or System.currentTimeMillis(); or new Date().getTime(); etc.
+        // Gets the local time of user in order to make utc object for database entries
+        final long timeAtLocal = System.currentTimeMillis();
         long offset = TimeZone.getDefault().getOffset(timeAtLocal);
         final Timestamp timeAtUTC = new Timestamp(timeAtLocal - offset);
+
+        // Checks if appointment is in local system, if not then it adds
         if(!Appointment.getAllAppointments().contains(appointment)) {
             Appointment.addAppointment(appointment);
         }
+        // Tries to insert data into the database
         try {
             Connection conn = Database.getConnection();
             PreparedStatement ps;
@@ -111,7 +106,6 @@ public class AppointmentsCRUD {
             ps.setInt(5, appointment.getCustomerID());
             ps.setInt(6, appointment.getUserID());
             ps.setInt(7, appointment.getContactID());
-//            ps.setInt(8, appointment.getAppointmentID());
             ps.setInt(8, AppointmentsCRUD.getNextIDCount());
             ps.setString(9, appointment.getCreatedBy());
             ps.setTimestamp(10, appointment.getStart());
@@ -124,11 +118,17 @@ public class AppointmentsCRUD {
         }
     }
 
+    /**
+     * Updates appointment data in the database
+     * @param id Provided id
+     * @param appointment Provided appointment object
+     */
     public static void updateAppointment(int id, Appointment appointment) {
-        OffsetDateTime now = OffsetDateTime.now(ZoneOffset.UTC);
-        final long timeAtLocal = System.currentTimeMillis(); // or System.currentTimeMillis(); or new Date().getTime(); etc.
+        // Changes local time of now to utc time
+        final long timeAtLocal = System.currentTimeMillis();
         long offset = TimeZone.getDefault().getOffset(timeAtLocal);
         final Timestamp timeAtUTC = new Timestamp(timeAtLocal - offset);
+        // Tries to update appointment in database
         try {
             Connection conn = Database.getConnection();
             PreparedStatement ps;
@@ -155,21 +155,28 @@ public class AppointmentsCRUD {
         }
     }
 
+    /**
+     * Deletes an appointment from the database
+     * @param appointment Provided appointment object
+     */
     public static void deleteAppointment(Appointment appointment) {
+        // Deletes an appointment from the database
         try {
             Connection conn = Database.getConnection();
             PreparedStatement ps;
-//            ResultSet rs;
             String query = "DELETE FROM appointments WHERE Appointment_ID = ?";
             ps = conn.prepareStatement(query);
             ps.setInt(1, appointment.getAppointmentID());
             ps.executeUpdate();
-            System.out.println("Appointment deleted from database...");
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
     }
 
+    /**
+     * Gets the next ID count for the database (Appointment_ID)
+     * @return The next ID for database entry
+     */
     public static int getNextIDCount() {
         int id = 0;
         try {
@@ -183,14 +190,17 @@ public class AppointmentsCRUD {
             while(rs.next()) {
                 id = rs.getInt("NEXT_ID");
             }
-            System.out.println("ID IS " + id);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
         return id;
-//        return Appointment.getAllAppointments().size() + 1;
     }
 
+    /**
+     * Gets the contact name assigned to an appointment from the database
+     * @param userID Provided userID used for inner join
+     * @return Name of contact assigned to appointment
+     */
     public static String getContactName(int userID) {
         String name = "";
         try {
@@ -212,10 +222,10 @@ public class AppointmentsCRUD {
         return name;
     }
 
+    // TODO: Probably delete later
     public static LocalDateTime toUTCFromLDT(String date, String time) {
         DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         LocalDateTime localDate =  LocalDateTime.parse(date + " " + time, format).atZone(ZoneId.systemDefault()).withZoneSameInstant(ZoneId.of("UTC")).toLocalDateTime();
         return localDate;
     }
-
 }
