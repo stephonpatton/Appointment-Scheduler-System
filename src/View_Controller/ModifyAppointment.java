@@ -188,6 +188,14 @@ public class ModifyAppointment implements Initializable {
                 return false;
             }
 
+            if(modifyAppointStartPicker.getValue().getDayOfYear() > modifyAppointEndPicker.getValue().getDayOfYear()) {
+                // TODO: ALERT
+                startDateCheck = false;
+                endDateCheck = false;
+                highlightErrors();
+                return false;
+            }
+
             if(startHrSpinner.getValue() > endHrSpinner.getValue() || (endHrSpinner.getValue() == startHrSpinner.getValue() && endMinSpinner.getValue() <= startMinSpinner.getValue())) {
                 // TODO: Alert saying end time before start time
                 System.err.println("END HOUR GREATER THAN START HOUR");

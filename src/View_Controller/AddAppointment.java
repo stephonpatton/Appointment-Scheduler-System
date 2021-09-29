@@ -149,6 +149,14 @@ public class AddAppointment implements Initializable {
                 return false;
             }
 
+            if(addAppointStartPicker.getValue().getDayOfYear() > addAppointEndPicker.getValue().getDayOfYear()) {
+                // TODO: ALERT
+                startDateCheck = false;
+                endDateCheck = false;
+                highlightErrors();
+                return false;
+            }
+
             if(title.length() == 0 || description.length() == 0 || location.length() == 0 || type.length() == 0) {
                 isCreated = false;
             } else {
