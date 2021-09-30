@@ -78,6 +78,21 @@
                   <Font size="18.0" />
                </font>
             </Button>
+            <Button layoutX="58.0" layoutY="73.0" mnemonicParsing="false" text="Customer Appointment Reports">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Button>
+            <Button layoutX="112.0" layoutY="196.0" mnemonicParsing="false" onAction="#openContactScheduleReport" text="Contact Schedules">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Button>
+            <Button layoutX="83.0" layoutY="135.0" mnemonicParsing="false" text="Customer Division Report">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Button>
          </children>
       </Pane>
    </children>

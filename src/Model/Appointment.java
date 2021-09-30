@@ -2,7 +2,10 @@ package Model;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import util.AppointmentsCRUD;
 import util.Time;
+
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -457,6 +460,17 @@ public class Appointment {
             if(appoint.getAppointmentID() == appointmentID) {
                 temp = appoint;
                 return temp;
+            }
+        }
+        return temp;
+    }
+
+    public static ObservableList<Appointment> getAppointmentsByContact(Contact contact) throws SQLException {
+        AppointmentsCRUD.loadAllAppointments();
+        ObservableList<Appointment> temp = FXCollections.observableArrayList();
+        for(Appointment appoint : allAppointments) {
+            if(appoint.getContact() == contact) {
+                temp.add(appoint);
             }
         }
         return temp;

@@ -501,4 +501,17 @@ public class MainForm implements Initializable {
         Database.closeConnection();
         Platform.exit();
     }
+
+    public void openContactScheduleReport(ActionEvent actionEvent) throws IOException {
+        Parent root;
+        root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("../View_Controller/ContactScheduleReport.fxml")));
+        Stage stage = new Stage();
+        stage.setTitle("Contact Schedule Reports");
+        stage.setScene(new Scene(root, 670, 400));
+        stage.setResizable(false);
+        stage.show();
+
+        //Hides current window
+        ((Node)(actionEvent.getSource())).getScene().getWindow().hide();
+    }
 }

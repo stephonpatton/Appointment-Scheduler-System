@@ -1,6 +1,10 @@
 package util;
 
 import Model.Appointment;
+import Model.Contact;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.time.*;
@@ -227,5 +231,43 @@ public class AppointmentsCRUD {
         DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         LocalDateTime localDate =  LocalDateTime.parse(date + " " + time, format).atZone(ZoneId.systemDefault()).withZoneSameInstant(ZoneId.of("UTC")).toLocalDateTime();
         return localDate;
+    }
+
+    /**
+     * Gets all appointments based on a contact
+     * @param contact Provided contact object
+     * @return An ObservableList of appointments based on contact
+     */
+    public static ObservableList<Appointment> getAppointmentsByContact(Contact contact) {
+        ObservableList<Appointment> temp = FXCollections.observableArrayList();
+        try {
+            Connection conn = Database.getConnection();
+            PreparedStatement ps;
+            ResultSet rs;
+            String query = "SELECT * FROM appointments INNER JOIN contacts AS C WHERE appointments.Contact_ID = ? AND C.Contact_ID = ?";
+            ps = conn.prepareStatement(query);
+            ps.setInt(1, contact.getContactID());
+            ps.setInt(2, contact.getContactID());
+            rs = ps.executeQuery();
+
+            while(rs.next()) {
+                Appointment appoint = new Appointment();
+                int id = rs.getInt("Appointment_ID");
+                String title = rs.getString("Title");
+                String type = rs.getString("Type");
+                Timestamp start = rs.getTimestamp("Start");
+                Timestamp end = rs.getTimestamp("End");
+
+                appoint.setAppointmentID(id);
+                appoint.setTitle(title);
+                appoint.setType(type);
+                appoint.setStart(start);
+                appoint.setEnd(end);
+                temp.add(appoint);
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return temp;
     }
 }
