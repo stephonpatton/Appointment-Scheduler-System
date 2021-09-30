@@ -179,7 +179,7 @@ public class CustomersCRUD {
                 LocalDateTime startLdt = start.toLocalDateTime();
                 LocalDateTime endLdt = end.toLocalDateTime();
 
-                if(startLocal.isEqual(startLdt) || endLocal.isEqual(endLdt)) {
+                if(startLocal.isEqual(startLdt) || endLocal.isEqual(endLdt) || endLdt.isAfter(endLocal) || endLdt.isAfter(startLocal)) {
                     checkAppoints.add(true);
                 } else if(startLocal.isAfter(startLdt) && startLocal.isBefore(endLdt)) {
                     checkAppoints.add(true);

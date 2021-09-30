@@ -22,9 +22,11 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
@@ -115,7 +117,10 @@ public class ModifyAppointment implements Initializable {
     }
 
     /**
-     * Tries to modify an appointment based on provided input from user
+     * USES LAMBDA FUNCTION: This uses the string to timestamp conversion lambda in order to create timestamps for time data.
+     * Tries to modify an appointment based on provided input from user.
+     *
+     *
      * @return True if the appointment was successfully modified
      * @throws SQLException
      */
@@ -142,8 +147,21 @@ public class ModifyAppointment implements Initializable {
             String endMinTime = String.valueOf(endMinSpinner.getValue());
             String endTime = "0" + endHrTime + ":" + endMinTime + ":00";
 
-            Timestamp startTs = Time.convertStringsToTime(startDate, startTime);
-            Timestamp endTs = Time.convertStringsToTime(endDate, endTime);
+            Time.TimestampInterface timestamp = (String date, String time) -> {
+                try {
+                    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    String dateTime = date + " " + time;
+                    Date parsedDate = formatter.parse(dateTime);
+                    Timestamp ts = new Timestamp(parsedDate.getTime());
+                    System.out.println("TIMESTAMP: " + ts.getTime());
+                    return ts;
+                }catch (Exception e) {
+                    return null;
+                }
+            };
+
+            Timestamp startTs = timestamp.stringToTimestamp(startDate, startTime);
+            Timestamp endTs = timestamp.stringToTimestamp(endDate, endTime);
 
             LocalDateTime startLdt = Time.convertTStoLDT(startTs);
             LocalDateTime endLdt = Time.convertTStoLDT(endTs);

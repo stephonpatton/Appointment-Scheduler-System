@@ -86,29 +86,28 @@ public class Time {
     }
 
     /**
-     * Takes two strings and converts them to a timestamp
-     * @param date Date provided in string format
-     * @param time Time provided in string format
-     * @return Timestamp formatted (yyyy-MM-dd HH:mm:ss)
-     */
-    public static Timestamp convertStringsToTime(String date, String time) {
-        try {
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            String dateTime = date + " " + time;
-            Date parsedDate = formatter.parse(dateTime);
-            Timestamp ts = new Timestamp(parsedDate.getTime());
-            System.out.println("TIMESTAMP: " + ts.getTime());
-            return ts;
-        }catch (Exception e) {
-            return null;
-        }
-    }
-
-    /**
      * Helper method to transfer which appointment is coming within the next 15 mins
      * @return Appointment object of appointment in next 15 mins
      */
     public static Appointment getAppointmentSoon() {
         return appointmentSoon;
     }
+
+    // Timezone interface for lambda functions
+    /**
+     * Timezone interface used for lambda functions
+     */
+    public interface Timezone {
+        String getUserTimezone();
+    }
+
+    // Timestamp converter interface for lambda functions
+    /**
+     * Timestamp converter used for lambda functions in project
+     */
+    public interface TimestampInterface {
+        Timestamp stringToTimestamp(String date, String time);
+    }
+
+
 }

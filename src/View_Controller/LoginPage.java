@@ -38,16 +38,21 @@ public class LoginPage implements Initializable {
     static Stage stage;
 
     /**
-     * Initialize database once program runs and loginpage is loaded
+     * USES LAMBDA FUNCTION: Prints users timezone as a label
+     *
+     * Initialize database once program runs and loginpage is loaded.
+     *
+     *
      * @param url
      * @param resourceBundle
      */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        Time.Timezone timezone = () -> String.valueOf(ZoneId.systemDefault());
         this.rb = resourceBundle;
         passwordLabel.setText(rb.getString("passwordLabel"));
         usernameLabel.setText(rb.getString("usernameLabel"));
-        languageLabel.setText(String.valueOf(ZoneId.systemDefault()));
+        languageLabel.setText(timezone.getUserTimezone());
         usernameTF.setPromptText(rb.getString("username"));
         passwordTF.setPromptText(rb.getString("password"));
         loginButton.setText(rb.getString("login"));
@@ -75,8 +80,6 @@ public class LoginPage implements Initializable {
         if(Query.login(username, password)) {
             Logger.logUser(username);
             User.setCurrentUser(username);
-            System.out.println("LOGIN SUCCESSFUL");
-            System.out.println("ZONE ID IS" + ZoneId.systemDefault());
             ContactsCRUD.loadAllContacts();
             AppointmentsCRUD.loadAllAppointments();
             CustomersCRUD.loadAllCustomers();
@@ -84,17 +87,15 @@ public class LoginPage implements Initializable {
             FirstLevelDivisionCRUD.loadAllFirstLevel();
             if(Time.checkIfAppointment15()) {
                 appointmentAlert();
-                System.out.println("APPOINTMENT IN 15");
             } else {
                 noAppointmentAlert();
-                System.out.println("NO APPOINTMENT");
             }
             showMainScreen(actionEvent);
         } else {
             String filename = "login_activity.txt";
             FileWriter fileWriter = new FileWriter(filename, true);
             PrintWriter printWriter = new PrintWriter(fileWriter);
-            printWriter.println(username + " failed to login on" + LocalDateTime.now().toLocalDate() + " " + LocalDateTime.now().toLocalTime());
+            printWriter.println(username + " failed to login on " + LocalDateTime.now().toLocalDate() + " " + LocalDateTime.now().toLocalTime());
             printWriter.close();
             invalidUserPassAlert();
         }

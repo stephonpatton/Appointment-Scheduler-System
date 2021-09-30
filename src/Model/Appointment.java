@@ -469,17 +469,6 @@ public class Appointment {
         return temp;
     }
 
-    public static ObservableList<Appointment> getAppointmentsByContact(Contact contact) throws SQLException {
-        AppointmentsCRUD.loadAllAppointments();
-        ObservableList<Appointment> temp = FXCollections.observableArrayList();
-        for(Appointment appoint : allAppointments) {
-            if(appoint.getContact() == contact) {
-                temp.add(appoint);
-            }
-        }
-        return temp;
-    }
-
     public static int getTotalMonthCount() {
         return totalMonthCount;
     }
@@ -488,10 +477,18 @@ public class Appointment {
         totalMonthCount = appointments.size();
     }
 
+    /**
+     * Sets the total count of monthly types of reports (helper method)
+     * @param total Sets the total
+     */
     public void setTotal(int total) {
         totalCount = total;
     }
 
+    /**
+     * Gets the total count of monthly types of reports (helper method)
+     * @return Total amount of types
+     */
     public int getTotal() {
         return totalCount;
     }
