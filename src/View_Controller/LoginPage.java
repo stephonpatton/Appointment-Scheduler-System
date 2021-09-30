@@ -95,7 +95,6 @@ public class LoginPage implements Initializable {
             FileWriter fileWriter = new FileWriter(filename, true);
             PrintWriter printWriter = new PrintWriter(fileWriter);
             printWriter.println(username + " failed to login on" + LocalDateTime.now().toLocalDate() + " " + LocalDateTime.now().toLocalTime());
-            System.out.println(username + " failed to login on" + LocalDateTime.now().toLocalDate() + LocalDateTime.now().toLocalTime()); // TODO: Delete later
             printWriter.close();
             invalidUserPassAlert();
         }

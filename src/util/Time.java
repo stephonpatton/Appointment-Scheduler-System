@@ -13,15 +13,6 @@ import java.util.TimeZone;
 
 public class Time {
     private static Appointment appointmentSoon;
-
-    // TODO: Maybe delete later
-    public static Timestamp localTimeToUTCTS(LocalDateTime ldt) {
-        Timestamp ts;
-        DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
-        ts = Timestamp.valueOf(ldt.format(format));
-        return ts;
-    }
-
     /**
      * Converts a timestamp to LDT object in UTC
      * @param ts Timestamp object
@@ -29,12 +20,6 @@ public class Time {
      */
     public static LocalDateTime convertTStoLDT(Timestamp ts) {
         return ts.toLocalDateTime().atZone(ZoneId.systemDefault()).withZoneSameInstant(ZoneId.of("UTC")).toLocalDateTime();
-    }
-
-    // TODO: Maybe delete later
-    public static LocalDateTime timestampToESTLDT(Timestamp dateTime) {
-        DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
-        return LocalDateTime.parse(dateTime.toString(), format).atZone(ZoneId.of("UTC")).withZoneSameInstant(ZoneId.of("EST")).toLocalDateTime();
     }
 
     /**
@@ -117,30 +102,6 @@ public class Time {
         }catch (Exception e) {
             return null;
         }
-    }
-
-    // TODO: Probably delete later
-    public static Timestamp convertStringToUTCTS(String date, String time) {
-        final long timeAtLocal = System.currentTimeMillis(); // or System.currentTimeMillis(); or new Date().getTime(); etc.
-        long offset = TimeZone.getDefault().getOffset(timeAtLocal);
-        final Timestamp timeAtUTC = new Timestamp(timeAtLocal - offset);
-        try {
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            String dateTime = date + " " + time;
-            Date parsedDate = formatter.parse(dateTime);
-            Timestamp ts = new Timestamp(parsedDate.getTime());
-            System.out.println("TIMESTAMP: " + ts.getTime());
-            return ts;
-        }catch (Exception e) {
-            return null;
-        }
-    }
-
-
-
-    // TODO: Probably delete later
-    public static LocalDateTime ldtToEst(LocalDateTime ldt) {
-        return ldt.atZone(ZoneId.of("UTC")).withZoneSameInstant(ZoneId.of("America/New_York")).toLocalDateTime();
     }
 
     /**

@@ -31,31 +31,4 @@ public class UsersCRUD {
         }
         return userID;
     }
-
-    /**
-     * Gets username based on a given user ID
-     * @param userID Provided user ID
-     * @return Username of a user based on user ID
-     * @throws SQLException If database issues occur
-     */
-    // TODO: Maybe delete later
-    public static String getUserName(int userID) throws SQLException {
-        Connection conn = Database.getConnection();
-        PreparedStatement ps;
-        ResultSet rs;
-        String username = "";
-
-        try {
-            String query = "SELECT User_Name FROM users WHERE User_ID = ?";
-            ps = conn.prepareStatement(query);
-            ps.setInt(1, userID);
-            rs = ps.executeQuery();
-            while(rs.next()) {
-                username = rs.getString("User_Name");
-            }
-        }catch(SQLException e) {
-            throw new Error("Problem", e);
-        }
-        return username;
-    }
 }

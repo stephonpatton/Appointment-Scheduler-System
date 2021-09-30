@@ -134,7 +134,7 @@ public class ModifyAppointment implements Initializable {
             String startDate = modifyAppointStartPicker.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
             String startHrTime = String.valueOf(startHrSpinner.getValue());
             String startMinTime = String.valueOf(startMinSpinner.getValue());
-            String startTime = "0" + startHrTime + ":" + startMinTime + ":00"; //TODO: Will need to check if starthrtime > 9, if so then do not add 0
+            String startTime = "0" + startHrTime + ":" + startMinTime + ":00";
 
             // End date and time info
             String endDate = modifyAppointEndPicker.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
@@ -190,7 +190,6 @@ public class ModifyAppointment implements Initializable {
             }
 
             if(modifyAppointStartPicker.getValue().getDayOfYear() > modifyAppointEndPicker.getValue().getDayOfYear()) {
-                // TODO: ALERT
                 startDateCheck = false;
                 endDateCheck = false;
                 highlightErrors();
@@ -198,21 +197,18 @@ public class ModifyAppointment implements Initializable {
             }
 
             if(!Query.checkCustomerInDB(custID)) {
-                // TODO: alert saying customer not in database
                 customerIDCheck = false;
                 highlightErrors();
                 return false;
             }
 
             if(!Query.checkUserInDB(userID)) {
-                //TODO: alert saying user not in database
                 userIDCheck = false;
                 highlightErrors();
                 return false;
             }
 
             if(startHrSpinner.getValue() > endHrSpinner.getValue() || (endHrSpinner.getValue() == startHrSpinner.getValue() && endMinSpinner.getValue() <= startMinSpinner.getValue())) {
-                // TODO: Alert saying end time before start time
                 System.err.println("END HOUR GREATER THAN START HOUR");
                 startTimeHrCheck = false;
                 endTimeHrCheck = false;
@@ -608,7 +604,7 @@ public class ModifyAppointment implements Initializable {
      * Initializes time arrays for spinner
      */
     private void initArrays() {
-        for(int i = 0; i < 23; i++) { //TODO: May have to change later after conversion and stuff
+        for(int i = 0; i < 23; i++) {
             hours.add(i);
         }
         mins.add(0);

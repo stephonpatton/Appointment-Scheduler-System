@@ -155,7 +155,6 @@ public class AddAppointment implements Initializable {
 
             // Checks if start date > end date (logical error)
             if(addAppointStartPicker.getValue().getDayOfYear() > addAppointEndPicker.getValue().getDayOfYear()) {
-                // TODO: ALERT
                 startDateCheck = false;
                 endDateCheck = false;
                 highlightErrors();
@@ -164,7 +163,6 @@ public class AddAppointment implements Initializable {
 
             // Checks if customer is in database before trying to assigning appointment
             if(!Query.checkCustomerInDB(customerID)) {
-                // TODO: alert saying customer not in database
                 customerIDCheck = false;
                 highlightErrors();
                 return false;
@@ -172,7 +170,6 @@ public class AddAppointment implements Initializable {
 
             // Checks if user is in database before assigning appointment
             if(!Query.checkUserInDB(userID)) {
-                //TODO: alert saying user not in database
                 userIDCheck = false;
                 highlightErrors();
                 return false;
@@ -183,7 +180,6 @@ public class AddAppointment implements Initializable {
                 isCreated = false;
             } else {
                 if(startHrSpinner.getValue() > endHrSpinner.getValue() || (endHrSpinner.getValue() == startHrSpinner.getValue() && endMinSpinner.getValue() <= startMinSpinner.getValue())) {
-                    // TODO: Alert saying end time before start time
                     System.err.println("END HOUR GREATER THAN START HOUR");
                     startTimeHrCheck = false;
                     endTimeHrCheck = false;

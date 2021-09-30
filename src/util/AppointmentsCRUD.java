@@ -12,8 +12,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.TimeZone;
 
 public class AppointmentsCRUD {
-//    private static final SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); // TODO: Delete at end of project if not needed
-
     /**
      * Loads all appointments from the database to store locally
      * @throws SQLException If appointments fail to be loaded from database
@@ -224,13 +222,6 @@ public class AppointmentsCRUD {
             throwables.printStackTrace();
         }
         return name;
-    }
-
-    // TODO: Probably delete later
-    public static LocalDateTime toUTCFromLDT(String date, String time) {
-        DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        LocalDateTime localDate =  LocalDateTime.parse(date + " " + time, format).atZone(ZoneId.systemDefault()).withZoneSameInstant(ZoneId.of("UTC")).toLocalDateTime();
-        return localDate;
     }
 
     /**
