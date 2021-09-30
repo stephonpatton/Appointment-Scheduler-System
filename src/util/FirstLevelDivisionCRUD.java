@@ -1,6 +1,11 @@
 package util;
 
+import Model.Appointment;
+import Model.Country;
 import Model.FirstLevelDivision;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 import java.sql.*;
 
 public class FirstLevelDivisionCRUD {
@@ -151,5 +156,34 @@ public class FirstLevelDivisionCRUD {
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
+    }
+
+    public static ObservableList<FirstLevelDivision> getFirstLevelByCountry(Country country) {
+        ObservableList<FirstLevelDivision> temp = FXCollections.observableArrayList();
+        try {
+            Connection conn = Database.getConnection();
+            PreparedStatement ps;
+            ResultSet rs;
+            String query = "SELECT COUNT(*) AS Total, Division FROM customers" +
+                    " JOIN first_level_divisions AS F ON F.Division_ID = customers.Division_ID INNER JOIN countries WHERE countries.Country_ID = ? AND F.COUNTRY_ID = ? GROUP BY(F.Division_ID) ORDER BY Total;";
+            ps = conn.prepareStatement(query);
+            ps.setInt(1, country.getCountryID());
+            ps.setInt(2, country.getCountryID());
+            rs = ps.executeQuery();
+
+            while(rs.next()) {
+                FirstLevelDivision fl = new FirstLevelDivision();
+//                int id = rs.getInt("Appointment_ID");
+                String division = rs.getString("Division");
+                int total = rs.getInt("Total");
+//                appoint.setAppointmentID(id);
+                fl.setTotal(total);
+                fl.setDivision(division);
+                temp.add(fl);
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return temp;
     }
 }

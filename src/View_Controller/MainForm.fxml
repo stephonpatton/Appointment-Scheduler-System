@@ -88,7 +88,7 @@
                   <Font size="18.0" />
                </font>
             </Button>
-            <Button layoutX="83.0" layoutY="135.0" mnemonicParsing="false" text="Customer Division Report">
+            <Button layoutX="83.0" layoutY="135.0" mnemonicParsing="false" onAction="#openCustomerDivisionReport" text="Customer Division Report">
                <font>
                   <Font size="18.0" />
                </font>

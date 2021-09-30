@@ -14,6 +14,8 @@ public class FirstLevelDivision {
     private String lastUpdatedBy;
     private int countryID;
 
+    private int total;
+
     // ObservableLists to hold all division, us divisions, uk divisions, and canadian divisions
     private static ObservableList<FirstLevelDivision> allDivisions = FXCollections.observableArrayList();
     private static ObservableList<FirstLevelDivision> usDivisions = FXCollections.observableArrayList();
@@ -218,5 +220,13 @@ public class FirstLevelDivision {
      */
     public String toString() {
         return division;
+    }
+
+    public void setTotal(int total) {
+        this.total = total;
+    }
+
+    public int getTotal() {
+        return this.total;
     }
 }

@@ -527,4 +527,17 @@ public class MainForm implements Initializable {
         //Hides current window
         ((Node)(actionEvent.getSource())).getScene().getWindow().hide();
     }
+
+    public void openCustomerDivisionReport(ActionEvent actionEvent) throws IOException {
+        Parent root;
+        root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("../View_Controller/CustomerDivisionReport.fxml")));
+        Stage stage = new Stage();
+        stage.setTitle("Customers by Divisions Report");
+        stage.setScene(new Scene(root, 444, 379));
+        stage.setResizable(false);
+        stage.show();
+
+        //Hides current window
+        ((Node)(actionEvent.getSource())).getScene().getWindow().hide();
+    }
 }
