@@ -274,4 +274,34 @@ public class AppointmentsCRUD {
         }
         return temp;
     }
+
+
+    public static ObservableList<Appointment> getAppointmentsByMonthAndType(int month) {
+        ObservableList<Appointment> temp = FXCollections.observableArrayList();
+        try {
+            Connection conn = Database.getConnection();
+            PreparedStatement ps;
+            ResultSet rs;
+            String query = "SELECT type, COUNT(*) AS Total FROM appointments WHERE MONTH(Start) = ? AND MONTH(End) = ? GROUP BY MONTH(?), type ORDER BY Total ASC";
+            ps = conn.prepareStatement(query);
+            ps.setInt(1, month);
+            ps.setInt(2, month);
+            ps.setInt(3, month);
+            rs = ps.executeQuery();
+
+            while(rs.next()) {
+                Appointment appoint = new Appointment();
+//                int id = rs.getInt("Appointment_ID");
+                String type = rs.getString("Type");
+                int total = rs.getInt("Total");
+//                appoint.setAppointmentID(id);
+                appoint.setTotal(total);
+                appoint.setType(type);
+                temp.add(appoint);
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return temp;
+    }
 }

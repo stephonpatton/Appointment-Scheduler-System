@@ -514,4 +514,17 @@ public class MainForm implements Initializable {
         //Hides current window
         ((Node)(actionEvent.getSource())).getScene().getWindow().hide();
     }
+
+    public void openCustomerAppointments(ActionEvent actionEvent) throws IOException {
+        Parent root;
+        root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("../View_Controller/CustomerAppointments.fxml")));
+        Stage stage = new Stage();
+        stage.setTitle("Customer Appointments by Month/Type Report");
+        stage.setScene(new Scene(root, 526, 330));
+        stage.setResizable(false);
+        stage.show();
+
+        //Hides current window
+        ((Node)(actionEvent.getSource())).getScene().getWindow().hide();
+    }
 }

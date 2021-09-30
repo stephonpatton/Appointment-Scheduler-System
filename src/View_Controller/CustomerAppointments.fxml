@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="330.0" prefWidth="536.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View_Controller.CustomerAppointments">
+   <children>
+      <Label layoutX="111.0" layoutY="14.0" text="Customer Appointments by Month and Type">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Label>
+      <ComboBox fx:id="monthComboBox" layoutX="36.0" layoutY="164.0" prefWidth="150.0" />
+      <Label layoutX="82.0" layoutY="128.0" text="Month:">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <TableView fx:id="appointmentsTableView" layoutX="244.0" layoutY="42.0" prefHeight="235.0" prefWidth="279.0">
+        <columns>
+          <TableColumn fx:id="totalCol" prefWidth="75.0" text="Total" />
+          <TableColumn fx:id="typeCol" prefWidth="124.0" text="Type" />
+        </columns>
+      </TableView>
+      <Button layoutX="59.0" layoutY="226.0" mnemonicParsing="false" onAction="#filterByMonth" text="Generate Report" />
+      <Button layoutX="363.0" layoutY="295.0" mnemonicParsing="false" onAction="#returnToMainScreen" text="Exit" />
+   </children>
+</AnchorPane>

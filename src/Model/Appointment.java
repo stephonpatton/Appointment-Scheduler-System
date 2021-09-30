@@ -34,6 +34,10 @@ public class Appointment {
     LocalDate startDate;
     LocalDate endDate;
 
+
+    private static int totalMonthCount;
+    private int totalCount;
+
     // ObservableList containing all appointments in the database
     private static ObservableList<Appointment> allAppointments = FXCollections.observableArrayList();
 
@@ -474,5 +478,21 @@ public class Appointment {
             }
         }
         return temp;
+    }
+
+    public static int getTotalMonthCount() {
+        return totalMonthCount;
+    }
+
+    public static void setMonthCount(ObservableList<Appointment> appointments) {
+        totalMonthCount = appointments.size();
+    }
+
+    public void setTotal(int total) {
+        totalCount = total;
+    }
+
+    public int getTotal() {
+        return totalCount;
     }
 }
