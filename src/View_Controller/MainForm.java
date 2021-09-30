@@ -507,7 +507,7 @@ public class MainForm implements Initializable {
         root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("../View_Controller/ContactScheduleReport.fxml")));
         Stage stage = new Stage();
         stage.setTitle("Contact Schedule Reports");
-        stage.setScene(new Scene(root, 670, 400));
+        stage.setScene(new Scene(root, 834, 400));
         stage.setResizable(false);
         stage.show();
 

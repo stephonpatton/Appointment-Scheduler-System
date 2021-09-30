@@ -257,12 +257,16 @@ public class AppointmentsCRUD {
                 String type = rs.getString("Type");
                 Timestamp start = rs.getTimestamp("Start");
                 Timestamp end = rs.getTimestamp("End");
+                int customerID = rs.getInt("Customer_ID");
+                String description = rs.getString("Description");
 
                 appoint.setAppointmentID(id);
                 appoint.setTitle(title);
                 appoint.setType(type);
                 appoint.setStart(start);
                 appoint.setEnd(end);
+                appoint.setCustomerID(customerID);
+                appoint.setDescription(description);
                 temp.add(appoint);
             }
         } catch (SQLException throwables) {

@@ -30,8 +30,10 @@ public class ContactScheduleReport implements Initializable {
 
     @FXML private TableView<Appointment> appointmentTableView;
     @FXML private TableColumn<Appointment, Integer> appointmentIDCol;
+    @FXML private TableColumn<Appointment, Integer> customerIDCol;
     @FXML private TableColumn<Appointment, String> typeCol;
     @FXML private TableColumn<Appointment, String> titleCol;
+    @FXML private TableColumn<Appointment, String> descriptionCol;
     @FXML private TableColumn<Appointment, Timestamp> startCol;
     @FXML private TableColumn<Appointment, Timestamp> endCol;
 
@@ -65,6 +67,8 @@ public class ContactScheduleReport implements Initializable {
         titleCol.setCellValueFactory(new PropertyValueFactory<>("title"));
         startCol.setCellValueFactory(new PropertyValueFactory<>("startLocal"));
         endCol.setCellValueFactory(new PropertyValueFactory<>("endLocal"));
+        descriptionCol.setCellValueFactory(new PropertyValueFactory<>("description"));
+        customerIDCol.setCellValueFactory(new PropertyValueFactory<>("customerID"));
     }
 
     public void filterByContact() throws SQLException {
